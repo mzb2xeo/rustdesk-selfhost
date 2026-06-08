@@ -9,8 +9,16 @@ RUN apk add --no-cache musl-dev gcc pkgconfig libsodium-dev cmake make g++ git
 WORKDIR /usr/src/rustdesk-server
 COPY ./rustdesk-server .
 
-# Build release binaries
-RUN cargo build --release
+# Set DATABASE_URL for SQLx compile-time query macros
+ENV DATABASE_URL=sqlite://./db_v2.sqlite3
+
+# Build release binaries using cache mounts for faster compilation
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/src/rustdesk-server/target \
+    cargo build --release && \
+    mkdir -p /usr/src/rustdesk-server/bin && \
+    cp target/release/hbbs /usr/src/rustdesk-server/bin/hbbs && \
+    cp target/release/hbbr /usr/src/rustdesk-server/bin/hbbr
 
 # ==============================================================================
 # STAGE 2: Final Production Image
@@ -22,11 +30,12 @@ WORKDIR /root
 RUN apk add --no-cache libsodium ca-certificates
 
 # Copy compiled binaries from Stage 1
-COPY --from=rust-builder /usr/src/rustdesk-server/target/release/hbbs /usr/bin/hbbs
-COPY --from=rust-builder /usr/src/rustdesk-server/target/release/hbbr /usr/bin/hbbr
+COPY --from=rust-builder /usr/src/rustdesk-server/bin/hbbs /usr/bin/hbbs
+COPY --from=rust-builder /usr/src/rustdesk-server/bin/hbbr /usr/bin/hbbr
 
 # Expose ports
 EXPOSE 21115 21116 21116/udp 21117 21118 21119
 
 # By default, hbbs runs. We can override this in docker-compose.yml.
 CMD ["hbbs"]
+

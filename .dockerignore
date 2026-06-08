@@ -1,0 +1,13 @@
+# Ignore git folder
+.git
+.gitignore
+
+# Ignore cargo build artifacts
+**/target
+
+# Ignore node modules
+**/node_modules
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
