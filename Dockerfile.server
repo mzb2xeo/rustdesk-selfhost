@@ -1,7 +1,7 @@
 # ==============================================================================
 # STAGE 1: Build hbbs and hbbr in Rust
 # ==============================================================================
-FROM rust:1.83-alpine AS rust-builder
+FROM rust:1.85-alpine AS rust-builder
 
 # Install build dependencies for Rust packages (sodiumoxide requires gcc, musl-dev, pkgconfig, cmake, make, etc.)
 RUN apk add --no-cache musl-dev gcc pkgconfig libsodium-dev cmake make g++ git
