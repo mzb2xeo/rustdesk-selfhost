@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # ------------------------------------------------------------------------------
+  # 1. RustDesk ID Server (hbbs)
+  # ------------------------------------------------------------------------------
+  hbbs:
+    image: rustdesk/rustdesk-server:latest
+    container_name: rustdesk-hbbs
+    command: hbbs -r ${DOMAIN}:21117 -k _
+    volumes:
+      - ./data/server:/root
+    ports:
+      - "21115:21115"
+      - "21116:21116"
+      - "21116:21116/udp"
+      - "21118:21118"  # Cổng Websocket ID cho Web Client
+    networks:
+      - rustdesk-net
+    depends_on:
+      - hbbr
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+
+  # ------------------------------------------------------------------------------
+  # 2. RustDesk Relay Server (hbbr)
+  # ------------------------------------------------------------------------------
+  hbbr:
+    image: rustdesk/rustdesk-server:latest
+    container_name: rustdesk-hbbr
+    command: hbbr -k _
+    volumes:
+      - ./data/server:/root
+    ports:
+      - "21117:21117"
+      - "21119:21119"  # Cổng Websocket Relay cho Web Client
+    networks:
+      - rustdesk-net
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+
+  # ------------------------------------------------------------------------------
+  # 3. RustDesk API & Web Admin / Web Client (Built from source)
+  # ------------------------------------------------------------------------------
+  rustdesk-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        COUNTRY: VN
+    container_name: rustdesk-api
+    environment:
+      - TZ=${TZ:-Asia/Ho_Chi_Minh}
+      - RUSTDESK_API_LANG=vi
+      - RUSTDESK_API_RUSTDESK_ID_SERVER=${DOMAIN}:21116
+      - RUSTDESK_API_RUSTDESK_RELAY_SERVER=${DOMAIN}:21117
+      - RUSTDESK_API_RUSTDESK_API_SERVER=https://${DOMAIN}
+      - RUSTDESK_API_RUSTDESK_KEY_FILE=/data/id_ed25519.pub
+      - RUSTDESK_API_JWT_KEY=${JWT_SECRET}
+    ports:
+      - "21114:21114"  # Mở cổng API ra host để Cloudflare Tunnel kết nối nội bộ
+    volumes:
+      - ./data/api:/app/data
+      - ./data/server:/data:ro
+    networks:
+      - rustdesk-net
+    depends_on:
+      - hbbs
+      - hbbr
+    restart: unless-stopped
+
+networks:
+  rustdesk-net:
+    name: rustdesk-net
+    driver: bridge

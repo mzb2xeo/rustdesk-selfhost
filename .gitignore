@@ -16,3 +16,21 @@ Thumbs.db
 *.exe
 *.log
 apimain
+
+# Sub-projects ignored files
+**/target/
+**/node_modules/
+**/dist/
+**/release/
+**/runtime/
+**/debian-build/
+**/debian/.debhelper/
+**/debian/debhelper-build-stamp
+**/.vscode/
+**/.idea/
+**/*.db
+**/*.sqlite3
+rustdesk-server/id*
+rustdesk-server/db*
+rustdesk-server/src/version.rs
+rustdesk-api/resources/admin/

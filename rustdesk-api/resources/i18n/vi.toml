@@ -1,0 +1,169 @@
+[Test]
+description = "test"
+one = "thử nghiệm 1 {{.P0}}"
+other = "thử nghiệm 2 {{.P0}}"
+
+[ParamsError]
+description = "Params validation failed."
+one = "Tham số không hợp lệ."
+other = "Tham số không hợp lệ."
+
+[OperationFailed]
+description = "OperationFailed."
+one = "Thao tác thất bại."
+other = "Thao tác thất bại."
+
+[OperationSuccess]
+description = "OperationSuccess."
+one = "Thao tác thành công."
+other = "Thao tác thành công."
+
+[ItemExists]
+description = "Item already exists."
+one = "Dữ liệu đã tồn tại."
+other = "Dữ liệu đã tồn tại."
+
+[ItemNotFound]
+description = "Item not found."
+one = "Không tìm thấy dữ liệu."
+other = "Không tìm thấy dữ liệu."
+
+[NoAccess]
+description = "No access."
+one = "Không có quyền truy cập."
+other = "Không có quyền truy cập."
+
+[NeedLogin]
+description = "Need login."
+one = "Vui lòng đăng nhập trước."
+other = "Vui lòng đăng nhập trước."
+
+[UsernameOrPasswordError]
+description = "Username or password error."
+one = "Tên đăng nhập hoặc mật khẩu không chính xác."
+other = "Tên đăng nhập hoặc mật khẩu không chính xác."
+
+[SystemError]
+description = "System error."
+one = "Lỗi hệ thống."
+other = "Lỗi hệ thống."
+
+[ConfigNotFound]
+description = "Config not found."
+one = "Cấu hình không tồn tại."
+other = "Cấu hình không tồn tại."
+
+[OauthExpired]
+description = "Oauth expired."
+one = "Ủy quyền đã hết hạn, vui lòng thử lại."
+other = "Ủy quyền đã hết hạn, vui lòng thử lại."
+
+[OauthFailed]
+description = "Oauth failed."
+one = "Ủy quyền thất bại."
+other = "Ủy quyền thất bại."
+
+[OauthHasBindOtherUser]
+description = "Oauth has bind other user."
+one = "Tài khoản ủy quyền đã được liên kết với người dùng khác."
+other = "Tài khoản ủy quyền đã được liên kết với người dùng khác."
+
+[ParamIsEmpty]
+description = "Param is empty."
+one = "{{.P0}} trống."
+other = "{{.P0}} trống."
+
+[BindFail]
+description = "Bind fail."
+one = "Liên kết thất bại."
+other = "Liên kết thất bại."
+
+[BindSuccess]
+description = "Bind success."
+one = "Liên kết thành công."
+other = "Liên kết thành công."
+
+[OauthHasBeenSuccess]
+description = "Oauth has been success."
+one = "Ủy quyền đã thành công."
+other = "Ủy quyền đã thành công."
+
+[OauthSuccess]
+description = "Oauth success."
+one = "Ủy quyền thành công."
+other = "Ủy quyền thành công."
+
+[OauthRegisterSuccess]
+description = "Oauth register success."
+one = "Đăng ký ủy quyền thành công."
+other = "Đăng ký ủy quyền thành công."
+
+[OauthRegisterFailed]
+description = "Oauth register failed."
+one = "Đăng ký ủy quyền thất bại."
+other = "Đăng ký ủy quyền thất bại."
+
+[GetOauthTokenError]
+description = "Get oauth token error."
+one = "Lấy token ủy quyền thất bại."
+other = "Lấy token ủy quyền thất bại."
+
+[GetOauthUserInfoError]
+description = "Get oauth user info error."
+one = "Lấy thông tin người dùng ủy quyền thất bại."
+other = "Lấy thông tin người dùng ủy quyền thất bại."
+
+[DecodeOauthUserInfoError]
+description = "Decode oauth user info error."
+one = "Giải mã thông tin người dùng ủy quyền thất bại."
+other = "Giải mã thông tin người dùng ủy quyền thất bại."
+
+[OldPasswordError]
+description = "Old password error."
+one = "Mật khẩu cũ không chính xác."
+other = "Mật khẩu cũ không chính xác."
+
+[DefaultGroup]
+description = "Default group."
+one = "Nhóm mặc định"
+other = "Nhóm mặc định"
+
+[ShareGroup]
+description = "Share group."
+one = "Nhóm chia sẻ"
+other = "Nhóm chia sẻ"
+
+[RegisterClosed]
+description = "Register closed."
+one = "Đăng ký đã đóng."
+other = "Đăng ký đã đóng."
+
+[CaptchaRequired]
+description = "Captcha required."
+one = "Yêu cầu mã xác thực."
+other = "Yêu cầu mã xác thực."
+
+[CaptchaError]
+description = "Captcha error."
+one = "Mã xác thực không chính xác."
+other = "Mã xác thực không chính xác."
+
+[PwdLoginDisabled]
+description = "Password login disabled."
+one = "Đăng nhập bằng mật khẩu đã bị vô hiệu hóa."
+other = "Đăng nhập bằng mật khẩu đã bị vô hiệu hóa."
+
+[CannotShareToSelf]
+description = "Cannot share to self."
+one = "Không thể chia sẻ cho chính mình."
+other = "Không thể chia sẻ cho chính mình."
+
+[Banned]
+description = "Banned."
+one = "Đã bị khóa/cấm."
+other = "Đã bị khóa/cấm."
+
+[RegisterSuccessWaitAdminConfirm]
+description = "Register success, wait for admin confirm."
+one = "Đăng ký thành công, vui lòng chờ quản trị viên phê duyệt."
+other = "Đăng ký thành công, vui lòng chờ quản trị viên phê duyệt."
