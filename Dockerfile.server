@@ -4,13 +4,32 @@
 FROM rust:1.85-alpine AS rust-builder
 
 # Install build dependencies for Rust packages (sodiumoxide requires gcc, musl-dev, pkgconfig, cmake, make, etc.)
-RUN apk add --no-cache musl-dev gcc pkgconfig libsodium-dev cmake make g++ git
+RUN apk add --no-cache musl-dev gcc pkgconfig libsodium-dev cmake make g++ git sqlite
 
 WORKDIR /usr/src/rustdesk-server
 COPY ./rustdesk-server .
 
 # Set DATABASE_URL for SQLx compile-time query macros
 ENV DATABASE_URL=sqlite://./db_v2.sqlite3
+
+# Pre-initialize SQLite database schema so SQLx query macros can verify queries at compile time
+RUN sqlite3 db_v2.sqlite3 " \
+    create table if not exists peer ( \
+        guid blob primary key not null, \
+        id varchar(100) not null, \
+        uuid blob not null, \
+        pk blob not null, \
+        created_at datetime not null default(current_timestamp), \
+        user blob, \
+        status tinyint, \
+        note varchar(300), \
+        info text not null \
+    ) without rowid; \
+    create unique index if not exists index_peer_id on peer (id); \
+    create index if not exists index_peer_user on peer (user); \
+    create index if not exists index_peer_created_at on peer (created_at); \
+    create index if not exists index_peer_status on peer (status); \
+"
 
 # Build release binaries using cache mounts for faster compilation
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
