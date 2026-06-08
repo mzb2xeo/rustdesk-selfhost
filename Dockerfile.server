@@ -1,0 +1,32 @@
+# ==============================================================================
+# STAGE 1: Build hbbs and hbbr in Rust
+# ==============================================================================
+FROM rust:1.75-alpine AS rust-builder
+
+# Install build dependencies for Rust packages (sodiumoxide requires gcc, musl-dev, pkgconfig, cmake, make, etc.)
+RUN apk add --no-cache musl-dev gcc pkgconfig libsodium-dev cmake make g++ git
+
+WORKDIR /usr/src/rustdesk-server
+COPY ./rustdesk-server .
+
+# Build release binaries
+RUN cargo build --release
+
+# ==============================================================================
+# STAGE 2: Final Production Image
+# ==============================================================================
+FROM alpine:latest
+WORKDIR /root
+
+# Install runtime dependencies (like libsodium, if dynamically linked)
+RUN apk add --no-cache libsodium ca-certificates
+
+# Copy compiled binaries from Stage 1
+COPY --from=rust-builder /usr/src/rustdesk-server/target/release/hbbs /usr/bin/hbbs
+COPY --from=rust-builder /usr/src/rustdesk-server/target/release/hbbr /usr/bin/hbbr
+
+# Expose ports
+EXPOSE 21115 21116 21116/udp 21117 21118 21119
+
+# By default, hbbs runs. We can override this in docker-compose.yml.
+CMD ["hbbs"]

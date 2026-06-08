@@ -1,0 +1,18 @@
+# ------------------------------------------------------------------------------
+# RUSTDESK UNIFIED GITIGNORE
+# ------------------------------------------------------------------------------
+
+# Docker persistent data
+/data/
+
+# Environment configurations containing secrets
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts (if compiled outside docker)
+*.exe
+*.log
+apimain

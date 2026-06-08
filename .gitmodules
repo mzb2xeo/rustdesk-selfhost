@@ -1,0 +1,12 @@
+[submodule "rustdesk-server"]
+	path = rustdesk-server
+	url = https://github.com/rustdesk/rustdesk-server.git
+[submodule "rustdesk-api"]
+	path = rustdesk-api
+	url = https://github.com/nntu/rustdesk-api.git
+[submodule "rustdesk-api-web"]
+	path = rustdesk-api-web
+	url = https://github.com/lejianwen/rustdesk-api-web.git
+[submodule "rustdesk-server-lejianwen"]
+	path = rustdesk-server-lejianwen
+	url = https://github.com/lejianwen/rustdesk-server.git
