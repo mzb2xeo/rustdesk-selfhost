@@ -31,6 +31,9 @@ RUN sqlite3 db_v2.sqlite3 " \
     create index if not exists index_peer_status on peer (status); \
 "
 
+# Force Cargo to rerun build.rs and generate version.rs (avoiding Docker cache invalidation issues)
+RUN touch Cargo.toml libs/hbb_common/Cargo.toml
+
 # Build release binaries using cache mounts for faster compilation
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/usr/src/rustdesk-server/target \
