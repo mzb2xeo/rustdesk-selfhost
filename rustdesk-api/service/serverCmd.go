@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/lejianwen/rustdesk-api/v2/model"
 	"net"
+	"os"
 	"time"
 )
 
@@ -62,6 +63,15 @@ func (is *ServerCmdService) SendSocketCmd(ty string, port int, cmd string) (stri
 	if ty == "v4" {
 		tcp = "tcp"
 		addr = "127.0.0.1"
+		if port == 21115 {
+			if h := os.Getenv("RUSTDESK_API_HBBS_HOST"); h != "" {
+				addr = h
+			}
+		} else if port == 21117 {
+			if h := os.Getenv("RUSTDESK_API_HBBR_HOST"); h != "" {
+				addr = h
+			}
+		}
 	}
 	conn, err := net.Dial(tcp, fmt.Sprintf("%s:%v", addr, port))
 	if err != nil {
