@@ -4,6 +4,7 @@ import zhCN from '@/utils/i18n/zh_CN.json'
 import ko from '@/utils/i18n/ko.json'
 import ru from '@/utils/i18n/ru.json'
 import es from '@/utils/i18n/es.json'
+import vi from '@/utils/i18n/vi.json'
 import zhTW from '@/utils/i18n/zh_TW.json'
 import { useAppStore } from '@/store/app'
 
@@ -14,6 +15,7 @@ const trans = {
   'ko': ko,
   'ru': ru,
   'es': es,
+  'vi': vi,
   'zh-TW': zhTW,
 }
 export function T (key, params, num = 0) {

@@ -6,6 +6,7 @@ import ko from 'element-plus/es/locale/lang/ko'
 import ru from 'element-plus/es/locale/lang/ru'
 import fr from 'element-plus/es/locale/lang/fr'
 import es from 'element-plus/es/locale/lang/es'
+import vi from 'element-plus/es/locale/lang/vi'
 import zhTw from 'element-plus/es/locale/lang/zh-tw'
 import { admin, app, server } from '@/api/config'
 
@@ -16,9 +17,13 @@ const langs = {
   'ko': { name: '한국어', value: ko, sideBarWidth: '230px' },
   'ru': { name: 'Русский', value: ru, sideBarWidth: '250px' },
   'es': { name: 'Español', value: es, sideBarWidth: '280px' },
+  'vi': { name: 'Tiếng Việt', value: vi, sideBarWidth: '250px' },
   'zh-TW': { name: '中文繁体', value: zhTw, sideBarWidth: '210px' },
 }
-const defaultLang = localStorage.getItem('lang') || navigator.language || 'zh-CN'
+const browserLang = navigator.language || 'zh-CN'
+const requestedLang = localStorage.getItem('lang') || browserLang
+const baseLang = requestedLang.split('-')[0]
+const defaultLang = langs[requestedLang] ? requestedLang : (langs[baseLang] ? baseLang : 'en')
 export const useAppStore = defineStore({
   id: 'App',
   state: () => ({

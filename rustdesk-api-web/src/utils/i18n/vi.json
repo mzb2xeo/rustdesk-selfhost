@@ -1,0 +1,535 @@
+{
+  "Login": {
+    "One": "Đăng nhập"
+  },
+  "Logout": {
+    "One": "Đăng xuất"
+  },
+  "Register": {
+    "One": "Đăng ký"
+  },
+  "Confirm": {
+    "One": "Xác nhận"
+  },
+  "Username": {
+    "One": "Tên đăng nhập"
+  },
+  "Password": {
+    "One": "Mật khẩu"
+  },
+  "LoginSuccess": {
+    "One": "Đăng nhập thành công"
+  },
+  "ForgotPassword": {
+    "One": "Quên mật khẩu"
+  },
+  "ResetPassword": {
+    "One": "Đặt lại mật khẩu"
+  },
+  "ChangePassword": {
+    "One": "Đổi mật khẩu"
+  },
+  "Userinfo": {
+    "One": "Thông tin người dùng"
+  },
+  "ParamRequired": {
+    "One": "Vui lòng nhập {param}"
+  },
+  "HasBind": {
+    "One": "Đã liên kết"
+  },
+  "NoBind": {
+    "One": "Chưa liên kết"
+  },
+  "UnBind": {
+    "One": "Hủy liên kết"
+  },
+  "ToBind": {
+    "One": "Liên kết"
+  },
+  "Confirm?": {
+    "One": "Xác nhận {param}?"
+  },
+  "Cancel": {
+    "One": "Hủy"
+  },
+  "Platform": {
+    "One": "Nền tảng"
+  },
+  "Status": {
+    "One": "Trạng thái"
+  },
+  "Actions": {
+    "One": "Thao tác"
+  },
+  "Filter": {
+    "One": "Lọc"
+  },
+  "Add": {
+    "One": "Thêm"
+  },
+  "Hostname": {
+    "One": "Tên máy"
+  },
+  "Alias": {
+    "One": "Bí danh"
+  },
+  "Hash": {
+    "One": "Mã băm"
+  },
+  "Tags": {
+    "One": "Thẻ"
+  },
+  "Edit": {
+    "One": "Chỉnh sửa"
+  },
+  "Delete": {
+    "One": "Xóa"
+  },
+  "Create": {
+    "One": "Tạo"
+  },
+  "Update": {
+    "One": "Cập nhật"
+  },
+  "LoginName": {
+    "One": "Tên đăng nhập"
+  },
+  "Submit": {
+    "One": "Gửi"
+  },
+  "OperationSuccess": {
+    "One": "Thao tác thành công"
+  },
+  "Owner": {
+    "One": "Chủ sở hữu"
+  },
+  "Name": {
+    "One": "Tên"
+  },
+  "Color": {
+    "One": "Màu sắc"
+  },
+  "CreatedAt": {
+    "One": "Ngày tạo"
+  },
+  "UpdatedAt": {
+    "One": "Ngày cập nhật"
+  },
+  "Memory": {
+    "One": "Bộ nhớ"
+  },
+  "Os": {
+    "One": "Hệ điều hành"
+  },
+  "Uuid": {
+    "One": "UUID"
+  },
+  "Version": {
+    "One": "Phiên bản"
+  },
+  "Type": {
+    "One": "Loại"
+  },
+  "Group": {
+    "One": "Nhóm"
+  },
+  "CommonGroup": {
+    "One": "Nhóm nội bộ"
+  },
+  "CommonGroupNote": {
+    "One": "Chỉ quản trị viên có thể xem thành viên nhóm và thiết bị của họ"
+  },
+  "SharedGroup": {
+    "One": "Nhóm chia sẻ"
+  },
+  "SharedGroupNote": {
+    "One": "Tất cả người dùng có thể xem thành viên nhóm và thiết bị của họ"
+  },
+  "Nickname": {
+    "One": "Tên hiển thị"
+  },
+  "UserTags": {
+    "One": "Thẻ người dùng"
+  },
+  "UserAddressBook": {
+    "One": "Sổ địa chỉ người dùng"
+  },
+  "IsAdmin": {
+    "One": "Quản trị viên"
+  },
+  "PleaseInputNewPassword": {
+    "One": "Vui lòng nhập mật khẩu mới"
+  },
+  "AutoRegister": {
+    "One": "Tự động đăng ký"
+  },
+  "AutoRegisterNote": {
+    "One": "Khi bật, tài khoản sẽ tự động được đăng ký nếu người dùng đăng nhập bằng OAuth mà không liên kết tài khoản hiện có"
+  },
+  "ThirdName": {
+    "One": "Tên bên thứ ba"
+  },
+  "Close": {
+    "One": "Đóng"
+  },
+  "OauthBinding": {
+    "One": "Bạn đang cấp quyền liên kết"
+  },
+  "OauthLogining": {
+    "One": "Bạn đang cấp quyền đăng nhập"
+  },
+  "OauthCloseNote": {
+    "One": "Nếu bạn không thực hiện yêu cầu này, hãy đóng trang ngay"
+  },
+  "OperationSuccessAndCloseAfter3Seconds": {
+    "One": "Thao tác thành công, trang sẽ đóng sau 3 giây"
+  },
+  "ConfirmOauth": {
+    "One": "Xác nhận OAuth"
+  },
+  "Device": {
+    "One": "Thiết bị"
+  },
+  "ChangeLang": {
+    "One": "Đổi ngôn ngữ"
+  },
+  "My": {
+    "One": "Cá nhân"
+  },
+  "Info": {
+    "One": "Thông tin"
+  },
+  "AddressBooks": {
+    "One": "Sổ địa chỉ"
+  },
+  "System": {
+    "One": "Hệ thống"
+  },
+  "PeerManage": {
+    "One": "Quản lý thiết bị"
+  },
+  "AddressBookManage": {
+    "One": "Quản lý sổ địa chỉ"
+  },
+  "GroupManage": {
+    "One": "Quản lý nhóm"
+  },
+  "UserManage": {
+    "One": "Quản lý người dùng"
+  },
+  "UserAdd": {
+    "One": "Thêm người dùng"
+  },
+  "UserEdit": {
+    "One": "Chỉnh sửa người dùng"
+  },
+  "TagsManage": {
+    "One": "Quản lý thẻ"
+  },
+  "OauthManage": {
+    "One": "Quản lý OAuth"
+  },
+  "LoginLog": {
+    "One": "Nhật ký đăng nhập"
+  },
+  "LastOnlineTime": {
+    "One": "Lần trực tuyến cuối"
+  },
+  "JustNow": {
+    "One": "Vừa xong"
+  },
+  "MinutesAgo": {
+    "One": "{param} phút trước",
+    "Other": "{param} phút trước"
+  },
+  "HoursAgo": {
+    "One": "{param} giờ trước",
+    "Other": "{param} giờ trước"
+  },
+  "DaysAgo": {
+    "One": "{param} ngày trước",
+    "Other": "{param} ngày trước"
+  },
+  "MonthsAgo": {
+    "One": "{param} tháng trước",
+    "Other": "{param} tháng trước"
+  },
+  "YearsAgo": {
+    "One": "{param} năm trước",
+    "Other": "{param} năm trước"
+  },
+  "MinutesLess": {
+    "One": "Dưới {param} phút",
+    "Other": "Dưới {param} phút"
+  },
+  "HoursLess": {
+    "One": "Dưới {param} giờ",
+    "Other": "Dưới {param} giờ"
+  },
+  "DaysLess": {
+    "One": "Dưới {param} ngày",
+    "Other": "Dưới {param} ngày"
+  },
+  "Export": {
+    "One": "Xuất"
+  },
+  "AddToAddressBook": {
+    "One": "Thêm vào sổ địa chỉ"
+  },
+  "BatchDelete": {
+    "One": "Xóa hàng loạt"
+  },
+  "PleaseSelectData": {
+    "One": "Vui lòng chọn dữ liệu"
+  },
+  "PasswordType": {
+    "One": "Loại mật khẩu"
+  },
+  "OncePassword": {
+    "One": "Mật khẩu dùng một lần"
+  },
+  "FixedPassword": {
+    "One": "Mật khẩu cố định"
+  },
+  "FixedPasswordWarning": {
+    "One": "Mật khẩu cố định có thể bị lộ. Hãy sử dụng thận trọng; nên dùng mật khẩu dùng một lần"
+  },
+  "ExpireTime": {
+    "One": "Thời gian hết hạn"
+  },
+  "ShareByWebClient": {
+    "One": "Chia sẻ qua Web Client"
+  },
+  "Minutes": {
+    "One": "{param} phút",
+    "Other": "{param} phút"
+  },
+  "Hours": {
+    "One": "{param} giờ",
+    "Other": "{param} giờ"
+  },
+  "Days": {
+    "One": "{param} ngày",
+    "Other": "{param} ngày"
+  },
+  "Weeks": {
+    "One": "{param} tuần",
+    "Other": "{param} tuần"
+  },
+  "Months": {
+    "One": "{param} tháng",
+    "Other": "{param} tháng"
+  },
+  "Forever": {
+    "One": "Vĩnh viễn"
+  },
+  "Error": {
+    "One": "Lỗi"
+  },
+  "IDNotExist": {
+    "One": "ID không tồn tại"
+  },
+  "RemoteDesktopOffline": {
+    "One": "Máy tính từ xa đang ngoại tuyến"
+  },
+  "KeyMismatch": {
+    "One": "Khóa không khớp"
+  },
+  "KeyOveruse": {
+    "One": "Khóa được sử dụng quá mức"
+  },
+  "Link": {
+    "One": "Liên kết"
+  },
+  "CopySuccess": {
+    "One": "Sao chép thành công"
+  },
+  "CopyFailed": {
+    "One": "Sao chép thất bại"
+  },
+  "Timeout": {
+    "One": "Hết thời gian chờ"
+  },
+  "AuditConnLog": {
+    "One": "Nhật ký kết nối"
+  },
+  "Peer": {
+    "One": "Thiết bị",
+    "Other": "Thiết bị"
+  },
+  "FromPeer": {
+    "One": "Từ thiết bị"
+  },
+  "FromName": {
+    "One": "Tên nguồn"
+  },
+  "CloseTime": {
+    "One": "Thời gian đóng"
+  },
+  "AuditFileLog": {
+    "One": "Nhật ký tệp"
+  },
+  "Common": {
+    "One": "Chung"
+  },
+  "File": {
+    "One": "Tệp"
+  },
+  "Num": {
+    "One": "Số lượng"
+  },
+  "Ip": {
+    "One": "IP"
+  },
+  "FileName": {
+    "One": "Tên tệp"
+  },
+  "FileInfo": {
+    "One": "Thông tin tệp"
+  },
+  "Path": {
+    "One": "Đường dẫn"
+  },
+  "IndexNum": {
+    "One": "Số thứ tự"
+  },
+  "ToRemote": {
+    "One": "Đến máy từ xa"
+  },
+  "ToLocal": {
+    "One": "Đến máy cục bộ"
+  },
+  "AddressBookName": {
+    "One": "Tên sổ địa chỉ"
+  },
+  "AddRule": {
+    "One": "Thêm quy tắc"
+  },
+  "ShareRules": {
+    "One": "Quy tắc chia sẻ"
+  },
+  "Rule": {
+    "One": "Quy tắc"
+  },
+  "Read": {
+    "One": "Chỉ đọc"
+  },
+  "ReadWrite": {
+    "One": "Đọc và ghi"
+  },
+  "FullControl": {
+    "One": "Toàn quyền kiểm soát"
+  },
+  "ShareTo": {
+    "One": "Chia sẻ với"
+  },
+  "MyAddressBook": {
+    "One": "Sổ địa chỉ của tôi"
+  },
+  "AddressBook": {
+    "One": "Sổ địa chỉ"
+  },
+  "AddressBookNameManage": {
+    "One": "Quản lý tên sổ địa chỉ"
+  },
+  "MyAddressBookTips": {
+    "One": "\"Sổ địa chỉ của tôi\" là mục mặc định của hệ thống, không thể sửa hoặc xóa"
+  },
+  "LastOnlineIp": {
+    "One": "IP trực tuyến cuối"
+  },
+  "OldPassword": {
+    "One": "Mật khẩu cũ"
+  },
+  "NewPasswordEqualOldPassword": {
+    "One": "Mật khẩu mới không được trùng mật khẩu cũ"
+  },
+  "NewPassword": {
+    "One": "Mật khẩu mới"
+  },
+  "ConfirmPassword": {
+    "One": "Xác nhận mật khẩu"
+  },
+  "PasswordNotMatchConfirmPassword": {
+    "One": "Mật khẩu xác nhận không khớp"
+  },
+  "ToLogin": {
+    "One": "Đến trang đăng nhập"
+  },
+  "UserToken": {
+    "One": "Token người dùng"
+  },
+  "BatchAddToAB": {
+    "One": "Thêm hàng loạt vào sổ địa chỉ"
+  },
+  "BatchEditTags": {
+    "One": "Sửa thẻ hàng loạt"
+  },
+  "User": {
+    "One": "Người dùng"
+  },
+  "ShareRecord": {
+    "One": "Lịch sử chia sẻ"
+  },
+  "Second": {
+    "One": "Giây"
+  },
+  "Captcha": {
+    "One": "Mã xác minh"
+  },
+  "ServerCmd": {
+    "One": "Lệnh máy chủ"
+  },
+  "Simple": {
+    "One": "Cơ bản"
+  },
+  "Advanced": {
+    "One": "Nâng cao"
+  },
+  "Available": {
+    "One": "Khả dụng"
+  },
+  "NotAvailable": {
+    "One": "Không khả dụng"
+  },
+  "ServerCmdTips": {
+    "One": "Tính năng này đang thử nghiệm. Hãy đảm bảo API, hbbs và hbbr dùng cùng địa chỉ loopback. Xem thêm tại {wiki}"
+  },
+  "Refresh": {
+    "One": "Làm mới"
+  },
+  "Save": {
+    "One": "Lưu"
+  },
+  "SendCustom": {
+    "One": "Gửi tùy chỉnh"
+  },
+  "Send": {
+    "One": "Gửi"
+  },
+  "SendCmd": {
+    "One": "Gửi lệnh"
+  },
+  "Result": {
+    "One": "Kết quả"
+  },
+  "DeviceGroupManage": {
+    "One": "Quản lý nhóm thiết bị"
+  },
+  "Drop file here or click to upload": {
+    "One": "Thả tệp vào đây hoặc nhấp để tải lên"
+  },
+  "Please upload csv file": {
+    "One": "Vui lòng tải lên tệp CSV"
+  },
+  "Columns": {
+    "One": "Cột"
+  },
+  "You can reference export file": {
+    "One": "Bạn có thể tham khảo tệp đã xuất"
+  },
+  "Remark": {
+    "One": "Ghi chú"
+  }
+}
