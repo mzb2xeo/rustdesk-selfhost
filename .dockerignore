@@ -3,7 +3,7 @@
 .gitignore
 
 # Ignore cargo build artifacts
-**/target
+**/target*
 
 # Ignore node modules
 **/node_modules
