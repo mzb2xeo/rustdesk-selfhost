@@ -16,17 +16,17 @@ Tai lieu nay ghi lai cac API con thieu sau khi doi chieu:
 - Them migration/model, controller, service, router va test cho tung nhom API.
 - Cap nhat Swagger sau khi hoan thanh endpoint.
 
-## Phase 1 - Sua Web Admin command update
+### Phase 1 - Sua Web Admin command update
 
 ### TASK-001: Dang ky route `cmdUpdate`
 
-- [ ] Them route:
+- [x] Them route:
   - `POST /api/admin/rustdesk/cmdUpdate`
   - Handler: `admin.Rustdesk.CmdUpdate`
-- [ ] Xac nhan route nam sau `middleware.BackendUserAuth()`.
-- [ ] Xac nhan quyen admin truoc khi cho phep sua command.
-- [ ] Test tao command, sua command, doc lai danh sach va xoa command.
-- [ ] Kiem tra thao tac sua command tren Web Admin khong con tra ve `404`.
+- [x] Xac nhan route nam sau `middleware.BackendUserAuth()`.
+- [x] Xac nhan quyen admin truoc khi cho phep sua command.
+- [x] Test tao command, sua command, doc lai danh sach va xoa command.
+- [x] Kiem tra thao tac sua command tren Web Admin khong con tra ve `404`.
 
 Vi tri lien quan:
 
@@ -44,10 +44,10 @@ Tieu chi nghiem thu:
 
 ### TASK-002: Them audit connection GUID
 
-- [ ] Them truong GUID duy nhat vao audit connection.
-- [ ] Tao GUID khi nhan `POST /api/audit/conn` voi `action = new`.
-- [ ] Them index database cho GUID.
-- [ ] Dam bao migration khong lam mat audit record hien tai.
+- [x] Them truong GUID duy nhat vao audit connection.
+- [x] Tao GUID khi nhan `POST /api/audit/conn` voi `action = new`.
+- [x] Them index database cho GUID.
+- [x] Dam bao migration khong lam mat audit record hien tai.
 
 Vi tri lien quan:
 
@@ -58,12 +58,12 @@ Vi tri lien quan:
 
 ### TASK-003: Them API truy van active audit connection
 
-- [ ] Them route co xac thuc:
+- [x] Them route co xac thuc:
   - `GET /api/audit/conn/active?id={peer_id}&session_id={session_id}&conn_type={type}`
-- [ ] Chi tra ve GUID cua connection dang active va thuoc user hien tai.
-- [ ] Tra ve JSON string GUID de phu hop client.
-- [ ] Khong cho phep user truy van audit connection cua user khac.
-- [ ] Them test: tim thay, khong tim thay, sai user, token khong hop le.
+- [x] Chi tra ve GUID cua connection dang active va thuoc user hien tai.
+- [x] Tra ve JSON string GUID de phu hop client.
+- [x] Khong cho phep user truy van audit connection cua user khac.
+- [x] Them test: tim thay, khong tim thay, sai user, token khong hop le.
 
 Client tham chieu:
 
@@ -71,10 +71,10 @@ Client tham chieu:
 
 ### TASK-004: Them API cap nhat audit note
 
-- [ ] Them truong `note` vao audit connection.
-- [ ] Them route co xac thuc:
+- [x] Them truong `note` vao audit connection.
+- [x] Them route co xac thuc:
   - `PUT /api/audit`
-- [ ] Payload:
+- [x] Payload:
 
 ```json
 {
@@ -83,9 +83,9 @@ Client tham chieu:
 }
 ```
 
-- [ ] Chi cho phep cap nhat record thuoc user hien tai.
-- [ ] Gioi han do dai note va validate payload.
-- [ ] Them test cap nhat thanh cong, GUID sai va sai user.
+- [x] Chi cho phep cap nhat record thuoc user hien tai.
+- [x] Gioi han do dai note va validate payload.
+- [x] Them test cap nhat thanh cong, GUID sai va sai user.
 
 Client tham chieu:
 
@@ -93,13 +93,13 @@ Client tham chieu:
 
 ### TASK-005: Them audit alarm
 
-- [ ] Xac dinh danh sach alarm type client dang gui.
-- [ ] Tao model va migration cho audit alarm.
-- [ ] Them route:
+- [x] Xac dinh danh sach alarm type client dang gui.
+- [x] Tao model va migration cho audit alarm.
+- [x] Them route:
   - `POST /api/audit/alarm`
-- [ ] Luu `id`, `uuid`, `typ`, `info`, IP va thoi gian.
-- [ ] Them danh sach alarm trong Web Admin neu can quan ly qua UI.
-- [ ] Them gioi han tan suat de tranh spam alarm.
+- [x] Luu `id`, `uuid`, `typ`, `info`, IP va thoi gian.
+- [x] Them danh sach alarm trong Web Admin neu can quan ly qua UI.
+- [x] Them gioi han tan suat de tranh spam alarm.
 
 Client tham chieu:
 
@@ -116,7 +116,7 @@ Tieu chi nghiem thu Phase 2:
 
 ### TASK-006: Them `POST /api/devices/deploy`
 
-- [ ] Xac dinh contract chinh xac tu client:
+- [x] Xac dinh contract chinh xac tu client:
 
 ```json
 {
@@ -126,11 +126,11 @@ Tieu chi nghiem thu Phase 2:
 }
 ```
 
-- [ ] Xac thuc `Authorization: Bearer <token>`.
-- [ ] Kiem tra token co quyen deploy device.
-- [ ] Dang ky hoac cap nhat device theo `id`, `uuid` va public key.
-- [ ] Xu ly tranh chiem device ID cua user khac.
-- [ ] Tra ve response client mong doi:
+- [x] Xac thuc `Authorization: Bearer <token>`.
+- [x] Kiem tra token co quyen deploy device.
+- [x] Dang ky hoac cap nhat device theo `id`, `uuid` va public key.
+- [x] Xu ly tranh chiem device ID cua user khac.
+- [x] Tra ve response client mong doi:
 
 ```json
 {
@@ -138,7 +138,7 @@ Tieu chi nghiem thu Phase 2:
 }
 ```
 
-- [ ] Them test deploy moi, deploy lai, ID trung, token sai va payload sai.
+- [x] Them test deploy moi, deploy lai, ID trung, token sai va payload sai.
 
 Client tham chieu:
 
@@ -146,12 +146,12 @@ Client tham chieu:
 
 ### TASK-007: Them `POST /api/devices/cli`
 
-- [ ] Liet ke day du tham so CLI client gui.
-- [ ] Xac thuc bearer token va quyen quan ly device.
-- [ ] Ho tro cac thao tac client CLI dang yeu cau.
-- [ ] Validate device ID, group, address book va owner.
-- [ ] Tra ve loi ro rang thay vi response rong khi thao tac that bai.
-- [ ] Them test cho tung thao tac CLI duoc ho tro.
+- [x] Liet ke day du tham so CLI client gui.
+- [x] Xac thuc bearer token va quyen quan ly device.
+- [x] Ho tro cac thao tac client CLI dang yeu cau.
+- [x] Validate device ID, group, address book va owner.
+- [x] Tra ve loi ro rang thay vi response rong khi thao tac that bai.
+- [x] Them test cho tung thao tac CLI duoc ho tro.
 
 Client tham chieu:
 
@@ -288,9 +288,28 @@ Ket qua kiem chung:
 - [ ] Xu ly cac warning moi/ro hon tren Rust `1.96`:
   - shared reference den mutable static va function-to-integer cast trong
     `libs/hbb_common/src/platform/mod.rs`;
-  - ket qua `array.map(...)` khong duoc su dung trong
-    `libs/hbb_common/src/config.rs`.
-- [ ] Kiem tra native Windows sau khi bo sung MSVC runtime `libcmt.lib` day du.
+  - [x] thay `array.map(...)` khong duoc su dung bang vong lap trong
+    `libs/hbb_common/src/config.rs`;
+  - [x] bo `mut` thua trong lenh `punch-requests` cua hbbs.
+- [x] Kiem tra native Windows bang MSYS2 UCRT64 va Rust GNU toolchain.
+
+Hien trang:
+
+- Native Windows MSVC check ngay 2026-06-09 van bi chan boi
+  `LNK1104: cannot open file 'libcmt.lib'`; khong dung MSVC cho check hien tai.
+- Da cai `stable-x86_64-pc-windows-gnu` va
+  `x86_64-pc-windows-gnu` bang rustup.
+- Native Windows GNU check dung MSYS2 UCRT64 GCC 16.1 va Rust 1.96 dat.
+- Protocol compatibility test tren native Windows GNU dat `2/2`.
+- `cargo check --bin hbbs` tren Linux image test Rust 1.96 dat.
+
+Lenh native Windows GNU:
+
+```powershell
+$env:PATH='C:\msys64\ucrt64\bin;' + $env:PATH
+$env:CARGO_TARGET_DIR='target-gnu-host'
+rtk cargo +stable-x86_64-pc-windows-gnu check --bin hbbs
+```
 
 ### TASK-020: Tao image Rust test dung lai
 
@@ -306,6 +325,8 @@ Ket qua:
 - Lan dau protocol test tao cache va dat `2/2`.
 - Lan chay lai hoan tat trong khoang `1.6s`; Cargo build/test mat `0.51s`.
 - Client `cargo check -p hbb_common` dat sau khi tao client target cache.
+- Full client check dung `linux-pkg-config`; image bo sung `libyuv.pc` vi
+  package Debian `libyuv-dev` khong cung cap file nay.
 
 Cach dung:
 
@@ -313,18 +334,18 @@ Cach dung:
 docker compose -f docker-compose.test.yml build rust-test
 docker compose -f docker-compose.test.yml run --rm rust-test
 docker compose -f docker-compose.test.yml run --rm -w /workspace/rustdeskclient rust-test cargo check -p hbb_common
-docker compose -f docker-compose.test.yml run --rm -w /workspace/rustdeskclient rust-test cargo check -p rustdesk
+docker compose -f docker-compose.test.yml run --rm -w /workspace/rustdeskclient rust-test cargo check -p rustdesk --features linux-pkg-config
 ```
 
 ### TASK-014: Ho tro UDP NAT punch va IPv6 theo client
 
-- [ ] Xu ly `PunchHoleRequest.udp_port` tren hbbs.
-- [ ] Tra ve `PunchHoleResponse.is_udp` khi UDP punch duoc chon.
-- [ ] Chuyen tiep `socket_addr_v6` giua hai client khi co IPv6.
-- [ ] Chuyen tiep `RelayResponse.socket_addr_v6` neu relay negotiation can.
-- [ ] Ton trong `force_relay` do client gui, thay vi chi dua vao server command
+- [x] Xu ly `PunchHoleRequest.udp_port` tren hbbs.
+- [x] Tra ve `PunchHoleResponse.is_udp` khi UDP punch duoc chon.
+- [x] Chuyen tiep `socket_addr_v6` giua hai client khi co IPv6.
+- [x] Chuyen tiep `RelayResponse.socket_addr_v6` neu relay negotiation can.
+- [x] Ton trong `force_relay` do client gui, thay vi chi dua vao server command
   `always-use-relay`.
-- [ ] Them fallback ro rang ve TCP/relay khi UDP hoac IPv6 that bai.
+- [x] Xac nhan client da co fallback TCP/relay khi UDP hoac IPv6 that bai.
 - [ ] Test cac truong hop:
   - TCP direct
   - UDP direct
@@ -334,15 +355,24 @@ docker compose -f docker-compose.test.yml run --rm -w /workspace/rustdeskclient 
 
 Hien trang:
 
-- Server proto va handler hien tai chi xu ly TCP/UDP rendezvous kieu cu.
-- Cac field UDP/IPv6/force-relay moi cua client khong ton tai trong server proto,
-  nen bi bo qua hoac khong the generate code tu source hien tai.
+- Server chuyen tiep `udp_port`, `force_relay`, `upnp_port` va
+  `socket_addr_v6` tu requester sang peer.
+- Server chuyen tiep IPv6/UPnP trong punch response, local-address response va
+  giu `RelayResponse.socket_addr_v6`.
+- Server dat `PunchHoleResponse.is_udp` khi nhan `PunchHoleSent` qua UDP.
+- Client chay song song request co UDP va request TCP, thu IPv6 cung relay va
+  chon ket noi thanh cong dau tien; khong can them fallback o hbbs.
+- `cargo check --bin hbbs` dat va protocol compatibility test dat `2/2`.
+- Integration test voi hai client that cho TCP/UDP/IPv6/relay se duoc kiem
+  thu tay va cap nhat ket qua sau; khong dong muc nay bang automated check.
 
 ### TASK-015: Dong bo luong bat buoc deploy device
 
-- [ ] Quyet dinh ro che do van hanh:
+- [x] Quyet dinh ro che do van hanh:
   - cho phep client tu dang ky nhu server hien tai; hoac
   - bat buoc deploy truoc khi client duoc dang ky.
+- [x] Ton trong `RegisterPk.no_register_device` trong che do hien tai: tra `OK`
+  de client xac nhan key, nhung khong tao/cap nhat peer trong hbbs.
 - [ ] Neu bat buoc deploy:
   - Khi `RegisterPk`, hbbs phai kiem tra device trong database/API.
   - Tra `RegisterPkResponse.Result.NOT_DEPLOYED` neu chua deploy.
@@ -356,8 +386,13 @@ Hien trang:
 Hien trang:
 
 - Client da co `NEEDS_DEPLOY`, retry throttling va xu ly `NOT_DEPLOYED`.
-- Server hien luon chap nhan `RegisterPk` hop le va tra `OK`; khong co
-  `NOT_DEPLOYED`.
+- Che do hien tai cho phep client tu dang ky; server chua tra `NOT_DEPLOYED`.
+- Khong bat deploy-required truoc khi co API deploy va nguon du lieu device dang
+  tin cay cho hbbs. `rustdesk-api` hien chua co route `/api/devices/deploy`.
+- `no_register_device` duoc xu ly tren ca UDP va TCP RegisterPk ma khong ghi peer
+  vao SQLite/in-memory map.
+- `cargo check --bin hbbs` tren image test Rust 1.96 dat sau thay doi; protocol
+  compatibility test dat `2/2`.
 
 Phu thuoc:
 
@@ -367,13 +402,13 @@ Phu thuoc:
 
 ### TASK-016: Sua cau hinh JWT giua API va hbbs
 
-- [ ] Truyen cung `RUSTDESK_API_JWT_KEY=${JWT_SECRET}` vao service `hbbs`.
-- [ ] Xac nhan JWT do `rustdesk-api` tao co claims va HS256 signature ma hbbs
+- [x] Truyen cung `RUSTDESK_API_JWT_KEY=${JWT_SECRET}` vao service `hbbs`.
+- [x] Xac nhan JWT do `rustdesk-api` tao co claims va HS256 signature ma hbbs
   verify duoc.
-- [ ] Khong cho phep bat `must-login` neu JWT secret rong.
-- [ ] Khi secret rong, hbbs phai fail startup hoac tu choi bat `must-login`;
+- [x] Khong cho phep bat `must-login` neu JWT secret rong.
+- [x] Khi secret rong, hbbs phai fail startup hoac tu choi bat `must-login`;
   khong duoc chi kiem tra token khong rong.
-- [ ] Khong log JWT secret. Xoa hoac cam su dung `generate_token()` dang
+- [x] Khong log JWT secret. Xoa hoac cam su dung `generate_token()` dang
   `println!` secret trong `rustdesk-server/src/jwt.rs`.
 - [ ] Test:
   - token API hop le
@@ -384,26 +419,34 @@ Phu thuoc:
 
 Hien trang:
 
-- `rustdesk-api` nhan `RUSTDESK_API_JWT_KEY`, nhung service `hbbs` trong
-  `docker-compose.yml` khong nhan bien nay.
-- Khi `must-login` bat va JWT secret rong, hbbs chi tu choi token rong; mot
-  chuoi bat ky khong rong se vuot qua kiem tra.
+- API va hbbs cung nhan `JWT_SECRET` qua `RUSTDESK_API_JWT_KEY`.
+- API tao HS256 claims `user_id` va `exp`, phu hop verifier hbbs.
+- Hbbs fail startup neu `must-login` duoc yeu cau voi secret rong, va tu choi
+  lenh runtime bat `must-login` trong truong hop nay.
+- `go test ./lib/jwt` dat `2/2`; `cargo check --bin hbbs` dat.
+- Chua co integration test dua token API qua hbbs, token revoke khong the duoc
+  hbbs nhan biet neu chi verify JWT stateless.
 - Hbbr khong can access token, nhung van phai tiep tuc kiem tra server key.
 
 ### TASK-017: Dong bo health-check/feedback contract
 
-- [ ] Xac dinh co su dung persistent health-check connection hay khong.
-- [ ] Neu co, hbbs phai tra `feedback` khac `0` khi muon client mo
+- [x] Xac dinh co su dung persistent health-check connection hay khong.
+- [x] Khong bat persistent health-check tren server hien tai; giu `feedback=0`.
+- [ ] Neu sau nay bat, hbbs phai tra `feedback` khac `0` khi muon client mo
   `HealthCheck`.
-- [ ] Them handler cho `RendezvousMessage.HealthCheck` va validate token.
-- [ ] Neu khong su dung, loai bo/vo hieu hoa contract nay trong client de tranh
-  code khong co server counterpart.
+- [ ] Neu sau nay bat, them handler cho `RendezvousMessage.HealthCheck`, validate
+  token va gan ket noi HC voi dung phien dang chay.
 
 Hien trang:
 
 - Client co the gui `HealthCheck` khi response co `feedback`.
 - Server proto co `HealthCheck`, nhung khong thay handler va hien khong set
-  `feedback`, nen luong nay khong hoat dong.
+  `feedback`, nen luong nay dang duoc vo hieu hoa an toan.
+- Khong bat `feedback` chi de tao heartbeat: client spawn HC tach roi, bo qua loi
+  HC va khong dong phien remote dang chay khi HC mat ket noi/token het han.
+- Chi nen mo lai contract nay khi server co session ID/state de revoke hoac dong
+  dung phien remote. Khong can xoa code client vi client van can tuong thich voi
+  server khac co ho tro contract nay.
 
 ### TASK-018: Them test matrix client-server
 

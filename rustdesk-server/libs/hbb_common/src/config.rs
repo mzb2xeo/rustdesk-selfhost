@@ -1476,7 +1476,7 @@ impl PeerConfig {
 
     fn default_options() -> HashMap<String, String> {
         let mut mp: HashMap<String, String> = Default::default();
-        [
+        for key in [
             keys::OPTION_CODEC_PREFERENCE,
             keys::OPTION_CUSTOM_FPS,
             keys::OPTION_ZOOM_CURSOR,
@@ -1484,10 +1484,9 @@ impl PeerConfig {
             keys::OPTION_I444,
             keys::OPTION_SWAP_LEFT_RIGHT_MOUSE,
             keys::OPTION_COLLAPSE_TOOLBAR,
-        ]
-        .map(|key| {
+        ] {
             mp.insert(key.to_owned(), UserDefaultConfig::read(key));
-        });
+        }
         mp
     }
 }

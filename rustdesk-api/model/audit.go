@@ -17,6 +17,8 @@ type AuditConn struct {
 	Type      int    `json:"type" gorm:"default:0;not null;"`
 	Uuid      string `json:"uuid" gorm:"default:'';not null;"`
 	CloseTime int64  `json:"close_time" gorm:"default:0;not null;"`
+	Guid      string `json:"guid" gorm:"default:'';not null;index"`
+	Note      string `json:"note" gorm:"default:'';not null;"`
 	TimeModel
 }
 
@@ -44,3 +46,19 @@ type AuditFileList struct {
 	AuditFiles []*AuditFile `json:"list"`
 	Pagination
 }
+
+type AuditAlarm struct {
+	IdModel
+	PeerId string `json:"id" gorm:"column:peer_id;default:'';not null;index"`
+	Uuid   string `json:"uuid" gorm:"default:'';not null;index"`
+	Type   int    `json:"typ" gorm:"column:typ;default:0;not null;"`
+	Info   string `json:"info" gorm:"type:text;not null;"`
+	Ip     string `json:"ip" gorm:"default:'';not null;"`
+	TimeModel
+}
+
+type AuditAlarmList struct {
+	AuditAlarms []*AuditAlarm `json:"list"`
+	Pagination
+}
+

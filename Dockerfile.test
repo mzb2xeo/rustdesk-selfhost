@@ -7,16 +7,19 @@ RUN apt-get update && \
         cmake \
         git \
         libasound2-dev \
+        libaom-dev \
         libayatana-appindicator3-dev \
         libgstreamer-plugins-base1.0-dev \
         libgstreamer1.0-dev \
         libgtk-3-dev \
+        libopus-dev \
         libpam0g-dev \
         libpulse-dev \
         libsodium-dev \
         libssl-dev \
         libudev-dev \
         libunwind-dev \
+        libvpx-dev \
         libwayland-dev \
         libx11-dev \
         libxcb1-dev \
@@ -25,9 +28,21 @@ RUN apt-get update && \
         libxkbcommon-dev \
         libxrandr-dev \
         libxtst-dev \
+        libyuv-dev \
         nasm \
         pkg-config \
         sqlite3 && \
+    printf '%s\n' \
+        'prefix=/usr' \
+        'libdir=${prefix}/lib/x86_64-linux-gnu' \
+        'includedir=${prefix}/include' \
+        '' \
+        'Name: libyuv' \
+        'Description: YUV conversion and scaling library' \
+        'Version: 0.0.1857' \
+        'Libs: -L${libdir} -lyuv' \
+        'Cflags: -I${includedir}' \
+        > /usr/lib/x86_64-linux-gnu/pkgconfig/libyuv.pc && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace/RustDesk/rustdesk-server

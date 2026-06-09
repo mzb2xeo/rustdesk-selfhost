@@ -76,3 +76,21 @@ func (a *AuditFileForm) ToAuditFile() *model.AuditFile {
 		Num:      fi.Num,
 	}
 }
+
+type AuditAlarmForm struct {
+	Id   string `json:"id" binding:"required"`
+	Uuid string `json:"uuid" binding:"required"`
+	Typ  int    `json:"typ"`
+	Info string `json:"info"`
+}
+
+func (a *AuditAlarmForm) ToAuditAlarm(ip string) *model.AuditAlarm {
+	return &model.AuditAlarm{
+		PeerId: a.Id,
+		Uuid:   a.Uuid,
+		Type:   a.Typ,
+		Info:   a.Info,
+		Ip:     ip,
+	}
+}
+

@@ -71,6 +71,8 @@ func ApiInit(g *gin.Engine) {
 		frg.POST("/audit/conn", au.AuditConn)
 		//[method:POST] [uri:/api/audit/file]
 		frg.POST("/audit/file", au.AuditFile)
+		//[method:POST] [uri:/api/audit/alarm]
+		frg.POST("/audit/alarm", au.AuditAlarm)
 	}
 
 	frg.Use(middleware.RustAuth())
@@ -78,6 +80,16 @@ func ApiInit(g *gin.Engine) {
 		u := &api.User{}
 		frg.GET("/user/info", u.Info)
 		frg.POST("/currentUser", u.Info)
+	}
+	{
+		au := &api.Audit{}
+		frg.GET("/audit/conn/active", au.AuditConnActive)
+		frg.PUT("/audit", au.UpdateAuditNote)
+	}
+	{
+		pe := &api.Peer{}
+		frg.POST("/devices/deploy", pe.Deploy)
+		frg.POST("/devices/cli", pe.Cli)
 	}
 	{
 		l := &api.Login{}

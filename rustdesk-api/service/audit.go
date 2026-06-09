@@ -76,6 +76,12 @@ func (as *AuditService) CreateAuditFile(u *model.AuditFile) error {
 	res := DB.Create(u).Error
 	return res
 }
+
+// CreateAuditAlarm
+func (as *AuditService) CreateAuditAlarm(u *model.AuditAlarm) error {
+	res := DB.Create(u).Error
+	return res
+}
 func (as *AuditService) DeleteAuditFile(u *model.AuditFile) error {
 	return DB.Delete(u).Error
 }

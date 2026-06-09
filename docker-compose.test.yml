@@ -1,3 +1,5 @@
+name: rustdesk-test
+
 services:
   rust-test:
     build:

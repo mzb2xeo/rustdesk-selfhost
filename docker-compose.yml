@@ -10,7 +10,9 @@ services:
       dockerfile: Dockerfile.server
     container_name: rustdesk-hbbs
     command: hbbs -r ${DOMAIN}:21117 -k _
-    # Note: Environment variables MUST_LOGIN and RUSTDESK_API_JWT_KEY are only supported by the lejianwen fork and are omitted here.
+    environment:
+      - MUST_LOGIN=${MUST_LOGIN:-N}
+      - RUSTDESK_API_JWT_KEY=${JWT_SECRET}
     volumes:
       - ./data/server:/root
     ports:

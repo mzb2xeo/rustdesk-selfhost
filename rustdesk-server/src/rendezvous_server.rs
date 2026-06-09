@@ -176,6 +176,9 @@ impl RendezvousServer {
                     .to_uppercase()
                     == "Y")
         {
+            if jwt::SECRET.is_empty() {
+                bail!("must-login requires non-empty RUSTDESK_API_JWT_KEY");
+            }
             MUST_LOGIN.store(true, Ordering::SeqCst);
         }
         log::info!(
@@ -377,6 +380,9 @@ impl RendezvousServer {
                     let ip = addr.ip().to_string();
                     if id.len() < 6 {
                         return send_rk_res(socket, addr, UUID_MISMATCH).await;
+                    } else if rk.no_register_device {
+                        log::debug!("Skip persisting unregistrable peer {}", id);
+                        return send_rk_res(socket, addr, register_pk_response::Result::OK).await;
                     } else if !self.check_ip_blocker(&ip, &id).await {
                         return send_rk_res(socket, addr, TOO_FREQUENT).await;
                     }
@@ -628,6 +634,8 @@ impl RendezvousServer {
                         let mut res = register_pk_response::Result::OK;
                         if id.len() < 6 {
                             res = register_pk_response::Result::UUID_MISMATCH;
+                        } else if rk.no_register_device {
+                            log::debug!("Skip persisting unregistrable peer {}", id);
                         } else if !self.check_ip_blocker(&ip, &id).await {
                             res = register_pk_response::Result::TOO_FREQUENT;
                         } else {
@@ -825,6 +833,9 @@ impl RendezvousServer {
             socket_addr: AddrMangle::encode(addr).into(),
             pk: self.get_pk(&phs.version, phs.id).await,
             relay_server: phs.relay_server.clone(),
+            is_udp: socket.is_some(),
+            upnp_port: phs.upnp_port,
+            socket_addr_v6: phs.socket_addr_v6,
             ..Default::default()
         };
         if let Ok(t) = phs.nat_type.enum_value() {
@@ -859,6 +870,7 @@ impl RendezvousServer {
             socket_addr: la.local_addr.clone(),
             pk: self.get_pk(&la.version, la.id).await,
             relay_server: la.relay_server,
+            socket_addr_v6: la.socket_addr_v6,
             ..Default::default()
         };
         p.set_is_local(true);
@@ -929,7 +941,7 @@ impl RendezvousServer {
                 });
                 return Ok((msg_out, None));
             }
-            
+
             // record punch hole request (from addr -> peer id/peer_addr)
             {
                 let from_ip = try_into_v4(addr).ip().to_string();
@@ -976,6 +988,7 @@ impl RendezvousServer {
                 msg_out.set_fetch_local_addr(FetchLocalAddr {
                     socket_addr,
                     relay_server,
+                    socket_addr_v6: ph.socket_addr_v6,
                     ..Default::default()
                 });
             } else {
@@ -989,6 +1002,10 @@ impl RendezvousServer {
                     socket_addr,
                     nat_type: ph.nat_type,
                     relay_server,
+                    udp_port: ph.udp_port,
+                    force_relay: ph.force_relay,
+                    upnp_port: ph.upnp_port,
+                    socket_addr_v6: ph.socket_addr_v6,
                     ..Default::default()
                 });
             }
@@ -1268,7 +1285,7 @@ impl RendezvousServer {
                 let arg = fds.next();
                 if let Some("-") = arg { lock.clear(); }
                 else {
-                    let mut start = arg.and_then(|x| x.parse::<usize>().ok()).unwrap_or(0);
+                    let start = arg.and_then(|x| x.parse::<usize>().ok()).unwrap_or(0);
                     let mut page_size = fds.next().and_then(|x| x.parse::<usize>().ok()).unwrap_or(10);
                     if page_size == 0 { page_size = 10; }
                     for (_, e) in lock.iter().enumerate().skip(start).take(page_size) {
@@ -1299,7 +1316,14 @@ impl RendezvousServer {
             Some("must-login" | "ml") => {
                 if let Some(rs) = fds.next() {
                     if rs.to_uppercase() == "Y" {
-                        MUST_LOGIN.store(true, Ordering::SeqCst);
+                        if jwt::SECRET.is_empty() {
+                            let _ = writeln!(
+                                res,
+                                "Cannot enable MUST_LOGIN: RUSTDESK_API_JWT_KEY is empty"
+                            );
+                        } else {
+                            MUST_LOGIN.store(true, Ordering::SeqCst);
+                        }
                     } else {
                         MUST_LOGIN.store(false, Ordering::SeqCst);
                     }

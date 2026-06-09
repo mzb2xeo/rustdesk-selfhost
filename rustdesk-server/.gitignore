@@ -1,4 +1,5 @@
 target
+target-gnu*
 id*
 db*
 debian-build

@@ -127,6 +127,86 @@ Tài liệu API được tạo tự động bằng Swag giúp các lập trình 
 2. Tài liệu API ứng dụng khách (PC): `<server-cua-ban[:port]>/swagger/index.html`
    ![api_swag](docs/api_swag.png)
 
+### Các Endpoint API bổ sung phục vụ Client & CLI
+
+Dưới đây là tài liệu sơ lược các API bổ sung hỗ trợ quản lý thiết bị, kiểm tra (audit) kết nối và đồng bộ thông tin nâng cao:
+
+#### 1. Đăng ký & Triển khai Thiết bị (Device Deploy)
+* **Endpoint**: `POST /api/devices/deploy`
+* **Xác thực**: `Authorization: Bearer <token>`
+* **Mô tả**: Dùng khi triển khai thiết bị mới lên server. Đăng ký thiết bị kèm khóa công khai (Public Key).
+* **Yêu cầu (Request Body)**:
+  ```json
+  {
+    "id": "device-id",
+    "uuid": "base64-uuid",
+    "pk": "base64-public-key"
+  }
+  ```
+* **Phản hồi (Response)**:
+  ```json
+  {
+    "result": "OK" // Hoặc "ID_TAKEN" nếu ID thiết bị đã thuộc tài khoản khác
+  }
+  ```
+
+#### 2. Quản lý Thiết bị qua Giao diện Dòng lệnh (CLI Device Management)
+* **Endpoint**: `POST /api/devices/cli`
+* **Xác thực**: `Authorization: Bearer <token>`
+* **Mô tả**: Cập nhật thông tin thiết bị từ xa qua CLI, cho phép chuyển quyền sở hữu (User), đưa vào nhóm (Group), hoặc tự động khởi tạo/cập nhật thông tin thiết bị trong Sổ địa chỉ (Address Book).
+* **Yêu cầu (Request Body)**:
+  ```json
+  {
+    "id": "device-id",
+    "uuid": "base64-uuid",
+    "user_name": "username-dich",             // Tùy chọn: chuyển thiết bị sang user này
+    "device_group_name": "ten-nhom-thiet-bi", // Tùy chọn: đưa thiết bị vào nhóm này
+    "address_book_name": "ten-so-dia-chi",    // Tùy chọn: tự động tạo/cập nhật sổ địa chỉ với tên này
+    "address_book_tag": "tag1,tag2",          // Tùy chọn: nhãn gán cho thiết bị trong sổ địa chỉ
+    "address_book_alias": "ten-goi-nho",      // Tùy chọn: tên gợi nhớ trong sổ địa chỉ
+    "address_book_password": "mat-khau",      // Tùy chọn: mật khẩu lưu trong sổ địa chỉ
+    "address_book_note": "ghi-chu-ab",        // Tùy chọn: ghi chú
+    "note": "ghi-chu-thiet-bi-chung",         // Tùy chọn: đổi tên hiển thị (alias) của thiết bị
+    "device_username": "os-username",         // Tùy chọn: tên đăng nhập HĐH của thiết bị
+    "device_name": "os-hostname"              // Tùy chọn: tên máy tính
+  }
+  ```
+* **Phản hồi (Response)**: HTTP `200 OK` (không có nội dung) nếu thành công.
+
+#### 3. Truy vấn phiên kết nối đang hoạt động (Active Connection Audit)
+* **Endpoint**: `GET /api/audit/conn/active`
+* **Xác thực**: `Authorization: Bearer <token>`
+* **Mô tả**: Lấy mã định danh phiên kết nối (`guid`) đang hoạt động của thiết bị thuộc quyền sở hữu của user hiện tại.
+* **Tham số truy vấn (Query Params)**: `id={peer_id}&session_id={session_id}&conn_type={type}`
+* **Phản hồi (Response)**: Chuỗi JSON chứa mã `guid` duy nhất.
+
+#### 4. Cập nhật ghi chú phiên kết nối (Update Connection Note)
+* **Endpoint**: `PUT /api/audit`
+* **Xác thực**: `Authorization: Bearer <token>`
+* **Mô tả**: Ghi nhận ghi chú (note) từ client sau khi kết thúc phiên kết nối.
+* **Yêu cầu (Request Body)**:
+  ```json
+  {
+    "guid": "audit-guid-cua-phien",
+    "note": "nội dung ghi chú"
+  }
+  ```
+* **Phản hồi (Response)**: HTTP `200 OK` nếu cập nhật thành công.
+
+#### 5. Báo cáo cảnh báo bất thường (Audit Alarm)
+* **Endpoint**: `POST /api/audit/alarm`
+* **Mô tả**: Client tự động báo cáo các cảnh báo hoặc sự cố đăng nhập thất bại.
+* **Yêu cầu (Request Body)**:
+  ```json
+  {
+    "id": "peer-id",
+    "uuid": "device-uuid",
+    "typ": "alarm-type",
+    "info": "thông tin chi tiết về alarm"
+  }
+  ```
+* **Phản hồi (Response)**: HTTP `200 OK`.
+
 ---
 
 ## Giao diện dòng lệnh (CLI)

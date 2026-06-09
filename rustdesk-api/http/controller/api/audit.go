@@ -3,10 +3,13 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/google/uuid"
+	"github.com/lejianwen/rustdesk-api/v2/global"
 	request "github.com/lejianwen/rustdesk-api/v2/http/request/api"
 	"github.com/lejianwen/rustdesk-api/v2/http/response"
 	"github.com/lejianwen/rustdesk-api/v2/model"
 	"github.com/lejianwen/rustdesk-api/v2/service"
+	"strconv"
 	"time"
 )
 
@@ -35,7 +38,10 @@ func (a *Audit) AuditConn(c *gin.Context) {
 	fmt.Println(ttt)*/
 	ac := af.ToAuditConn()
 	if af.Action == model.AuditActionNew {
+		ac.Guid = uuid.New().String()
 		service.AllService.AuditService.CreateAuditConn(ac)
+		response.Success(c, ac.Guid)
+		return
 	} else if af.Action == model.AuditActionClose {
 		ex := service.AllService.AuditService.InfoByPeerIdAndConnId(af.Id, af.ConnId)
 		if ex.Id != 0 {
@@ -82,3 +88,111 @@ func (a *Audit) AuditFile(c *gin.Context) {
 	service.AllService.AuditService.CreateAuditFile(af)
 	response.Success(c, "")
 }
+
+func (a *Audit) AuditConnActive(c *gin.Context) {
+	peerId := c.Query("id")
+	sessionId := c.Query("session_id")
+	connTypeStr := c.Query("conn_type")
+
+	if peerId == "" || sessionId == "" {
+		c.JSON(400, "Thiếu tham số id và session_id")
+		return
+	}
+
+	connType, _ := strconv.Atoi(connTypeStr)
+
+	currentUser := service.AllService.UserService.CurUser(c)
+	if currentUser == nil || currentUser.Id == 0 {
+		c.JSON(401, "Chưa xác thực")
+		return
+	}
+
+	ac := &model.AuditConn{}
+	err := global.DB.Where("peer_id = ? AND session_id = ? AND type = ? AND close_time = 0", peerId, sessionId, connType).Order("id DESC").First(ac).Error
+	if err != nil {
+		c.JSON(404, "Không tìm thấy kết nối")
+		return
+	}
+
+	var count int64
+	global.DB.Model(&model.Peer{}).Where("(id = ? OR id = ?) AND user_id = ?", ac.FromPeer, ac.PeerId, currentUser.Id).Count(&count)
+	if count == 0 {
+		c.JSON(403, "Không có quyền truy cập")
+		return
+	}
+
+	c.JSON(200, ac.Guid)
+}
+
+func (a *Audit) UpdateAuditNote(c *gin.Context) {
+	var form struct {
+		Guid string `json:"guid" binding:"required"`
+		Note string `json:"note" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&form); err != nil {
+		response.Error(c, response.TranslateMsg(c, "ParamsError")+err.Error())
+		return
+	}
+
+	if len(form.Note) > 500 {
+		response.Error(c, "Ghi chú quá dài (tối đa 500 ký tự)")
+		return
+	}
+
+	currentUser := service.AllService.UserService.CurUser(c)
+	if currentUser == nil || currentUser.Id == 0 {
+		c.JSON(401, "Chưa xác thực")
+		return
+	}
+
+	ac := &model.AuditConn{}
+	err := global.DB.Where("guid = ?", form.Guid).First(ac).Error
+	if err != nil {
+		c.JSON(404, "Không tìm thấy thông tin kiểm tra kết nối")
+		return
+	}
+
+	var count int64
+	global.DB.Model(&model.Peer{}).Where("(id = ? OR id = ?) AND user_id = ?", ac.FromPeer, ac.PeerId, currentUser.Id).Count(&count)
+	if count == 0 {
+		c.JSON(403, "Không có quyền truy cập")
+		return
+	}
+
+	ac.Note = form.Note
+	err = service.AllService.AuditService.UpdateAuditConn(ac)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+
+	response.Success(c, nil)
+}
+
+func (a *Audit) AuditAlarm(c *gin.Context) {
+	af := &request.AuditAlarmForm{}
+	err := c.ShouldBindJSON(af)
+	if err != nil {
+		response.Error(c, response.TranslateMsg(c, "ParamsError")+err.Error())
+		return
+	}
+
+	var count int64
+	global.DB.Model(&model.AuditAlarm{}).
+		Where("peer_id = ? AND created_at > ?", af.Id, time.Now().Add(-10*time.Second)).
+		Count(&count)
+	if count > 0 {
+		c.JSON(429, "Yêu cầu quá nhanh. Đã vượt quá giới hạn tần suất.")
+		return
+	}
+
+	alarm := af.ToAuditAlarm(c.ClientIP())
+	err = service.AllService.AuditService.CreateAuditAlarm(alarm)
+	if err != nil {
+		response.Error(c, err.Error())
+		return
+	}
+
+	response.Success(c, "")
+}
+
