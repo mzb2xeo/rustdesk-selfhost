@@ -1,6 +1,7 @@
-import { ossToken } from '@/api/file'
 import { random_filename } from '@/utils/file'
 import { reactive, ref } from 'vue'
+
+const ossToken = () => Promise.resolve({ data: '{}' })
 
 export function useOss (beforeUp, multiple) {
   let fileUploadData = reactive({

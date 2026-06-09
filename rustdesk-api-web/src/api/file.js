@@ -1,7 +1,2 @@
-import request from '@/utils/request'
-
-export function ossToken () {
-  return request({
-    url: '/file/oss_token',
-  })
-}
+// Unused file upload API wrapper
+export {}

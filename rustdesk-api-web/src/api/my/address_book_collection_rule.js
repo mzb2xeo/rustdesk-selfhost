@@ -30,11 +30,3 @@ export function remove (data) {
     data,
   })
 }
-
-export function batchCreate (data) {
-  return request({
-    url: '/my/address_book_collection_rule/batchCreate',
-    method: 'post',
-    data,
-  })
-}

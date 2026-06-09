@@ -199,15 +199,15 @@ Client tham chieu:
 
 ### TASK-011: Ra soat API khai bao nhung backend chua co
 
-- [ ] Xac minh endpoint nao con duoc UI su dung:
-  - `/address_book/detail/:id`
-  - `/user/myPeer`
-  - `/address_book_collection_rule/batchCreate`
-  - `/my/address_book_collection_rule/batchCreate`
-  - `/file/oss_token`
-- [ ] Neu UI khong su dung, xoa API wrapper khoi `rustdesk-api-web`.
-- [ ] Neu UI can su dung, them controller/router va test tuong ung.
-- [ ] Khong bat lai file upload routes neu chua co storage configuration an toan.
+- [x] Xac minh endpoint nao con duoc UI su dung:
+  - `/address_book/detail/:id` (Khong su dung)
+  - `/user/myPeer` (Khong su dung)
+  - `/address_book_collection_rule/batchCreate` (Khong su dung)
+  - `/my/address_book_collection_rule/batchCreate` (Khong su dung)
+  - `/file/oss_token` (Khong su dung)
+- [x] Neu UI khong su dung, xoa API wrapper khoi `rustdesk-api-web`.
+- [x] Neu UI can su dung, them controller/router va test tuong ung.
+- [x] Khong bat lai file upload routes neu chua co storage configuration an toan.
 
 ## Phase 6 - Dong bo rustdesk-server voi client
 

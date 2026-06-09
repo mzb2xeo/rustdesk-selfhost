@@ -75,13 +75,6 @@ export function myOauth () {
   })
 }
 
-export function myPeer (params) {
-  return request({
-    url: '/user/myPeer',
-    params,
-  })
-}
-
 export function groupUsers (data) {
   return request({
     url: '/user/groupUsers',

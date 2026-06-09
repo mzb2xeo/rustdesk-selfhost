@@ -7,12 +7,6 @@ export function list (params) {
   })
 }
 
-export function detail (id) {
-  return request({
-    url: `/address_book/detail/${id}`,
-  })
-}
-
 export function create (data) {
   return request({
     url: '/address_book/create',
