@@ -1416,10 +1416,9 @@ impl RendezvousServer {
                     .or_else(|| headers.get("X-Forwarded-For"))
                     .and_then(|header_value| header_value.to_str().ok());
                 if let Some(ip) = real_ip {
-                    if ip.contains('.') {
-                        addr = format!("{ip}:0").parse().unwrap_or(addr);
-                    } else {
-                        addr = format!("[{ip}]:0").parse().unwrap_or(addr);
+                    let ip = ip.split(',').next().unwrap_or(ip).trim();
+                    if let Ok(ip_addr) = ip.parse::<IpAddr>() {
+                        addr.set_ip(ip_addr);
                     }
                 }
                 Ok(response)
