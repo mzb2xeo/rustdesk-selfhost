@@ -1,0 +1,20 @@
+services:
+  rust-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: rustdesk-rust-test:1.96
+    working_dir: /workspace/RustDesk/rustdesk-server
+    volumes:
+      - .:/workspace/RustDesk
+      - ../rustdeskclient:/workspace/rustdeskclient
+      - rust-test-cargo-registry:/usr/local/cargo/registry
+      - rust-test-cargo-git:/usr/local/cargo/git
+      - rust-test-server-target:/workspace/RustDesk/rustdesk-server/target
+      - rust-test-client-target:/workspace/rustdeskclient/target
+
+volumes:
+  rust-test-cargo-registry:
+  rust-test-cargo-git:
+  rust-test-server-target:
+  rust-test-client-target:

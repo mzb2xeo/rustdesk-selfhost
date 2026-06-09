@@ -1,7 +1,7 @@
 # ==============================================================================
 # STAGE 1: Build hbbs and hbbr in Rust
 # ==============================================================================
-FROM rust:1.85-alpine AS rust-builder
+FROM rust:1.96-alpine AS rust-builder
 
 # Install build dependencies for Rust packages (sodiumoxide requires gcc, musl-dev, pkgconfig, cmake, make, etc.)
 RUN apk add --no-cache musl-dev gcc pkgconfig libsodium-dev cmake make g++ git sqlite
@@ -60,4 +60,3 @@ EXPOSE 21115 21116 21116/udp 21117 21118 21119
 
 # By default, hbbs runs. We can override this in docker-compose.yml.
 CMD ["hbbs"]
-
