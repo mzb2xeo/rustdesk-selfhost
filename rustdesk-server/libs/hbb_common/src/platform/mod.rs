@@ -62,7 +62,7 @@ extern "C" fn breakdown_signal_handler(sig: i32) {
         .ok();
     }
     unsafe {
-        if let Some(callback) = &GLOBAL_CALLBACK {
+        if let Some(callback) = &*std::ptr::addr_of!(GLOBAL_CALLBACK) {
             callback()
         }
     }
@@ -76,6 +76,6 @@ where
 {
     unsafe {
         GLOBAL_CALLBACK = Some(Box::new(callback));
-        libc::signal(libc::SIGSEGV, breakdown_signal_handler as _);
+        libc::signal(libc::SIGSEGV, breakdown_signal_handler as *const () as _);
     }
 }

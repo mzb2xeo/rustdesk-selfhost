@@ -285,8 +285,8 @@ Ket qua kiem chung:
 - [x] Nang Rust toolchain trong workflow build server len `1.96`.
 - [x] Build release `hbbs` va `hbbr` thanh cong tren Linux/Rust `1.96`.
 - [x] Chay protocol compatibility test tren Rust `1.96`.
-- [ ] Xu ly cac warning moi/ro hon tren Rust `1.96`:
-  - shared reference den mutable static va function-to-integer cast trong
+- [x] Xu ly cac warning moi/ro hon tren Rust `1.96`:
+  - [x] shared reference den mutable static va function-to-integer cast trong
     `libs/hbb_common/src/platform/mod.rs`;
   - [x] thay `array.map(...)` khong duoc su dung bang vong lap trong
     `libs/hbb_common/src/config.rs`;
