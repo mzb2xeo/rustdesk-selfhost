@@ -1051,9 +1051,13 @@ impl RendezvousServer {
 
     #[inline]
     async fn send_to_tcp(&mut self, msg: RendezvousMessage, addr: SocketAddr) {
-        let mut tcp = self.tcp_punch.lock().await.remove(&try_into_v4(addr));
+        let tcp_punch = self.tcp_punch.clone();
+        let mut tcp = tcp_punch.lock().await.remove(&try_into_v4(addr));
         tokio::spawn(async move {
             Self::send_to_sink(&mut tcp, msg).await;
+            if let Some(sink) = tcp {
+                tcp_punch.lock().await.insert(try_into_v4(addr), sink);
+            }
         });
     }
 
@@ -1081,6 +1085,9 @@ impl RendezvousServer {
     ) -> ResultType<()> {
         let mut sink = self.tcp_punch.lock().await.remove(&try_into_v4(addr));
         Self::send_to_sink(&mut sink, msg).await;
+        if let Some(s) = sink {
+            self.tcp_punch.lock().await.insert(try_into_v4(addr), s);
+        }
         Ok(())
     }
 
@@ -1426,19 +1433,123 @@ impl RendezvousServer {
             let ws_stream = tokio_tungstenite::accept_hdr_async(stream, callback).await?;
             let (a, mut b) = ws_stream.split();
             sink = Some(Sink::Ws(a));
-            while let Ok(Some(Ok(msg))) = timeout(30_000, b.next()).await {
-                if let tungstenite::Message::Binary(bytes) = msg {
-                    if !self.handle_tcp(&bytes, &mut sink, addr, key, ws).await {
-                        break;
+            let mut heartbeat_timer = tokio::time::interval(tokio::time::Duration::from_secs(15));
+            heartbeat_timer.tick().await;
+            loop {
+                tokio::select! {
+                    _ = heartbeat_timer.tick() => {
+                        let mut got_from_tcp_punch = false;
+                        let mut active_sink = sink.take();
+                        if active_sink.is_none() {
+                            active_sink = self.tcp_punch.lock().await.remove(&try_into_v4(addr));
+                            if active_sink.is_some() {
+                                got_from_tcp_punch = true;
+                            }
+                        }
+                        if let Some(mut s) = active_sink {
+                            let mut success = true;
+                            match &mut s {
+                                Sink::Ws(ws_sink) => {
+                                    if ws_sink.send(tungstenite::Message::Binary(vec![])).await.is_err() {
+                                        success = false;
+                                    }
+                                }
+                                Sink::TcpStream(tcp_sink) => {
+                                    if tcp_sink.send(Bytes::new()).await.is_err() {
+                                        success = false;
+                                    }
+                                }
+                            }
+                            if success {
+                                if got_from_tcp_punch {
+                                    self.tcp_punch.lock().await.insert(try_into_v4(addr), s);
+                                } else {
+                                    sink = Some(s);
+                                }
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                    res = timeout(60_000, b.next()) => {
+                        match res {
+                            Ok(Some(Ok(msg))) => {
+                                if let tungstenite::Message::Binary(bytes) = msg {
+                                    if bytes.is_empty() {
+                                        continue;
+                                    }
+                                    if !self.handle_tcp(&bytes, &mut sink, addr, key, ws).await {
+                                        break;
+                                    }
+                                }
+                            }
+                            _ => {
+                                break;
+                            }
+                        }
                     }
                 }
             }
         } else {
             let (a, mut b) = Framed::new(stream, BytesCodec::new()).split();
             sink = Some(Sink::TcpStream(a));
-            while let Ok(Some(Ok(bytes))) = timeout(30_000, b.next()).await {
-                if !self.handle_tcp(&bytes, &mut sink, addr, key, ws).await {
-                    break;
+            let mut heartbeat_timer = tokio::time::interval(tokio::time::Duration::from_secs(15));
+            heartbeat_timer.tick().await;
+            loop {
+                tokio::select! {
+                    _ = heartbeat_timer.tick() => {
+                        let mut got_from_tcp_punch = false;
+                        let mut active_sink = sink.take();
+                        if active_sink.is_none() {
+                            active_sink = self.tcp_punch.lock().await.remove(&try_into_v4(addr));
+                            if active_sink.is_some() {
+                                got_from_tcp_punch = true;
+                            }
+                        }
+                        if let Some(mut s) = active_sink {
+                            let mut success = true;
+                            match &mut s {
+                                Sink::Ws(ws_sink) => {
+                                    if ws_sink.send(tungstenite::Message::Binary(vec![])).await.is_err() {
+                                        success = false;
+                                    }
+                                }
+                                Sink::TcpStream(tcp_sink) => {
+                                    if tcp_sink.send(Bytes::new()).await.is_err() {
+                                        success = false;
+                                    }
+                                }
+                            }
+                            if success {
+                                if got_from_tcp_punch {
+                                    self.tcp_punch.lock().await.insert(try_into_v4(addr), s);
+                                } else {
+                                    sink = Some(s);
+                                }
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                    res = timeout(60_000, b.next()) => {
+                        match res {
+                            Ok(Some(Ok(bytes))) => {
+                                if bytes.is_empty() {
+                                    continue;
+                                }
+                                if !self.handle_tcp(&bytes, &mut sink, addr, key, ws).await {
+                                    break;
+                                }
+                            }
+                            _ => {
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }

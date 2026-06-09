@@ -88,6 +88,48 @@ Sau khi khởi chạy hoàn tất:
 
 ---
 
+## 💻 Hướng dẫn Deploy Client cho Người dùng (Device Deployment)
+
+Tính năng **Device Deployment** (hoặc Deploy Client) được áp dụng khi máy chủ cấu hình bắt buộc phải xác thực thiết bị trước khi cho phép đăng ký (tránh việc ID lạ tự ý đăng ký vào hệ thống). Khi tính năng này hoạt động, Client sẽ hiển thị cảnh báo yêu cầu deploy.
+
+Để triển khai RustDesk Client cho từng người dùng, hãy thực hiện theo các bước sau:
+
+### Bước 1: Lấy API Token của User
+1. Người dùng (hoặc quản trị viên đại diện cho người dùng đó) đăng nhập vào giao diện Web Admin.
+2. Truy cập vào mục **Thông tin cá nhân (Profile)** hoặc liên hệ Admin để lấy **API Token** tương ứng với tài khoản của người dùng.
+
+### Bước 2: Thực hiện lệnh Deploy trên thiết bị Client
+Bạn cần chạy file cài đặt RustDesk Client bằng dòng lệnh (CLI) với quyền Administrator (trên Windows) hoặc root (trên Linux/macOS).
+
+#### Trên Windows (cmd / PowerShell với quyền Run as Administrator):
+1. Mở Command Prompt hoặc PowerShell với quyền Admin.
+2. Di chuyển đến thư mục chứa file thực thi RustDesk (mặc định nếu đã cài đặt thường ở `C:\Program Files\RustDesk\rustdesk.exe`).
+3. Chạy lệnh deploy:
+   ```cmd
+   rustdesk.exe --deploy --token <API_TOKEN_CỦA_USER>
+   ```
+4. **Tùy chọn thiết lập ID**: Nếu muốn thay đổi ID của thiết bị cùng lúc với việc triển khai, bạn sử dụng thêm tham số `--id`:
+   ```cmd
+   rustdesk.exe --deploy --token <API_TOKEN_CỦA_USER> --id <ID_TỰ_CHỌN>
+   ```
+
+#### Trên Linux / macOS (Terminal):
+Chạy lệnh bằng quyền `sudo` hoặc root:
+```bash
+sudo rustdesk --deploy --token <API_TOKEN_CỦA_USER>
+```
+Hoặc cấu hình ID:
+```bash
+sudo rustdesk --deploy --token <API_TOKEN_CỦA_USER> --id <ID_TỰ_CHỌN>
+```
+
+### Bước 3: Xác nhận thành công
+- Màn hình Command Line sẽ in ra dòng chữ: `Device deployed.`
+- Trên giao diện Web Admin, thiết bị này sẽ ngay lập tức xuất hiện trong mục **Thiết bị (Devices)** dưới quyền sở hữu của người dùng đó.
+- Trạng thái kết nối của Client sẽ chuyển sang **Ready (Sẵn sàng)**, không còn hiển thị lỗi yêu cầu deploy nữa và có thể thực hiện remote control bình thường.
+
+---
+
 ## 🔄 Quy trình cập nhật mã nguồn (Update bảo mật)
 
 Vì các dự án con được liên kết qua Git Submodule, bạn có thể dễ dàng cập nhật mã nguồn của từng dự án từ tác giả gốc để áp dụng các bản vá bảo mật mới:
