@@ -25,6 +25,39 @@ D:\projects\RustDesk\
 └── docker-compose.yml          # Trình quản lý điều phối khởi chạy hệ thống Docker
 ```
 
+## 🌐 Kiến trúc và Phương án Triển khai (Deployment Strategy)
+
+Dự án hỗ trợ mô hình triển khai **Single-Node Dockerized Stack** giúp tối ưu hóa tài nguyên phần cứng, đồng thời đảm bảo bảo mật và dễ vận hành.
+
+### 1. Sơ đồ các luồng Dịch vụ
+* **Nginx Reverse Proxy**: Làm cổng ngõ duy nhất hứng traffic HTTPS (`443`) và HTTP (`80`). Nó thực hiện SSL termination và định tuyến:
+  * Traffic API & Web Admin tới `rustdesk-api` (Port `21114`).
+  * Traffic WebSocket kết nối client (đối với Web Client) tới `hbbs`/`hbbr` (Port `21118`/`21119`).
+* **hbbs (ID Server)**: Dịch vụ điều khiển, quản lý đăng ký thiết bị và hỗ trợ đấm cổng (Punch Hole).
+* **hbbr (Relay Server)**: Trung chuyển dữ liệu màn hình khi kết nối trực tiếp (Direct Connection) thất bại hoặc bị áp đặt (Force Relay).
+* **rustdesk-api**: Xử lý logic đăng nhập, xác thực JWT, đồng bộ Sổ địa chỉ (Address Book), nhóm thiết bị và giao diện Web Admin.
+
+### 2. Cấu hình Tường lửa (Firewall / Ports to open)
+Để hệ thống hoạt động ổn định (đặc biệt là kết nối đấm cổng UDP và trung chuyển Relay), bạn cần mở các cổng sau trên tường lửa của máy chủ:
+
+| Cổng | Giao thức | Dịch vụ | Chức năng |
+|---|---|---|---|
+| **80** / **443** | TCP | Nginx Proxy | Truy cập Web Admin, REST API & Web Client |
+| **21115** | TCP | hbbs | Cổng điều khiển hbbs |
+| **21116** | TCP | hbbs | Cổng truy vấn ID |
+| **21116** | **UDP** | hbbs | Cổng Rendezvous / Punch Hole (Bắt buộc phải mở UDP) |
+| **21117** | TCP | hbbr | Cổng điều khiển hbbr (Relay) |
+| **21118** | TCP | hbbs | Cổng WebSocket ID (phục vụ Web Client) |
+| **21119** | TCP | hbbr | Cổng WebSocket Relay (phục vụ Web Client) |
+
+### 3. Đồng bộ hóa Khóa và Bảo mật
+* **Khóa công khai (Public Key Encryption)**:
+  * Khi `hbbs` khởi chạy lần đầu, nó sẽ tự động sinh cặp khóa bảo mật (trong `./data/server/`).
+  * `rustdesk-api` được mount chung thư mục này dưới dạng Read-Only (`/data:ro`) để tự động đọc file public key `id_ed25519.pub` và trả về cấu hình cho các client PC khi đăng nhập mà không cần cấu hình thủ công.
+* **Xác thực JWT & Bắt buộc Đăng nhập (MUST_LOGIN)**:
+  * Biến `JWT_SECRET` được đồng bộ hóa giữa `hbbs` và `rustdesk-api` để kiểm tra chữ ký token đăng nhập.
+  * Nếu đặt `MUST_LOGIN=Y` ở file `.env`, client RustDesk bắt buộc phải đăng nhập bằng tài khoản (đồng bộ qua API Server) trước khi có thể lấy ID hoặc bắt đầu kết nối từ xa.
+
 ---
 
 ## 🛠️ Hướng dẫn cài đặt và Khởi chạy
