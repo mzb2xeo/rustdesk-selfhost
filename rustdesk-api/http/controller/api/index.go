@@ -250,14 +250,7 @@ foreach ($tomlPath in $configPaths) {
 Start-Service -Name "rustdesk" -ErrorAction SilentlyContinue
 Start-Sleep -Seconds 5
 
-Write-Host "[3/6] Registering device with RustDesk CLI..." -ForegroundColor Yellow
-$deployOutput = & $rustdeskExe --deploy --token $DeployToken 2>&1
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "RustDesk CLI deploy failed: $deployOutput"
-    exit 1
-}
-
-Write-Host "[4/6] Reading device ID..." -ForegroundColor Yellow
+Write-Host "[3/6] Reading device ID..." -ForegroundColor Yellow
 $id = ""
 for ($i = 0; $i -lt 30; $i++) {
     $idOutput = & $rustdeskExe --get-id 2>$null | Select-Object -First 1
@@ -270,16 +263,24 @@ if (-not $id) {
     exit 1
 }
 
-Write-Host "[5/6] Setting host password..." -ForegroundColor Yellow
-$charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-$randomPassword = -join ((1..12) | ForEach-Object { $charset[(Get-Random -Maximum $charset.Length)] })
-Start-Process -FilePath $rustdeskExe -ArgumentList "--password", $randomPassword -NoNewWindow -Wait
-
 $cleanApiUrl = $ApiUrl.TrimEnd('/')
 $headers = @{
     "Authorization" = "Bearer $DeployToken"
     "Content-Type"  = "application/json"
 }
+
+Write-Host "[4/6] Registering device with API..." -ForegroundColor Yellow
+$deployBody = @{ id = $id } | ConvertTo-Json
+$deployResponse = Invoke-RestMethod -Uri "$cleanApiUrl/api/devices/deploy" -Method Post -Headers $headers -Body $deployBody
+if ($deployResponse.result -ne "OK") {
+    Write-Error "Device deploy failed: $($deployResponse | ConvertTo-Json -Compress)"
+    exit 1
+}
+
+Write-Host "[5/6] Setting host password..." -ForegroundColor Yellow
+$charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+$randomPassword = -join ((1..12) | ForEach-Object { $charset[(Get-Random -Maximum $charset.Length)] })
+Start-Process -FilePath $rustdeskExe -ArgumentList "--password", $randomPassword -NoNewWindow -Wait
 
 Write-Host "[6/6] Syncing address book..." -ForegroundColor Yellow
 $base64Password = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($randomPassword))

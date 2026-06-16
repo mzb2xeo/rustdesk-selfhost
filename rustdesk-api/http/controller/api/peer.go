@@ -82,8 +82,8 @@ func (p *Peer) SysInfoVer(c *gin.Context) {
 
 type DeployForm struct {
 	Id   string `json:"id" binding:"required"`
-	Uuid string `json:"uuid" binding:"required"`
-	Pk   string `json:"pk" binding:"required"`
+	Uuid string `json:"uuid"`
+	Pk   string `json:"pk"`
 }
 
 func (p *Peer) Deploy(c *gin.Context) {
@@ -105,8 +105,12 @@ func (p *Peer) Deploy(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"result": "ID_TAKEN"})
 			return
 		}
-		pe.Uuid = form.Uuid
-		pe.Pk = form.Pk
+		if form.Uuid != "" {
+			pe.Uuid = form.Uuid
+		}
+		if form.Pk != "" {
+			pe.Pk = form.Pk
+		}
 		pe.UserId = currentUser.Id
 		err := service.AllService.PeerService.Update(pe)
 		if err != nil {
