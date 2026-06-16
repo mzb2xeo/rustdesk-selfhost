@@ -4,7 +4,7 @@ FROM alpine
 
 ARG BUILDARCH
 WORKDIR /app
-RUN apk add --no-cache tzdata
+RUN apk add --no-cache tzdata sqlite
 COPY ./${BUILDARCH}/release /app/
 
 COPY --from=server /init /init

@@ -9,6 +9,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/spf13/cobra"
+	"gorm.io/gorm"
 	"rustdesk-api/config"
 	"rustdesk-api/global"
 	"rustdesk-api/http"
@@ -23,7 +24,7 @@ import (
 	"rustdesk-api/utils"
 )
 
-const DatabaseVersion = 265
+const DatabaseVersion = 267
 
 // @title Management System API
 // @version 1.0
@@ -285,10 +286,11 @@ func DatabaseAutoUpdate() {
 		}
 	}
 
+	ensureSchema(db)
 }
-func Migrate(version uint) {
-	global.Logger.Info("Migrating....", version)
-	err := global.DB.AutoMigrate(
+
+func schemaModels() []interface{} {
+	return []interface{}{
 		&model.Version{},
 		&model.User{},
 		&model.UserToken{},
@@ -307,7 +309,20 @@ func Migrate(version uint) {
 		&model.AddressBookCollectionRule{},
 		&model.ServerCmd{},
 		&model.DeviceGroup{},
-	)
+	}
+}
+
+// ensureSchema syncs missing tables/columns on every startup.
+// Version bumps only gate data migrations; schema must stay in sync with models.
+func ensureSchema(db *gorm.DB) {
+	if err := db.AutoMigrate(schemaModels()...); err != nil {
+		global.Logger.Errorf("ensureSchema error: %v", err)
+	}
+}
+
+func Migrate(version uint) {
+	global.Logger.Info("Migrating....", version)
+	err := global.DB.AutoMigrate(schemaModels()...)
 	if err != nil {
 		global.Logger.Error("migrate err :=>", err)
 	}

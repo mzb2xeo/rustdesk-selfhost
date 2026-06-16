@@ -67,7 +67,7 @@ RUN if [ "$COUNTRY" = "CN" ] ; then \
         echo "It is in China, updating the repositories"; \
         sed -i 's#https\?://dl-cdn.alpinelinux.org/alpine#https://mirrors.tuna.tsinghua.edu.cn/alpine#g' /etc/apk/repositories; \
     fi && \
-    apk update && apk add --no-cache tzdata file
+    apk update && apk add --no-cache tzdata file sqlite
 
 # Copy the built application and resources from the builder stage
 COPY --from=builder-backend /app/release /app/

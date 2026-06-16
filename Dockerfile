@@ -44,8 +44,8 @@ RUN CGO_ENABLED=1 GOOS=linux go build -ldflags "-s -w -extldflags '-static'" -o 
 FROM alpine:latest
 WORKDIR /app
 
-# Install timezone data
-RUN apk add --no-cache tzdata ca-certificates
+# Install timezone data and sqlite3 CLI (for DB inspection/migrations)
+RUN apk add --no-cache tzdata ca-certificates sqlite
 
 # Copy build artifacts and configuration folders
 COPY --from=backend-builder /app/release/apimain /app/apimain
