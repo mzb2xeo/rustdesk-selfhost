@@ -4,6 +4,8 @@ Bộ triển khai RustDesk tự lưu trữ gồm ID Server, Relay Server, API Se
 
 > Đây là bản tích hợp/fork phục vụ triển khai riêng, không phải bản phát hành chính thức của RustDesk.
 
+Tài liệu: **Tiếng Việt** | [English](README_EN.md)
+
 ## Nội Dung Chính
 
 - `hbbs`: ID/Rendezvous server, quản lý đăng ký thiết bị và NAT traversal.
@@ -14,8 +16,6 @@ Bộ triển khai RustDesk tự lưu trữ gồm ID Server, Relay Server, API Se
 
 ## Nguồn Upstream Và Các Bản Fork
 
-### Tiếng Việt
-
 | Thành phần | Mô tả | Nguồn fork | Phiên bản gốc | Thay đổi so với bản gốc |
 |---|---|---|---|---|
 | `hbbs` | RustDesk ID/Rendezvous server | `https://github.com/rustdesk/rustdesk-server` | `1.1.15` | Tích hợp kiểm tra `MUST_LOGIN`, dùng `JWT_SECRET` chung với API, hỗ trợ luồng bắt buộc đăng nhập/deploy trước khi thiết bị được đăng ký. |
@@ -23,16 +23,6 @@ Bộ triển khai RustDesk tự lưu trữ gồm ID Server, Relay Server, API Se
 | `rustdesk-api` | API server | `https://github.com/lejianwen/rustdesk-api` | `2.7` | Bổ sung deploy token ngắn hạn, route tải PowerShell deploy script, auth bằng deploy token cho `/api/devices/deploy` và `/api/devices/cli`, đọc public key từ `hbbs`, cấu hình server tự động cho client. |
 | `rustdesk-api-web` | Web Admin | `https://github.com/lejianwen/rustdesk-api` | `2.7` | Bổ sung trang `My -> Client Config`, hiển thị cấu hình client, tạo lệnh tự tải script và chạy deploy, tải script deploy, copy command/token metadata. |
 | Docker/ops trong repo này | Local integration/custom fork | Local working tree | Theo các nguồn trên | Thêm `docker-compose.yml`, `Dockerfile`, `Dockerfile.server`, `nginx.conf`, `deploy-host.ps1`, volume dữ liệu chung và tài liệu vận hành cho triển khai self-hosted. |
-
-### English
-
-| Component | Description | Fork source | Base version | Changes from upstream/base |
-|---|---|---|---|---|
-| `hbbs` | RustDesk ID/Rendezvous server | `https://github.com/rustdesk/rustdesk-server` | `1.1.15` | Integrates `MUST_LOGIN` checks, shares `JWT_SECRET` with the API, and supports the required login/deployment flow before device registration. |
-| `hbbr` | RustDesk relay server | `https://github.com/rustdesk/rustdesk-server` | `1.1.15` | Packaged into the same Docker stack, shares the `hbbs` network namespace, and uses stack-level relay/domain configuration. |
-| `rustdesk-api` | API server | `https://github.com/lejianwen/rustdesk-api` | `2.7` | Adds short-lived deploy tokens, a PowerShell deploy-script endpoint, deploy-token auth for `/api/devices/deploy` and `/api/devices/cli`, `hbbs` public-key discovery, and automatic client server configuration. |
-| `rustdesk-api-web` | Web Admin | `https://github.com/lejianwen/rustdesk-api` | `2.7` | Adds `My -> Client Config`, client configuration display, self-downloading deploy command generation, script download, command copy actions, and token expiration metadata. |
-| Docker/ops in this repo | Local integration/custom fork | Local working tree | Based on the sources above | Adds `docker-compose.yml`, `Dockerfile`, `Dockerfile.server`, `nginx.conf`, `deploy-host.ps1`, shared data volumes, and operational documentation for self-hosted deployment. |
 
 Khi cập nhật fork, cần phân biệt rõ:
 
@@ -146,8 +136,8 @@ Script sẽ:
 
 - Tải RustDesk client nếu máy chưa cài.
 - Ghi cấu hình `ID Server`, `Relay Server`, `API Server`, public key.
-- Gọi `rustdesk.exe --deploy --token <deploy-token>`.
 - Đọc device ID bằng `rustdesk.exe --get-id`.
+- Gọi API `/api/devices/deploy` trực tiếp bằng deploy token ngắn hạn.
 - Sinh mật khẩu tĩnh ngẫu nhiên cho unattended access.
 - Đồng bộ thiết bị vào address book `My Devices`.
 - Thu hồi deploy token sau khi hoàn tất.
