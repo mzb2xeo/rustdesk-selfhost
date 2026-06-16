@@ -556,6 +556,24 @@
   "RustDeskConfig": {
     "One": "Cấu hình RustDesk Client"
   },
+  "AutoDeploy": {
+    "One": "Tự động Cài đặt & Cấu hình (Windows)"
+  },
+  "DeployIntro": {
+    "One": "Chạy một dòng lệnh duy nhất trong PowerShell (chạy dưới quyền Administrator) để tự động cài đặt RustDesk và cấu hình máy khách liên kết với tài khoản này."
+  },
+  "IncludeCredentials": {
+    "One": "Tùy chọn tài khoản"
+  },
+  "EmbedUsername": {
+    "One": "Nhúng tài khoản hiện tại vào script"
+  },
+  "DeployCommand": {
+    "One": "Lệnh PowerShell"
+  },
+  "CopyCommand": {
+    "One": "Sao chép Lệnh"
+  },
   "PublicKey": {
     "One": "Khóa công khai (Key)"
   },

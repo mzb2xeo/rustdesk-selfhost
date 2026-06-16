@@ -55,6 +55,35 @@
       </el-form>
     </el-card>
 
+    <!-- Auto Deployment Card -->
+    <el-card shadow="hover" class="deploy-card">
+      <template #header>
+        <div class="card-header">
+          <el-icon class="header-icon"><Tools /></el-icon>
+          <span>{{ T('AutoDeploy') || 'Tự động Cài đặt & Cấu hình (Windows)' }}</span>
+        </div>
+      </template>
+
+      <div class="deploy-intro">
+        <p>{{ T('DeployIntro') || 'Chạy một dòng lệnh duy nhất trong PowerShell (chạy dưới quyền Administrator) để tự động cài đặt RustDesk và cấu hình máy khách liên kết với tài khoản này.' }}</p>
+      </div>
+
+      <el-form class="deploy-form" label-width="150px" label-position="left">
+        <el-form-item :label="T('IncludeCredentials') || 'Tùy chọn tài khoản'">
+          <el-checkbox v-model="embedUsername">{{ T('EmbedUsername') || 'Nhúng tài khoản hiện tại vào script' }} ({{ userStore.username }})</el-checkbox>
+        </el-form-item>
+
+        <el-form-item :label="T('DeployCommand') || 'Lệnh PowerShell'">
+          <el-input :value="powershellCommand" type="textarea" :rows="4" readonly class="command-textarea"></el-input>
+          <div class="command-actions">
+            <el-button type="primary" size="small" @click="copyText(powershellCommand)">
+              {{ T('CopyCommand') || 'Sao chép Lệnh' }}
+            </el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
     <!-- Guide / Steps Card -->
     <el-card shadow="hover" class="guide-card">
       <template #header>
@@ -146,13 +175,34 @@
 </template>
 
 <script setup>
-  import { onMounted } from 'vue'
+  import { onMounted, ref, computed } from 'vue'
   import { useAppStore } from '@/store/app'
+  import { useUserStore } from '@/store/user'
   import { ElMessage } from 'element-plus'
   import { T } from '@/utils/i18n'
-  import { Cpu, Notebook, Download } from '@element-plus/icons'
+  import { Cpu, Notebook, Download, Tools } from '@element-plus/icons'
 
   const appStore = useAppStore()
+  const userStore = useUserStore()
+  const embedUsername = ref(true)
+
+  const scriptUrl = computed(() => {
+    const apiServer = appStore.setting.rustdeskConfig.api_server || window.location.origin
+    const baseUrl = apiServer.replace(/\/$/, '')
+    let url = `${baseUrl}/api/deploy/powershell`
+    const params = []
+    if (embedUsername.value && userStore.username) {
+      params.push(`username=${encodeURIComponent(userStore.username)}`)
+    }
+    if (params.length > 0) {
+      url += `?${params.join('&')}`
+    }
+    return url
+  })
+
+  const powershellCommand = computed(() => {
+    return `powershell -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; $r = Invoke-WebRequest -UseBasicParsing -Uri '${scriptUrl.value}'; Invoke-Expression $r.Content"`
+  })
 
   onMounted(() => {
     appStore.loadRustdeskConfig()
@@ -325,5 +375,28 @@
       color: #909399;
     }
   }
+}
+
+.deploy-card {
+  margin-bottom: 0px;
+}
+
+.deploy-intro {
+  margin-bottom: 20px;
+  color: #606266;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.deploy-form {
+  padding: 10px 0;
+}
+
+.command-textarea {
+  max-width: 100%;
+}
+
+.command-actions {
+  margin-top: 10px;
 }
 </style>

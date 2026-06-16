@@ -556,6 +556,24 @@
   "RustDeskConfig": {
     "One": "RustDesk Client Configuration"
   },
+  "AutoDeploy": {
+    "One": "Automated Setup & Config (Windows)"
+  },
+  "DeployIntro": {
+    "One": "Run a single command in PowerShell (running as Administrator) to automatically download, install, and configure the RustDesk client linked to this account."
+  },
+  "IncludeCredentials": {
+    "One": "Account options"
+  },
+  "EmbedUsername": {
+    "One": "Embed current account into script"
+  },
+  "DeployCommand": {
+    "One": "PowerShell Command"
+  },
+  "CopyCommand": {
+    "One": "Copy Command"
+  },
   "PublicKey": {
     "One": "Public Key (Key)"
   },

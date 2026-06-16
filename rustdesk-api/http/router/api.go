@@ -27,6 +27,7 @@ func ApiInit(g *gin.Engine) {
 		i := &api.Index{}
 		frg.GET("/", i.Index)
 		frg.GET("/version", i.Version)
+		frg.GET("/deploy/powershell", i.DeployPowershell)
 
 		frg.POST("/heartbeat", i.Heartbeat)
 	}
