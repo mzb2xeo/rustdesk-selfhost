@@ -14,7 +14,7 @@ type SqliteConfig struct {
 }
 
 func NewSqlite(sqliteConf *SqliteConfig, logwriter logger.Writer) *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("./data/rustdeskapi.db"), &gorm.Config{
+	db, err := gorm.Open(sqlite.Open("./data/rustdeskapi.db?_busy_timeout=5000&_journal_mode=WAL&_foreign_keys=on"), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 		Logger: logger.New(
 			logwriter, // io writer
@@ -38,7 +38,11 @@ func NewSqlite(sqliteConf *SqliteConfig, logwriter logger.Writer) *gorm.DB {
 	sqlDB.SetMaxIdleConns(sqliteConf.MaxIdleConns)
 
 	// SetMaxOpenConns sets the maximum number of open database connections.
-	sqlDB.SetMaxOpenConns(sqliteConf.MaxOpenConns)
+	maxOpenConns := sqliteConf.MaxOpenConns
+	if maxOpenConns <= 0 || maxOpenConns > 1 {
+		maxOpenConns = 1
+	}
+	sqlDB.SetMaxOpenConns(maxOpenConns)
 
 	return db
 }
