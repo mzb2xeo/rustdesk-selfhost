@@ -1,7 +1,7 @@
 # ==============================================================================
 # STAGE 1: Build Vue 3 Web Admin Frontend
 # ==============================================================================
-FROM node:18-alpine AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 WORKDIR /frontend
 
 # Copy dependencies list first
@@ -15,7 +15,7 @@ RUN npm run build
 # ==============================================================================
 # STAGE 2: Build Go Backend
 # ==============================================================================
-FROM golang:1.25-alpine AS backend-builder
+FROM golang:1.26.4-alpine AS backend-builder
 WORKDIR /app
 
 # Install dependencies required for CGO compilation (needed for sqlite3)
