@@ -134,7 +134,7 @@ func (p *Peer) Deploy(c *gin.Context) {
 
 type DeviceCliForm struct {
 	Id                  string `json:"id" binding:"required"`
-	Uuid                string `json:"uuid" binding:"required"`
+	Uuid                string `json:"uuid"`
 	UserName            string `json:"user_name"`
 	StrategyName        string `json:"strategy_name"`
 	AddressBookName     string `json:"address_book_name"`
