@@ -46,21 +46,24 @@
 
 <style lang="scss" scoped>
 .app-header {
-  background-color: #3f454b;
-  color: var(--basicWhite);
+  background-color: var(--header-bg-color);
+  color: var(--header-text-color);
+  border-bottom: 1px solid var(--header-border-color);
   display: flex;
   height: 50px;
 }
 
 .header-tags {
   height: auto;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--header-border-color);
+  background-color: var(--header-bg-color);
   display: flex;
-  padding: 0;
+  padding: 4px 10px;
 }
 
 .app-left {
   transition: width 0.5s;
+  border-right: 1px solid var(--side-border-color);
 }
 
 .app-container {

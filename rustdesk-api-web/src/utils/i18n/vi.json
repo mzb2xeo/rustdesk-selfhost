@@ -531,5 +531,63 @@
   },
   "Remark": {
     "One": "Ghi chú"
+  },
+  "MyAbSettings": {
+    "One": "Cấu hình sổ địa chỉ"
+  },
+  "MyLogs": {
+    "One": "Nhật ký cá nhân"
+  },
+  "DevicesConnections": {
+    "One": "Thiết bị & Kết nối"
+  },
+  "AddressBooksSystem": {
+    "One": "Sổ địa chỉ hệ thống"
+  },
+  "UsersSecurity": {
+    "One": "Người dùng & Bảo mật"
+  },
+  "MyPeer": {
+    "One": "Thiết bị cá nhân"
+  },
+  "ClientConfig": {
+    "One": "Cấu hình & Tải Client"
+  },
+  "RustDeskConfig": {
+    "One": "Cấu hình RustDesk Client"
+  },
+  "PublicKey": {
+    "One": "Khóa công khai (Key)"
+  },
+  "CopyKey": {
+    "One": "Sao chép Khóa công khai"
+  },
+  "ConfigIntro": {
+    "One": "Để thiết bị của bạn có thể kết nối thông qua máy chủ riêng này, vui lòng cấu hình Client RustDesk bằng các thông tin bên dưới."
+  },
+  "SetupGuide": {
+    "One": "Hướng dẫn Cấu hình Nhanh"
+  },
+  "Step1Title": {
+    "One": "Tải và cài đặt RustDesk Client"
+  },
+  "Step1Desc": {
+    "One": "Tải xuống ứng dụng RustDesk chính thức từ phần bên dưới phù hợp với hệ điều hành của bạn."
+  },
+  "Step2Title": {
+    "One": "Mở cấu hình Network"
+  },
+  "Step2Desc": {
+    "One": "Mở phần mềm RustDesk -> Click vào biểu tượng Menu (3 dấu gạch/chấm bên cạnh ID của bạn) -> Settings (Thiết lập) -> Network (Mạng)."
+  },
+  "Step3Title": {
+    "One": "Điền các thông tin Server & Key"
+  },
+  "Step3Desc": {
+    "One": "Tích chọn \"Unlock Network Settings\", sau đó sao chép và dán lần lượt ID Server, Relay Server, API Server và Key vào các ô tương ứng rồi bấm Apply (Áp dụng)."
+  },
+  "DownloadClient": {
+    "One": "Tải Client chính thức"
   }
 }
+

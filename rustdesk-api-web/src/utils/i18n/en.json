@@ -531,5 +531,63 @@
   },
   "Remark": {
     "One": "Remark"
+  },
+  "MyAbSettings": {
+    "One": "Address Book Config"
+  },
+  "MyLogs": {
+    "One": "Personal Logs"
+  },
+  "DevicesConnections": {
+    "One": "Devices & Connections"
+  },
+  "AddressBooksSystem": {
+    "One": "System Address Books"
+  },
+  "UsersSecurity": {
+    "One": "Users & Security"
+  },
+  "MyPeer": {
+    "One": "My Devices"
+  },
+  "ClientConfig": {
+    "One": "Client Setup & Downloads"
+  },
+  "RustDeskConfig": {
+    "One": "RustDesk Client Configuration"
+  },
+  "PublicKey": {
+    "One": "Public Key (Key)"
+  },
+  "CopyKey": {
+    "One": "Copy Public Key"
+  },
+  "ConfigIntro": {
+    "One": "To connect your device to this private server, please configure your RustDesk client using the details below."
+  },
+  "SetupGuide": {
+    "One": "Quick Configuration Guide"
+  },
+  "Step1Title": {
+    "One": "Download & Install RustDesk Client"
+  },
+  "Step1Desc": {
+    "One": "Download the official RustDesk application matching your operating system from the section below."
+  },
+  "Step2Title": {
+    "One": "Open Network Settings"
+  },
+  "Step2Desc": {
+    "One": "Open the RustDesk app -> Click Menu (three dots/lines next to your ID) -> Settings -> Network."
+  },
+  "Step3Title": {
+    "One": "Enter Server & Key Details"
+  },
+  "Step3Desc": {
+    "One": "Check 'Unlock Network Settings', then copy and paste the ID Server, Relay Server, API Server, and Key into their respective fields. Click Apply."
+  },
+  "DownloadClient": {
+    "One": "Download Official Client"
   }
 }
+

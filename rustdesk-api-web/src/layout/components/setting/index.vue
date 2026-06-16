@@ -98,11 +98,11 @@
   }
 
   .title {
-    color: #fff;
+    color: var(--header-text-color);
     display: flex;
     align-items: center;
     justify-content: space-around;
-
+    cursor: pointer;
 
     .nickname {
       padding: 0 10px;
