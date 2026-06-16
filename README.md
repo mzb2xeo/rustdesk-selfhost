@@ -92,41 +92,58 @@ Sau khi khởi chạy hoàn tất:
 
 Tính năng **Device Deployment** (hoặc Deploy Client) được áp dụng khi máy chủ cấu hình bắt buộc phải xác thực thiết bị trước khi cho phép đăng ký (tránh việc ID lạ tự ý đăng ký vào hệ thống). Khi tính năng này hoạt động, Client sẽ hiển thị cảnh báo yêu cầu deploy.
 
-Để triển khai RustDesk Client cho từng người dùng, hãy thực hiện theo các bước sau:
+Để triển khai RustDesk Client cho từng thiết bị, bạn có hai lựa chọn dưới đây:
 
-### Bước 1: Lấy API Token của User
-1. Người dùng (hoặc quản trị viên đại diện cho người dùng đó) đăng nhập vào giao diện Web Admin.
-2. Truy cập vào mục **Thông tin cá nhân (Profile)** hoặc liên hệ Admin để lấy **API Token** tương ứng với tài khoản của người dùng.
+### Cách 1: Tự động Triển khai & Cấu hình qua PowerShell (Khuyên dùng cho Windows)
+Đây là phương pháp nhanh nhất và hoàn toàn tự động dành cho các máy chủ chạy hệ điều hành Windows:
+1. Đăng nhập vào giao diện Web Admin.
+2. Điều hướng đến menu **Cấu hình & Tải Client (Client Setup & Downloads)** ở thanh điều hướng bên trái.
+3. Ở thẻ **Tự động Cài đặt & Cấu hình (Windows)**, bạn có thể tích chọn **Nhúng tài khoản hiện tại vào script** để tự động gán thiết bị vào tài khoản đang đăng nhập.
+4. Sao chép dòng lệnh PowerShell một hàng được tạo sẵn.
+5. Mở ứng dụng **PowerShell dưới quyền Administrator (Run as Administrator)** trên máy trạm Windows, dán lệnh vào và nhấn **Enter**.
+6. Script sẽ tự động:
+   - Tải về phiên bản RustDesk Client chính thức phù hợp và cài đặt silent.
+   - Ghi cấu hình máy chủ riêng gồm ID Server, Relay Server, API Server và Public Key vào hệ thống.
+   - Khởi chạy dịch vụ và tự động sinh ngẫu nhiên một mật khẩu tĩnh bảo mật dài 12 ký tự cho unattended access.
+   - Gửi yêu cầu đăng nhập và deploy thiết bị lên API Server để gán sở hữu cho tài khoản của bạn.
+   - Mã hóa và đồng bộ hóa mật khẩu tĩnh lên **Sổ địa chỉ (Address Book)** cá nhân của bạn dưới tên máy tính trạm.
 
-### Bước 2: Thực hiện lệnh Deploy trên thiết bị Client
-Bạn cần chạy file cài đặt RustDesk Client bằng dòng lệnh (CLI) với quyền Administrator (trên Windows) hoặc root (trên Linux/macOS).
+### Cách 2: Triển khai thủ công qua dòng lệnh CLI
+Nếu bạn muốn cấu hình thủ công hoặc triển khai cho Linux/macOS, vui lòng thực hiện các bước sau:
 
-#### Trên Windows (cmd / PowerShell với quyền Run as Administrator):
-1. Mở Command Prompt hoặc PowerShell với quyền Admin.
-2. Di chuyển đến thư mục chứa file thực thi RustDesk (mặc định nếu đã cài đặt thường ở `C:\Program Files\RustDesk\rustdesk.exe`).
-3. Chạy lệnh deploy:
+#### Bước A: Lấy API Token của User
+1. Đăng nhập vào giao diện Web Admin bằng tài khoản người dùng hoặc admin.
+2. Truy cập mục **Thông tin cá nhân (Profile)** để lấy **API Token** tương ứng với tài khoản đó.
+
+#### Bước B: Thực hiện lệnh Deploy trên thiết bị Client
+Chạy file thực thi của RustDesk bằng dòng lệnh (CLI) với quyền Administrator (trên Windows) hoặc root (trên Linux/macOS).
+
+##### Trên Windows (PowerShell/CMD với quyền Admin):
+1. Mở PowerShell hoặc Command Prompt dưới quyền Administrator.
+2. Điều hướng tới thư mục cài đặt RustDesk (mặc định là `C:\Program Files\RustDesk\rustdesk.exe`).
+3. Thực thi lệnh deploy:
    ```cmd
    rustdesk.exe --deploy --token <API_TOKEN_CỦA_USER>
    ```
-4. **Tùy chọn thiết lập ID**: Nếu muốn thay đổi ID của thiết bị cùng lúc với việc triển khai, bạn sử dụng thêm tham số `--id`:
+4. **Tùy chọn thiết lập ID**: Thêm tham số `--id` để đặt ID tùy chọn nếu muốn:
    ```cmd
    rustdesk.exe --deploy --token <API_TOKEN_CỦA_USER> --id <ID_TỰ_CHỌN>
    ```
 
-#### Trên Linux / macOS (Terminal):
+##### Trên Linux / macOS (Terminal):
 Chạy lệnh bằng quyền `sudo` hoặc root:
 ```bash
 sudo rustdesk --deploy --token <API_TOKEN_CỦA_USER>
 ```
-Hoặc cấu hình ID:
+Hoặc cấu hình kèm ID:
 ```bash
 sudo rustdesk --deploy --token <API_TOKEN_CỦA_USER> --id <ID_TỰ_CHỌN>
 ```
 
-### Bước 3: Xác nhận thành công
+#### Bước C: Xác nhận kết quả
 - Màn hình Command Line sẽ in ra dòng chữ: `Device deployed.`
-- Trên giao diện Web Admin, thiết bị này sẽ ngay lập tức xuất hiện trong mục **Thiết bị (Devices)** dưới quyền sở hữu của người dùng đó.
-- Trạng thái kết nối của Client sẽ chuyển sang **Ready (Sẵn sàng)**, không còn hiển thị lỗi yêu cầu deploy nữa và có thể thực hiện remote control bình thường.
+- Trên giao diện Web Admin, thiết bị sẽ xuất hiện trong mục **Thiết bị cá nhân (My Peer)**.
+- Trạng thái kết nối của Client chuyển sang **Ready (Sẵn sàng)** và sẵn sàng cho việc kết nối từ xa.
 
 ---
 
@@ -179,6 +196,211 @@ git commit -m "Initial commit: Unified RustDesk Stack with submodules"
 
 # 5. Đẩy lên Github cá nhân
 git remote add origin <URL_GITHUB_REPOSITRY_CỦA_BẠN>
+git branch -M main
+git push -u origin main
+```
+
+---
+---
+
+# RustDesk Server & Synced API Server (Self-Hosted) Project
+
+This project provides a complete self-hosted integration stack to run **RustDesk** remote control services with full features:
+- **RustDesk Server (hbbs & hbbr)**: Official ID/Rendezvous and Relay services.
+- **RustDesk API Server**: An API service backend handling accounts, Address Book synchronization, device groups, and a Web Admin panel.
+- **Web Admin Frontend**: An intuitive user interface and control panel.
+
+The project is structured as a parent Git repository linking component repositories via **Git Submodules**, making it easy to fetch updates and security patches from upstream sources.
+
+---
+
+## 📂 Project Structure
+
+```text
+D:\projects\RustDesk\
+├── rustdesk-server/            # Submodule: Official ID/Relay Server (Rust)
+├── rustdesk-api/               # Submodule: Go API Server (Forked from lejianwen/rustdesk-api)
+├── rustdesk-api-web/           # Submodule: Vue 3 Web Admin Dashboard
+├── rustdesk-server-lejianwen/  # Submodule: Reference implementation for authentication
+├── data/                       # [Git Ignored] Operation data (Databases, Keys, Logs)
+├── .env                        # [Git Ignored] Environment configurations containing credentials
+├── .gitignore                  # Git ignore rules
+├── Dockerfile                  # Container build instructions for rustdesk-api (Go + Vue)
+├── Dockerfile.server           # Container build instructions for hbbs/hbbr (Rust Upstream)
+└── docker-compose.yml          # Docker compose file managing all services
+```
+
+## 🌐 Architecture & Deployment Strategy
+
+The project supports a **Single-Node Dockerized Stack** model to optimize hardware resources while ensuring security and simple maintenance.
+
+### 1. Service Flow Architecture
+* **Nginx Reverse Proxy**: Acts as the single entrance for HTTP (`80`) and HTTPS (`443`) traffic, handles SSL termination, and routes traffic:
+  - API & Web Admin traffic is routed to `rustdesk-api` (Port `21114`).
+  - WebSocket client traffic (for Web Client connections) is routed to `hbbs`/`hbbr` (Port `21118`/`21119`).
+* **hbbs (ID Server)**: Controls connection setup, NAT traversal (Punch Hole), and client registrations.
+* **hbbr (Relay Server)**: Relays screen data when direct client connections fail or force-relay is configured.
+* **rustdesk-api**: Processes login logic, JWT signing, Address Book synchronization, device groups, and serves the Web Admin UI.
+
+### 2. Firewall Settings (Ports to Open)
+For smooth operation (especially rendezvous UDP traffic and relay connections), please open these ports on your host firewall:
+
+| Port | Protocol | Service | Purpose |
+|---|---|---|---|
+| **80** / **443** | TCP | Nginx Proxy | Web Admin, REST API & Web Client access |
+| **21115** | TCP | hbbs | hbbs control port |
+| **21116** | TCP | hbbs | ID query port |
+| **21116** | **UDP** | hbbs | Rendezvous/NAT Punch Hole (Mandatory UDP) |
+| **21117** | TCP | hbbr | hbbr relay control port |
+| **21118** | TCP | hbbs | WebSocket ID port (for Web Client) |
+| **21119** | TCP | hbbr | WebSocket Relay port (for Web Client) |
+
+### 3. Encryption Keys & Access Security
+* **Public Key Encryption**:
+  - Upon first boot, `hbbs` automatically generates a secure keypair under `./data/server/`.
+  - `rustdesk-api` mounts this folder as read-only (`/data:ro`) to read the public key file `id_ed25519.pub` and automatically supply it to logging-in PC clients, eliminating manual client key setups.
+* **JWT & Forced Authentication (MUST_LOGIN)**:
+  - The `JWT_SECRET` key is shared between `hbbs` and `rustdesk-api` to verify user logins.
+  - When `MUST_LOGIN=Y` is enabled in `.env`, clients must authenticate with their account credentials (synchronized via the API Server) before being assigned an ID or starting remote sessions.
+
+---
+
+## 🛠️ Installation & Setup Guide
+
+### 1. Prepare Environment variables
+Copy or create a `.env` file in the root directory:
+```env
+# Public IP or Domain of your host server (e.g. 192.168.1.100 or rustdesk.example.com)
+DOMAIN=127.0.0.1
+
+# Timezone
+TZ=Asia/Ho_Chi_Minh
+
+# JWT secret key for signing login tokens. Change this to a secure random string!
+JWT_SECRET=super_secret_jwt_sign_key_change_me
+```
+
+### 2. Launch using Docker Compose
+Execute the following command in the root folder to build and run all services in the background:
+```bash
+docker compose up -d --build
+```
+*Note: The first launch might take several minutes as Docker downloads the Rust build image and compiles the upstream `hbbs`/`hbbr` source code.*
+
+Once running:
+- Access the Web Admin dashboard at: `http://<Your_Server_IP>:21114/_admin/`
+- Default login username is `admin`, and the random password will be shown in the start logs of the `rustdesk-api` container.
+
+---
+
+## 💻 Client / Device Deployment Guide
+
+The **Device Deployment** feature applies when the server requires device authentication before registering them (preventing unknown client IDs from arbitrary server registry). When activated, client terminals will display a warning requiring deployment.
+
+To deploy RustDesk host clients on target devices, you have two options:
+
+### Method 1: Automated Script via PowerShell (Recommended for Windows)
+This is the fastest and fully automated method for Windows-based clients:
+1. Log in to the Web Admin dashboard.
+2. Open the **Client Setup & Downloads** menu in the sidebar.
+3. Under the **Automated Setup & Config (Windows)** card, check **Embed current account into script** if you want to assign the device to your account automatically.
+4. Copy the generated single-line PowerShell command.
+5. Open **PowerShell as Administrator (Run as Administrator)** on the target Windows machine, paste the command, and press **Enter**.
+6. The script will automatically:
+   - Download the official RustDesk client and perform a silent installation.
+   - Configure your private server settings (ID Server, Relay Server, API Server, and Public Key).
+   - Start the client service and generate a secure, random 12-character static password for unattended access.
+   - Send authentication details and deploy requests to the API Server, registering the host under your account.
+   - Encrypt and sync the password to your personal **Address Book** under the host computer name.
+
+### Method 2: Manual CLI Deployment
+To perform a manual deployment or set up Linux/macOS clients, please follow these steps:
+
+#### Step A: Obtain User API Token
+1. Log in to the Web Admin dashboard with the target user account.
+2. Go to **Profile** to retrieve the **API Token** assigned to the account.
+
+#### Step B: Execute Deploy Command on Client Device
+Run the RustDesk client executable from the terminal with Administrator/root privileges.
+
+##### On Windows (PowerShell/CMD as Admin):
+1. Open PowerShell or Command Prompt as Administrator.
+2. Navigate to the RustDesk installation folder (default is `C:\Program Files\RustDesk\rustdesk.exe`).
+3. Run the deploy command:
+   ```cmd
+   rustdesk.exe --deploy --token <USER_API_TOKEN>
+   ```
+4. **Optional custom ID**: Append the `--id` parameter to assign a custom ID:
+   ```cmd
+   rustdesk.exe --deploy --token <USER_API_TOKEN> --id <CUSTOM_ID>
+   ```
+
+##### On Linux / macOS (Terminal):
+Run with `sudo` or root privileges:
+```bash
+sudo rustdesk --deploy --token <USER_API_TOKEN>
+```
+Or with a custom ID:
+```bash
+sudo rustdesk --deploy --token <USER_API_TOKEN> --id <CUSTOM_ID>
+```
+
+#### Step C: Verify Connection
+- The command line will output: `Device deployed.`
+- In the Web Admin dashboard, the client device will immediately appear under **My Devices** (My Peer).
+- The client status will change to **Ready**, allowing passwordless remote control connections.
+
+---
+
+## 🔄 Upstream Repository Updates (Security Patches)
+
+Since component projects are linked as Git Submodules, you can easily pull updates and security patches from their original authors:
+
+### 1. Update all submodules to the latest commits
+Run the following from the project root:
+```bash
+git submodule update --remote --merge
+```
+
+### 2. Manually update a specific submodule
+For instance, to update the upstream RustDesk server:
+```bash
+cd rustdesk-server
+git checkout master
+git pull origin master
+cd ..
+# Commit the updated submodule pointer to the parent repository
+git add rustdesk-server
+git commit -m "Update rustdesk-server submodule to latest release"
+```
+
+### 3. Rebuild the stack
+After pulling the updates, rebuild and restart your Docker containers:
+```bash
+docker compose up -d --build
+```
+
+---
+
+## 📝 Parent Git Repository Management
+
+To push this self-hosted unified repository structure to your private GitHub repository:
+
+```bash
+# 1. Initialize Git repository
+git init
+
+# 2. Add configuration files and submodule registers
+git add .gitignore README.md docker-compose.yml Dockerfile Dockerfile.server .gitmodules
+
+# 3. Add submodules as gitlinks (Do NOT add their files directly)
+git add rustdesk-server rustdesk-api rustdesk-api-web rustdesk-server-lejianwen
+
+# 4. Commit initial project setup
+git commit -m "Initial commit: Unified RustDesk Stack with submodules"
+
+# 5. Push to your private remote GitHub repository
+git remote add origin <YOUR_GITHUB_REPOSITORY_URL>
 git branch -M main
 git push -u origin main
 ```

@@ -65,21 +65,35 @@
       </template>
 
       <div class="deploy-intro">
-        <p>{{ T('DeployIntro') || 'Chạy một dòng lệnh duy nhất trong PowerShell (chạy dưới quyền Administrator) để tự động cài đặt RustDesk và cấu hình máy khách liên kết với tài khoản này.' }}</p>
+        <p>{{ T('DeployIntro') || 'Bấm "Tạo lệnh triển khai" để sinh token 1 lần (30 phút). Chạy lệnh PowerShell dưới quyền Administrator trên máy Windows — script sẽ tự tải RustDesk, cấu hình và đăng ký thiết bị vào tài khoản của bạn.' }}</p>
       </div>
 
       <el-form class="deploy-form" label-width="150px" label-position="left">
-        <el-form-item :label="T('IncludeCredentials') || 'Tùy chọn tài khoản'">
-          <el-checkbox v-model="embedUsername">{{ T('EmbedUsername') || 'Nhúng tài khoản hiện tại vào script' }} ({{ userStore.username }})</el-checkbox>
+        <el-form-item :label="T('DownloadAndRunDeploy') || 'Tự tải script và chạy deploy'">
+          <el-input :value="downloadRunCommand" type="textarea" :rows="4" readonly class="command-textarea" placeholder="Bấm 'Tạo lệnh triển khai' để sinh lệnh tự tải script và chạy deploy..."></el-input>
+          <div class="command-actions">
+            <el-button type="primary" :loading="generating" @click="generateDeployCommand">
+              {{ T('GenerateDeployCommand') || 'Tạo lệnh triển khai' }}
+            </el-button>
+            <el-button type="primary" size="small" :disabled="!downloadRunCommand" @click="copyText(downloadRunCommand)">
+              {{ T('CopyDownloadRunCommand') || 'Sao chép lệnh tự chạy' }}
+            </el-button>
+            <el-button size="small" :disabled="!scriptUrl" @click="downloadScript">
+              {{ T('DownloadDeployScript') || 'Tải script' }}
+            </el-button>
+          </div>
         </el-form-item>
 
         <el-form-item :label="T('DeployCommand') || 'Lệnh PowerShell'">
-          <el-input :value="powershellCommand" type="textarea" :rows="4" readonly class="command-textarea"></el-input>
+          <el-input :value="powershellCommand" type="textarea" :rows="4" readonly class="command-textarea" placeholder="Bấm 'Tạo lệnh triển khai' để sinh lệnh mới..."></el-input>
           <div class="command-actions">
-            <el-button type="primary" size="small" @click="copyText(powershellCommand)">
+            <el-button type="primary" size="small" :disabled="!powershellCommand" @click="copyText(powershellCommand)">
               {{ T('CopyCommand') || 'Sao chép Lệnh' }}
             </el-button>
           </div>
+          <p v-if="tokenExpiresAt" class="token-meta">
+            Token hết hạn: {{ formatExpire(tokenExpiresAt) }}
+          </p>
         </el-form-item>
       </el-form>
     </el-card>
@@ -175,38 +189,49 @@
 </template>
 
 <script setup>
-  import { onMounted, ref, computed } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { useAppStore } from '@/store/app'
-  import { useUserStore } from '@/store/user'
   import { ElMessage } from 'element-plus'
   import { T } from '@/utils/i18n'
   import { Cpu, Notebook, Download, Tools } from '@element-plus/icons'
+  import { createDeployToken } from '@/api/my/deploy'
 
   const appStore = useAppStore()
-  const userStore = useUserStore()
-  const embedUsername = ref(true)
-
-  const scriptUrl = computed(() => {
-    const apiServer = appStore.setting.rustdeskConfig.api_server || window.location.origin
-    const baseUrl = apiServer.replace(/\/$/, '')
-    let url = `${baseUrl}/api/deploy/powershell`
-    const params = []
-    if (embedUsername.value && userStore.username) {
-      params.push(`username=${encodeURIComponent(userStore.username)}`)
-    }
-    if (params.length > 0) {
-      url += `?${params.join('&')}`
-    }
-    return url
-  })
-
-  const powershellCommand = computed(() => {
-    return `powershell -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; $r = Invoke-WebRequest -UseBasicParsing -Uri '${scriptUrl.value}'; Invoke-Expression $r.Content"`
-  })
+  const powershellCommand = ref('')
+  const downloadRunCommand = ref('')
+  const scriptUrl = ref('')
+  const tokenExpiresAt = ref(0)
+  const generating = ref(false)
 
   onMounted(() => {
     appStore.loadRustdeskConfig()
   })
+
+  const generateDeployCommand = async () => {
+    generating.value = true
+    try {
+      const res = await createDeployToken()
+      powershellCommand.value = res.data.powershell_command
+      downloadRunCommand.value = res.data.download_run_command || res.data.powershell_command
+      scriptUrl.value = res.data.script_url
+      tokenExpiresAt.value = res.data.expires_at
+      ElMessage.success(T('GenerateDeployCommandSuccess') || 'Đã tạo lệnh triển khai mới!')
+    } catch (e) {
+      ElMessage.error(T('GenerateDeployCommandFailed') || 'Không thể tạo lệnh triển khai.')
+    } finally {
+      generating.value = false
+    }
+  }
+
+  const formatExpire = (ts) => {
+    if (!ts) return ''
+    return new Date(ts * 1000).toLocaleString()
+  }
+
+  const downloadScript = () => {
+    if (!scriptUrl.value) return
+    window.open(scriptUrl.value, '_blank')
+  }
 
   const copyText = (text) => {
     if (!text) return
@@ -398,5 +423,14 @@
 
 .command-actions {
   margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.token-meta {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #909399;
 }
 </style>

@@ -24,7 +24,7 @@ import (
 	"rustdesk-api/utils"
 )
 
-const DatabaseVersion = 267
+const DatabaseVersion = 268
 
 // @title Management System API
 // @version 1.0
@@ -309,6 +309,7 @@ func schemaModels() []interface{} {
 		&model.AddressBookCollectionRule{},
 		&model.ServerCmd{},
 		&model.DeviceGroup{},
+		&model.DeployToken{},
 	}
 }
 

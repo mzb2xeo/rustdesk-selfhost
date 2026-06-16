@@ -76,43 +76,43 @@ func ApiInit(g *gin.Engine) {
 		frg.POST("/audit/alarm", au.AuditAlarm)
 	}
 
-	frg.Use(middleware.RustAuth())
+	deployRoutes := frg.Group("", middleware.RustOrDeployAuth())
+	{
+		pe := &api.Peer{}
+		deployRoutes.POST("/devices/deploy", pe.Deploy)
+		deployRoutes.POST("/devices/cli", pe.Cli)
+		i := &api.Index{}
+		deployRoutes.POST("/deploy/revoke", i.DeployRevoke)
+	}
+
+	authRoutes := frg.Group("", middleware.RustAuth())
 	{
 		u := &api.User{}
-		frg.GET("/user/info", u.Info)
-		frg.POST("/currentUser", u.Info)
+		authRoutes.GET("/user/info", u.Info)
+		authRoutes.POST("/currentUser", u.Info)
 	}
 	{
 		au := &api.Audit{}
-		frg.GET("/audit/conn/active", au.AuditConnActive)
-		frg.PUT("/audit", au.UpdateAuditNote)
-	}
-	{
-		pe := &api.Peer{}
-		frg.POST("/devices/deploy", pe.Deploy)
-		frg.POST("/devices/cli", pe.Cli)
+		authRoutes.GET("/audit/conn/active", au.AuditConnActive)
+		authRoutes.PUT("/audit", au.UpdateAuditNote)
 	}
 	{
 		l := &api.Login{}
-		frg.POST("/logout", l.Logout)
+		authRoutes.POST("/logout", l.Logout)
 	}
 	{
 		gr := &api.Group{}
-		frg.GET("/users", gr.Users)
-		frg.GET("/peers", gr.Peers)
-		// /api/device-group/accessible?current=1&pageSize=100
-		frg.GET("/device-group/accessible", gr.Device)
+		authRoutes.GET("/users", gr.Users)
+		authRoutes.GET("/peers", gr.Peers)
+		authRoutes.GET("/device-group/accessible", gr.Device)
 	}
-
 	{
 		ab := &api.Ab{}
-		//Get address
-		frg.GET("/ab", ab.Ab)
-		//Update address
-		frg.POST("/ab", ab.UpAb)
+		authRoutes.GET("/ab", ab.Ab)
+		authRoutes.POST("/ab", ab.UpAb)
 	}
 
-	PersonalRoutes(frg)
+	PersonalRoutes(authRoutes)
 	//Access static files
 	g.StaticFS("/upload", http.Dir(global.Config.Gin.ResourcesPath+"/public/upload"))
 }

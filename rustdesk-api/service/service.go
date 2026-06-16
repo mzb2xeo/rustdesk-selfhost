@@ -24,6 +24,7 @@ type Service struct {
 	*ServerCmdService
 	*LdapService
 	*AppService
+	*DeployTokenService
 }
 
 type Dependencies struct {
