@@ -1,7 +1,13 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-      <img src="@/assets/logo.png" alt="logo" class="login-logo"/>
+      <div class="brand">
+        <img src="@/assets/logo.png" alt="logo" class="login-logo"/>
+        <div>
+          <h1>RustDesk API</h1>
+          <p>Admin console</p>
+        </div>
+      </div>
 
       <el-form v-if="!disablePwd" label-position="top" class="login-form">
         <el-form-item :label="T('Username')">
@@ -20,8 +26,10 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="login" type="primary" class="login-button">{{ T('Login') }}</el-button>
-          <el-button v-if="allowRegister" @click="register" class="login-button">{{ T('Register') }}</el-button>
+          <div class="login-actions">
+            <el-button @click="login" type="primary" class="login-button">{{ T('Login') }}</el-button>
+            <el-button v-if="allowRegister" @click="register" class="login-button secondary">{{ T('Register') }}</el-button>
+          </div>
         </el-form-item>
       </el-form>
 
@@ -173,33 +181,56 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #2d3a4b;
-  padding: 20px;
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.14), transparent 26rem),
+    linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
+  padding: 24px;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
 }
 
 .login-card {
-  width: 360px;
-  background-color: #283342;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  width: min(100%, 410px);
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 12px;
+  border: 1px solid #dbe4f0;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.12);
+  position: relative;
+  z-index: 1;
 }
 
 h1 {
-  margin-bottom: 20px;
+  margin: 0;
   font-size: 24px;
-  font-weight: bold;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+
+  p {
+    margin: 5px 0 0;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 650;
+  }
 }
 
 .login-form {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .login-input {
   width: 100%;
+
   .captcha{
     cursor: pointer;
     width: 150px;
@@ -207,17 +238,27 @@ h1 {
 }
 .captcha-input{
   :deep(.el-input-group__append) {
-    border-radius: 5px;
+    border-radius: 0 8px 8px 0;
     padding: 0;
     overflow: hidden;
   }
 }
 
+.login-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
 .login-button {
   width: 100%;
-  height: 40px;
-  margin-bottom: 20px;
+  height: 42px;
   margin-left: 0;
+
+  &.secondary {
+    margin-left: 0;
+  }
 }
 
 .divider {
@@ -225,14 +266,15 @@ h1 {
   align-items: center;
   margin: 20px 0;
   font-size: 14px;
-  color: #888;
+  color: #64748b;
+  font-weight: 650;
 
   &::before,
   &::after {
     content: '';
     flex: 1;
     height: 1px;
-    background-color: #ddd;
+    background-color: #e2e8f0;
   }
 
   &::before {
@@ -258,40 +300,63 @@ h1 {
   width: 100%;
   height: 50px;
   background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  color: black;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #0f172a;
   font-size: 14px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 650;
+  margin-left: 0;
 }
 
 .oidc-icon {
   width: 24px;
   height: 24px;
-  margin-right: 10px;
+  margin-right: 0;
 }
 
 .login-logo {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 20px;
+  width: 54px;
+  height: 54px;
+  margin: 0;
   display: block;
+  border-radius: 12px;
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.20);
 }
 
 .el-form-item {
+  margin-bottom: 18px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   ::v-deep(.el-form-item__label) {
-    color: #fff;
+    color: #334155;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
   }
 
   .el-input {
     ::v-deep(.el-input__wrapper) {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: transparent;
+      min-height: 42px;
+      border: 0;
+      background: #f8fafc;
     }
 
     ::v-deep(input) {
-      color: #fff;
+      color: #0f172a;
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 16px;
+  }
+
+  .login-card {
+    padding: 24px;
   }
 }
 </style>

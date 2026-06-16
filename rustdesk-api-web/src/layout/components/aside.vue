@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar class="scroll-sidebar" height="100vh">
+  <el-scrollbar class="scroll-sidebar" height="100dvh">
     <menus></menus>
   </el-scrollbar>
 </template>
@@ -16,6 +16,7 @@
 <style scoped lang="scss">
 .scroll-sidebar {
   background-color: var(--side-bg-color);
-  height: 100vh;
+  height: 100dvh;
+  box-shadow: 8px 0 28px rgba(15, 23, 42, 0.04);
 }
 </style>

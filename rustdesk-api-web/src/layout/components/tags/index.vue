@@ -74,14 +74,16 @@
 <style lang="scss" scoped>
 
 .tag {
-  border-radius: var(--el-border-radius-small);
+  border-radius: 999px;
   cursor: pointer;
-  margin-right: 6px;
-  transition: all 0.2s ease;
+  margin-right: 0;
+  border-color: transparent;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  white-space: nowrap;
   
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
   }
 }
 </style>

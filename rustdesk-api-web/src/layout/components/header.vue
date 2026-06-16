@@ -40,12 +40,26 @@
 
 <style scoped lang="scss">
   .ex-icon {
-    height: 100%;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
-    margin-right: 10px;
-    font-size: 16px;
+    justify-content: center;
+    margin: auto 12px auto 14px;
+    font-size: 18px;
     cursor: pointer;
+    border-radius: 8px;
+    color: var(--app-text-muted);
+    transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+
+    &:hover {
+      color: var(--primaryColor);
+      background: var(--el-menu-hover-bg-color);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
   }
 
   .header-logo {
@@ -55,13 +69,19 @@
 
     .title {
       display: block;
-      margin-left: 10px;
+      margin-left: 12px;
+      font-weight: 700;
+      letter-spacing: 0;
+      color: var(--header-text-color);
+      white-space: nowrap;
     }
 
     .logo {
       display: block;
-      width: 30px;
-      height: 30px;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
     }
   }
 

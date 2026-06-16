@@ -41,12 +41,29 @@
 
 <style lang="scss" scoped>
   .menus {
-    min-height: 100vh;
+    min-height: 100dvh;
     border-right: none;
+    padding: 10px 8px;
+
     &:not(.el-menu--collapse) {
       width: var(--sideBarWidth);
     }
+  }
 
+  :deep(.el-menu-item),
+  :deep(.el-sub-menu__title) {
+    border-radius: 8px;
+    margin: 2px 0;
+    font-weight: 600;
+  }
+
+  :deep(.el-menu-item.is-active) {
+    background: #eff6ff;
+    box-shadow: inset 3px 0 0 var(--primaryColor);
+  }
+
+  :deep(.el-icon) {
+    font-size: 18px;
   }
 </style>
 <style>

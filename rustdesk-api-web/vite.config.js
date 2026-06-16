@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
 const envFile = `.env.${NODE_ENV}`
@@ -74,6 +75,7 @@ const conf = {
     alias,
   },
   plugins: [
+    tailwindcss(),
     vue(),
   ],
 }

@@ -4,7 +4,7 @@
       <el-aside :width="leftWidth" class="app-left">
         <g-aside></g-aside>
       </el-aside>
-      <el-container class="app-container ">
+      <el-container class="app-container">
         <el-header class="app-header">
           <g-header></g-header>
         </el-header>
@@ -50,24 +50,47 @@
   color: var(--header-text-color);
   border-bottom: 1px solid var(--header-border-color);
   display: flex;
-  height: 50px;
+  height: 58px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .header-tags {
-  height: auto;
+  min-height: 42px;
   border-bottom: 1px solid var(--header-border-color);
   background-color: var(--header-bg-color);
   display: flex;
-  padding: 4px 10px;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px;
+  position: sticky;
+  top: 58px;
+  z-index: 19;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  overflow-x: auto;
 }
 
 .app-left {
-  transition: width 0.5s;
+  transition: width 0.25s ease;
   border-right: 1px solid var(--side-border-color);
+  background: var(--side-bg-color);
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  z-index: 30;
 }
 
 .app-container {
-  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.app-main {
+  min-height: calc(100dvh - 100px);
+  background: transparent;
 }
 </style>
 

@@ -57,9 +57,8 @@
   import { useUserStore } from '@/store/user'
   import { useAppStore } from '@/store/app'
   import changePwdDialog from '@/components/changePwdDialog.vue'
-  import { ref } from 'vue'
+  import { onMounted, ref, watch } from 'vue'
   import { T } from '@/utils/i18n'
-  import { useDark } from '@vueuse/core'
   import { Sunny, Moon } from '@element-plus/icons'
 
   const userStore = useUserStore()
@@ -78,8 +77,22 @@
   const changeLang = (v) => {
     appStore.changeLang(v)
   }
-  const isDark = useDark()
-  // const toggleDark = useToggle(isDark)
+  const isDark = ref(false)
+
+  const applyTheme = (dark) => {
+    document.documentElement.classList.toggle('dark', dark)
+    localStorage.setItem('vueuse-color-scheme', dark ? 'dark' : 'light')
+  }
+
+  onMounted(() => {
+    const stored = localStorage.getItem('vueuse-color-scheme')
+    isDark.value = stored
+      ? stored === 'dark'
+      : window.matchMedia?.('(prefers-color-scheme: dark)').matches
+    applyTheme(isDark.value)
+  })
+
+  watch(isDark, applyTheme)
 </script>
 
 <style lang="scss" scoped>
@@ -90,7 +103,7 @@
   justify-content: space-around;
 
   .menu-item {
-    margin-left: 15px;
+    margin-left: 10px;
 
     * {
       outline: none;
@@ -103,9 +116,23 @@
     align-items: center;
     justify-content: space-around;
     cursor: pointer;
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 999px;
+    transition: background-color 0.18s ease, color 0.18s ease;
+
+    &:hover {
+      color: var(--primaryColor);
+      background: var(--el-menu-hover-bg-color);
+    }
 
     .nickname {
-      padding: 0 10px;
+      padding: 0 8px;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 650;
     }
   }
 }

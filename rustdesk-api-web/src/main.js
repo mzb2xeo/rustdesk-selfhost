@@ -8,6 +8,7 @@ import 'normalize.css/normalize.css'
 import { pinia } from '@/store'
 import '@/permission'
 import 'element-plus/theme-chalk/dark/css-vars.css'
+import '@/styles/tailwind.css'
 import '@/styles/style.scss'
 import * as ElementIcons from '@element-plus/icons'
 
