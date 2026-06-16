@@ -2057,7 +2057,7 @@ const docTemplateadmin = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_lejianwen_rustdesk-api_v2_http_request_admin.Login"
+                            "$ref": "#/definitions/rustdesk_api_http_request_admin.Login"
                         }
                     }
                 ],
@@ -5820,7 +5820,7 @@ const docTemplateadmin = `{
                 }
             }
         },
-        "github_com_lejianwen_rustdesk-api_v2_http_request_admin.Login": {
+        "rustdesk_api_http_request_admin.Login": {
             "type": "object",
             "required": [
                 "password",

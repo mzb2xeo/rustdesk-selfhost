@@ -1,5 +1,7 @@
 # RustDesk API
 
+> Fork note: This repository is a fork/customized build of `github.com/lejianwen/rustdesk-api`. The internal Go module and import path have been changed to `rustdesk-api`.
+
 [English Doc](README_EN.md) | [Tài liệu Tiếng Trung](README_CN.md)
 
 Dự án này sử dụng Go để triển khai các API của RustDesk, đồng thời tích hợp cả giao diện quản trị Web Admin và Web Client. RustDesk là một phần mềm điều khiển máy tính từ xa mã nguồn mở cung cấp các giải pháp tự lưu trữ (self-hosted).
@@ -9,12 +11,12 @@ Dự án này sử dụng Go để triển khai các API của RustDesk, đồng
 <img src="https://img.shields.io/badge/gin-v1.9.0-lightBlue"/>
 <img src="https://img.shields.io/badge/gorm-v1.25.7-green"/>
 <img src="https://img.shields.io/badge/swag-v1.16.3-yellow"/>
-<img src="https://goreportcard.com/badge/github.com/lejianwen/rustdesk-api/v2"/>
-<img src="https://github.com/lejianwen/rustdesk-api/actions/workflows/build.yml/badge.svg"/>
+<img src="https://goreportcard.com/badge/rustdesk-api"/>
+<img src="rustdesk-api/actions/workflows/build.yml/badge.svg"/>
 </div>
 
-## Khuyên dùng kết hợp với [lejianwen/rustdesk-server].
-> [lejianwen/rustdesk-server] được fork từ kho lưu trữ RustDesk Server chính thức.
+## Khuyên dùng kết hợp với [rustdesk-server].
+> [rustdesk-server] được fork từ kho lưu trữ RustDesk Server chính thức.
 > 1. Giải quyết vấn đề hết hạn kết nối (timeout) của API.
 > 2. Có thể bắt buộc đăng nhập trước khi thiết lập kết nối từ xa.
 > 3. Hỗ trợ kết nối websocket phía client.
@@ -47,7 +49,7 @@ Dự án này sử dụng Go để triển khai các API của RustDesk, đồng
     - Truy cập nhanh vào Web Client.
     - Hỗ trợ đa ngôn ngữ (i18n).
     - Chia sẻ thiết bị cho khách (Share to guest) qua Web Client.
-    - Điều khiển server (gửi một số lệnh đơn giản qua [WIKI](https://github.com/lejianwen/rustdesk-api/wiki/Rustdesk-Command)).
+    - Điều khiển server (gửi một số lệnh đơn giản qua [WIKI](rustdesk-api/wiki/Rustdesk-Command)).
 - **Web Client**
     - Tự động nhận diện Máy chủ API.
     - Tự động nhận diện Máy chủ ID (ID server) và Khóa (KEY).
@@ -82,7 +84,7 @@ Triển khai cơ bản các giao diện chính cho máy khách PC. Hỗ trợ AP
 
 ### Giao diện quản trị Web (Web Admin)
 
-* Dự án được thiết kế theo mô hình tách biệt Frontend và Backend để cung cấp một giao diện quản trị thân thiện với người dùng, chủ yếu dùng cho quản lý và hiển thị dữ liệu. Mã nguồn Frontend có sẵn tại [rustdesk-api-web](https://github.com/lejianwen/rustdesk-api-web).
+* Dự án được thiết kế theo mô hình tách biệt Frontend và Backend để cung cấp một giao diện quản trị thân thiện với người dùng, chủ yếu dùng cho quản lý và hiển thị dữ liệu. Mã nguồn Frontend có sẵn tại [rustdesk-api-web](rustdesk-api-web).
 * Đường dẫn truy cập trang quản trị: `http://<server-cua-ban[:port]>/_admin/`
 * Đối với lần cài đặt đầu tiên, tài khoản quản trị mặc định là `admin`, và mật khẩu ngẫu nhiên sẽ được in trên cửa sổ console/log. Bạn có thể thay đổi mật khẩu này thông qua [CLI](#CLI).
 
@@ -111,7 +113,7 @@ Triển khai cơ bản các giao diện chính cho máy khách PC. Hỗ trợ AP
       * Có thể sử dụng các lệnh chính thức từ RustDesk.
       * Có thể thêm các câu lệnh tùy chỉnh.
       * Chạy câu lệnh tùy chỉnh.
-11. **Hỗ trợ LDAP**: Khi bạn thiết lập LDAP (đã kiểm tra thành công với OpenLDAP và Active Directory), bạn có thể đăng nhập bằng thông tin người dùng từ máy chủ LDAP của bạn. Chi tiết: [Issue #114](https://github.com/lejianwen/rustdesk-api/issues/114). Nếu xác thực LDAP thất bại, hệ thống sẽ tự động chuyển sang kiểm tra người dùng cục bộ.
+11. **Hỗ trợ LDAP**: Khi bạn thiết lập LDAP (đã kiểm tra thành công với OpenLDAP và Active Directory), bạn có thể đăng nhập bằng thông tin người dùng từ máy chủ LDAP của bạn. Chi tiết: [Issue #114](rustdesk-api/issues/114). Nếu xác thực LDAP thất bại, hệ thống sẽ tự động chuyển sang kiểm tra người dùng cục bộ.
 
 ### Web Client
 
@@ -297,7 +299,7 @@ Bảng dưới đây không liệt kê tất cả cấu hình. Vui lòng tham kh
     -e RUSTDESK_API_RUSTDESK_RELAY_SERVER=192.168.1.66:21117 \
     -e RUSTDESK_API_RUSTDESK_API_SERVER=http://192.168.1.66:21114 \
     -e RUSTDESK_API_RUSTDESK_KEY=<key_cua_ban> \
-    lejianwen/rustdesk-api
+    rustdesk-api
     ```
 
 2. **Chạy bằng `docker-compose` (Khuyên dùng)**:
@@ -321,13 +323,13 @@ Bảng dưới đây không liệt kê tất cả cấu hình. Vui lòng tham kh
 
 #### Sử dụng các bản Release được biên dịch sẵn
 
-Tải phiên bản mới nhất từ trang [Releases](https://github.com/lejianwen/rustdesk-api/releases).
+Tải phiên bản mới nhất từ trang [Releases](rustdesk-api/releases).
 
 #### Biên dịch từ mã nguồn
 
 1. Sao chép kho lưu trữ (Clone):
    ```bash
-   git clone https://github.com/lejianwen/rustdesk-api.git
+   git clone rustdesk-api.git
    cd rustdesk-api
    ```
 
@@ -338,11 +340,11 @@ Tải phiên bản mới nhất từ trang [Releases](https://github.com/lejianw
    go install github.com/swaggo/swag/cmd/swag@latest
    ```
 
-3. Biên dịch giao diện quản trị Web Admin (Mã nguồn nằm trong dự án [rustdesk-api-web](https://github.com/lejianwen/rustdesk-api-web)):
+3. Biên dịch giao diện quản trị Web Admin (Mã nguồn nằm trong dự án [rustdesk-api-web](rustdesk-api-web)):
    ```bash
    cd resources
    mkdir -p admin
-   git clone https://github.com/lejianwen/rustdesk-api-web
+   git clone rustdesk-api-web
    cd rustdesk-api-web
    npm install
    npm run build
@@ -365,11 +367,11 @@ Tải phiên bản mới nhất từ trang [Releases](https://github.com/lejianw
 
 6. Truy cập `http://<server-cua-ban[:port]>/_admin/`, đăng nhập bằng tài khoản/mật khẩu mặc định là `admin` / `admin`. Hãy đổi mật khẩu ngay sau đó.
 
-#### Chạy với hình ảnh s6 server fork từ lejianwen/server-s6
+#### Chạy với hình ảnh s6 server fork từ server-s6
 
 - Đã sửa lỗi API kết nối timeout.
 - Bắt buộc đăng nhập trước khi điều khiển từ xa.
-- Github: https://github.com/lejianwen/rustdesk-server
+- Github: rustdesk-server
 
 ```yaml
  networks:
@@ -385,7 +387,7 @@ Tải phiên bản mới nhất từ trang [Releases](https://github.com/lejianw
        - 21117:21117
        - 21118:21118
        - 21119:21119
-     image: lejianwen/rustdesk-server-s6:latest
+     image: rustdesk-server-s6:latest
      environment:
        - RELAY=<relay_server[:port]>
        - ENCRYPTED_ONLY=1
@@ -408,8 +410,8 @@ Tải phiên bản mới nhất từ trang [Releases](https://github.com/lejianw
 
 ## Liên kết khác
 
-- [WIKI](https://github.com/lejianwen/rustdesk-api/wiki)
-- [Vấn đề kết nối timeout](https://github.com/lejianwen/rustdesk-api/issues/92)
+- [WIKI](rustdesk-api/wiki)
+- [Vấn đề kết nối timeout](rustdesk-api/issues/92)
 - [Thay đổi ID thiết bị](https://github.com/abdullah-erturk/RustDesk-ID-Changer)
 - [Nguồn của Web Client](https://hub.docker.com/r/keyurbhole/flutter_web_desk)
 
@@ -417,12 +419,12 @@ Tải phiên bản mới nhất từ trang [Releases](https://github.com/lejianw
 
 Xin chân thành cảm ơn tất cả những người đã đóng góp xây dựng dự án!
 
-<a href="https://github.com/lejianwen/rustdesk-api/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=lejianwen/rustdesk-api" />
+<a href="rustdesk-api/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=rustdesk-api" />
 </a>
 
 ## Ủng hộ dự án
 
 Nếu dự án này giúp ích cho bạn, hãy nhấn ⭐️ để ủng hộ tác giả nhé. Xin cảm ơn!
 
-[lejianwen/rustdesk-server]: https://github.com/lejianwen/rustdesk-server
+[rustdesk-server]: rustdesk-server

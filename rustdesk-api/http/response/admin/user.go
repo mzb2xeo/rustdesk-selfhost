@@ -1,8 +1,9 @@
 package admin
 
-import "github.com/lejianwen/rustdesk-api/v2/model"
+import "rustdesk-api/model"
 
 type LoginPayload struct {
+	Id         uint     `json:"id"`
 	Username   string   `json:"username"`
 	Email      string   `json:"email"`
 	Avatar     string   `json:"avatar"`
@@ -12,6 +13,7 @@ type LoginPayload struct {
 }
 
 func (lp *LoginPayload) FromUser(user *model.User) {
+	lp.Id = user.Id
 	lp.Username = user.Username
 	lp.Email = user.Email
 	lp.Avatar = user.Avatar

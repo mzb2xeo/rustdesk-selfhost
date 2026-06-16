@@ -294,7 +294,7 @@ definitions:
     required:
     - ids
     type: object
-  github_com_lejianwen_rustdesk-api_v2_http_request_admin.Login:
+  rustdesk_api_http_request_admin.Login:
     properties:
       captcha:
         type: string
@@ -2039,7 +2039,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/github_com_lejianwen_rustdesk-api_v2_http_request_admin.Login'
+          $ref: '#/definitions/rustdesk_api_http_request_admin.Login'
       produces:
       - application/json
       responses:

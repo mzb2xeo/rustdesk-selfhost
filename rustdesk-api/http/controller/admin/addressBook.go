@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	_ "encoding/json"
 	"github.com/gin-gonic/gin"
-	"github.com/lejianwen/rustdesk-api/v2/global"
-	"github.com/lejianwen/rustdesk-api/v2/http/request/admin"
-	"github.com/lejianwen/rustdesk-api/v2/http/response"
-	"github.com/lejianwen/rustdesk-api/v2/service"
 	"gorm.io/gorm"
+	"rustdesk-api/global"
+	"rustdesk-api/http/request/admin"
+	"rustdesk-api/http/response"
+	"rustdesk-api/service"
 	"strconv"
 )
 

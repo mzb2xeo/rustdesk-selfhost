@@ -1,4 +1,4 @@
-module github.com/lejianwen/rustdesk-api/v2
+module rustdesk-api
 
 go 1.26.4
 

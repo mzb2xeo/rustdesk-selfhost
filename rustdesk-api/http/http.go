@@ -2,11 +2,11 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lejianwen/rustdesk-api/v2/global"
-	"github.com/lejianwen/rustdesk-api/v2/http/middleware"
-	"github.com/lejianwen/rustdesk-api/v2/http/router"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"rustdesk-api/global"
+	"rustdesk-api/http/middleware"
+	"rustdesk-api/http/router"
 	"strings"
 )
 

@@ -1,6 +1,6 @@
 package admin
 
-import "github.com/lejianwen/rustdesk-api/v2/model"
+import "rustdesk-api/model"
 
 type TagForm struct {
 	Id           uint   `json:"id"`

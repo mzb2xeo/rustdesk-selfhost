@@ -26,7 +26,7 @@ on:
       WEBCLIENT_SOURCE_LOCATION:
         description: 'Web Client API Repository'
         required: true
-        default: 'https://github.com/lejianwen/rustdesk-api-web'
+        default: 'rustdesk-api-web'
   push:
     tags:
       - 'v*.*.*'  # The workflow is triggered when pushing a tag with a version number (e.g. v1.0.0)
@@ -34,7 +34,7 @@ on:
 
 env:
   LATEST_TAG: latest
-  WEBCLIENT_SOURCE_LOCATION: ${{ github.event.inputs.WEBCLIENT_SOURCE_LOCATION || 'https://github.com/lejianwen/rustdesk-api-web' }}
+  WEBCLIENT_SOURCE_LOCATION: ${{ github.event.inputs.WEBCLIENT_SOURCE_LOCATION || 'rustdesk-api-web' }}
   BASE_IMAGE_NAMESPACE: ${{ github.event.inputs.BASE_IMAGE_NAMESPACE || github.actor }}
   DOCKERHUB_IMAGE_NAMESPACE: ${{ github.event.inputs.DOCKERHUB_IMAGE_NAMESPACE || github.actor }}
   GHCR_IMAGE_NAMESPACE: ${{ github.event.inputs.GHCR_IMAGE_NAMESPACE || github.actor }}
@@ -59,7 +59,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/checkout@v4
         with:
-          repository: lejianwen/rustdesk-api-web
+          repository: rustdesk-api-web
           path: rustdesk-api-web
           ref: master
 

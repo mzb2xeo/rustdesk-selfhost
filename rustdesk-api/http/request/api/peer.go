@@ -1,6 +1,6 @@
 package api
 
-import "github.com/lejianwen/rustdesk-api/v2/model"
+import "rustdesk-api/model"
 
 type AddressBookFormData struct {
 	Tags      []string             `json:"tags"`

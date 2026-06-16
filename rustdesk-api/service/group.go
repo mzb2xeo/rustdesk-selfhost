@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/lejianwen/rustdesk-api/v2/model"
 	"gorm.io/gorm"
+	"rustdesk-api/model"
 )
 
 type GroupService struct {

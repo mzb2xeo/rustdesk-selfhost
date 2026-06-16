@@ -61,4 +61,3 @@ type AuditAlarmList struct {
 	AuditAlarms []*AuditAlarm `json:"list"`
 	Pagination
 }
-

@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lejianwen/rustdesk-api/v2/global"
-	"github.com/lejianwen/rustdesk-api/v2/http/request/api"
-	"github.com/lejianwen/rustdesk-api/v2/http/response"
-	apiResp "github.com/lejianwen/rustdesk-api/v2/http/response/api"
-	"github.com/lejianwen/rustdesk-api/v2/model"
-	"github.com/lejianwen/rustdesk-api/v2/service"
 	"net/http"
+	"rustdesk-api/global"
+	"rustdesk-api/http/request/api"
+	"rustdesk-api/http/response"
+	apiResp "rustdesk-api/http/response/api"
+	"rustdesk-api/model"
+	"rustdesk-api/service"
 )
 
 type Login struct {

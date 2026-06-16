@@ -2,11 +2,11 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lejianwen/rustdesk-api/v2/global"
-	"github.com/lejianwen/rustdesk-api/v2/http/request/admin"
-	"github.com/lejianwen/rustdesk-api/v2/http/response"
-	"github.com/lejianwen/rustdesk-api/v2/model"
-	"github.com/lejianwen/rustdesk-api/v2/service"
+	"rustdesk-api/global"
+	"rustdesk-api/http/request/admin"
+	"rustdesk-api/http/response"
+	"rustdesk-api/model"
+	"rustdesk-api/service"
 )
 
 type Rustdesk struct {

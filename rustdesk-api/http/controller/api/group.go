@@ -2,12 +2,12 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	apiReq "github.com/lejianwen/rustdesk-api/v2/http/request/api"
-	"github.com/lejianwen/rustdesk-api/v2/http/response"
-	apiResp "github.com/lejianwen/rustdesk-api/v2/http/response/api"
-	"github.com/lejianwen/rustdesk-api/v2/model"
-	"github.com/lejianwen/rustdesk-api/v2/service"
 	"net/http"
+	apiReq "rustdesk-api/http/request/api"
+	"rustdesk-api/http/response"
+	apiResp "rustdesk-api/http/response/api"
+	"rustdesk-api/model"
+	"rustdesk-api/service"
 )
 
 type Group struct {

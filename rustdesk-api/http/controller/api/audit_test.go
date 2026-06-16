@@ -9,15 +9,15 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lejianwen/rustdesk-api/v2/config"
-	"github.com/lejianwen/rustdesk-api/v2/global"
-	"github.com/lejianwen/rustdesk-api/v2/http/controller/api"
-	"github.com/lejianwen/rustdesk-api/v2/http/middleware"
-	"github.com/lejianwen/rustdesk-api/v2/lib/jwt"
-	"github.com/lejianwen/rustdesk-api/v2/model"
-	"github.com/lejianwen/rustdesk-api/v2/service"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"rustdesk-api/config"
+	"rustdesk-api/global"
+	"rustdesk-api/http/controller/api"
+	"rustdesk-api/http/middleware"
+	"rustdesk-api/lib/jwt"
+	"rustdesk-api/model"
+	"rustdesk-api/service"
 )
 
 func setupTestRouter() (*gin.Engine, *gorm.DB) {

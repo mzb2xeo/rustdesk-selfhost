@@ -2,8 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/lejianwen/rustdesk-api/v2/global"
-	"github.com/lejianwen/rustdesk-api/v2/model"
+	"rustdesk-api/global"
+	"rustdesk-api/model"
 	"strconv"
 )
 
@@ -93,4 +93,3 @@ func (a *AuditAlarmForm) ToAuditAlarm(ip string) *model.AuditAlarm {
 		Ip:     ip,
 	}
 }
-

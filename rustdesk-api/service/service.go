@@ -1,12 +1,12 @@
 package service
 
 import (
-	"github.com/lejianwen/rustdesk-api/v2/config"
-	"github.com/lejianwen/rustdesk-api/v2/lib/jwt"
-	"github.com/lejianwen/rustdesk-api/v2/lib/lock"
-	"github.com/lejianwen/rustdesk-api/v2/model"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"rustdesk-api/config"
+	"rustdesk-api/lib/jwt"
+	"rustdesk-api/lib/lock"
+	"rustdesk-api/model"
 )
 
 type Service struct {

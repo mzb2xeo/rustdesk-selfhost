@@ -2,13 +2,13 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	_ "github.com/lejianwen/rustdesk-api/v2/docs/api"
-	"github.com/lejianwen/rustdesk-api/v2/global"
-	"github.com/lejianwen/rustdesk-api/v2/http/controller/api"
-	"github.com/lejianwen/rustdesk-api/v2/http/middleware"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
+	_ "rustdesk-api/docs/api"
+	"rustdesk-api/global"
+	"rustdesk-api/http/controller/api"
+	"rustdesk-api/http/middleware"
 )
 
 func ApiInit(g *gin.Engine) {

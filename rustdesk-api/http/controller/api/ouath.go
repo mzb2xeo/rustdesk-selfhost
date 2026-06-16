@@ -4,14 +4,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lejianwen/rustdesk-api/v2/global"
-	"github.com/lejianwen/rustdesk-api/v2/http/request/api"
-	"github.com/lejianwen/rustdesk-api/v2/http/response"
-	apiResp "github.com/lejianwen/rustdesk-api/v2/http/response/api"
-	"github.com/lejianwen/rustdesk-api/v2/model"
-	"github.com/lejianwen/rustdesk-api/v2/service"
-	"github.com/lejianwen/rustdesk-api/v2/utils"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"rustdesk-api/global"
+	"rustdesk-api/http/request/api"
+	"rustdesk-api/http/response"
+	apiResp "rustdesk-api/http/response/api"
+	"rustdesk-api/model"
+	"rustdesk-api/service"
+	"rustdesk-api/utils"
 )
 
 type Oauth struct {

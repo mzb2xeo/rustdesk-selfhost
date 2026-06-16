@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lejianwen/rustdesk-api/v2/global"
-	"github.com/lejianwen/rustdesk-api/v2/http/controller/api"
-	"github.com/lejianwen/rustdesk-api/v2/http/request/admin"
-	apiReq "github.com/lejianwen/rustdesk-api/v2/http/request/api"
-	"github.com/lejianwen/rustdesk-api/v2/http/response"
-	adResp "github.com/lejianwen/rustdesk-api/v2/http/response/admin"
-	"github.com/lejianwen/rustdesk-api/v2/model"
-	"github.com/lejianwen/rustdesk-api/v2/service"
+	"rustdesk-api/global"
+	"rustdesk-api/http/controller/api"
+	"rustdesk-api/http/request/admin"
+	apiReq "rustdesk-api/http/request/api"
+	"rustdesk-api/http/response"
+	adResp "rustdesk-api/http/response/admin"
+	"rustdesk-api/model"
+	"rustdesk-api/service"
 )
 
 type Login struct {

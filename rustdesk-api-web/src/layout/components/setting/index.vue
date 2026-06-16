@@ -1,22 +1,5 @@
 <template>
   <div class="setting">
-    <div class="menu-item">
-      <el-switch
-          v-model="isDark"
-          style="--el-switch-on-color:#18222c"
-      >
-        <template #active-action>
-          <el-icon>
-            <Moon/>
-          </el-icon>
-        </template>
-        <template #inactive-action>
-          <el-icon>
-            <Sunny color="#000"/>
-          </el-icon>
-        </template>
-      </el-switch>
-    </div>
     <el-dropdown class="menu-item">
       <div class="title">
         <i class="el-icon el-tooltip__trigger" style="font-size: 24px;">
@@ -57,9 +40,8 @@
   import { useUserStore } from '@/store/user'
   import { useAppStore } from '@/store/app'
   import changePwdDialog from '@/components/changePwdDialog.vue'
-  import { onMounted, ref, watch } from 'vue'
+  import { onMounted, ref } from 'vue'
   import { T } from '@/utils/i18n'
-  import { Sunny, Moon } from '@element-plus/icons'
 
   const userStore = useUserStore()
   const user = userStore
@@ -77,22 +59,10 @@
   const changeLang = (v) => {
     appStore.changeLang(v)
   }
-  const isDark = ref(false)
-
-  const applyTheme = (dark) => {
-    document.documentElement.classList.toggle('dark', dark)
-    localStorage.setItem('vueuse-color-scheme', dark ? 'dark' : 'light')
-  }
-
   onMounted(() => {
-    const stored = localStorage.getItem('vueuse-color-scheme')
-    isDark.value = stored
-      ? stored === 'dark'
-      : window.matchMedia?.('(prefers-color-scheme: dark)').matches
-    applyTheme(isDark.value)
+    document.documentElement.classList.remove('dark')
+    localStorage.removeItem('vueuse-color-scheme')
   })
-
-  watch(isDark, applyTheme)
 </script>
 
 <style lang="scss" scoped>

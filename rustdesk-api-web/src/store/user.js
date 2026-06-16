@@ -8,6 +8,7 @@ import { oidcAuth, oidcQuery } from '@/api/login'
 export const useUserStore = defineStore({
   id: 'user',
   state: () => ({
+    id: 0,
     nickname: '',
     username: '',
     email: '',
@@ -31,7 +32,7 @@ export const useUserStore = defineStore({
       // useAppStore().getAppConfig()
       setToken(userData.token)
       //
-      localStorage.setItem('user_info', JSON.stringify({ name: userData.username }))
+      localStorage.setItem('user_info', JSON.stringify({ id: userData.id || 0, name: userData.username }))
       this.$patch({
         ...userData,
       })
