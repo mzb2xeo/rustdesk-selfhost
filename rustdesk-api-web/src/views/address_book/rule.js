@@ -79,7 +79,7 @@ export function useRepositories (api_type = 'my') {
 
   const toEdit = (row) => {
     formVisible.value = true
-    //将row中的数据赋值给formData
+    //Assign the data in row to formData
     Object.keys(formData).forEach(key => {
       formData[key] = row[key]
     })
@@ -92,7 +92,7 @@ export function useRepositories (api_type = 'my') {
     }
   }
   const toAdd = () => {
-    //初始化formData
+    //Initialize formData
     formData.id = 0
     formData.type = TYPE_U
     formData.rule = 1

@@ -12,10 +12,10 @@ import (
 type DeviceGroup struct {
 }
 
-// Detail 设备群组
-// @Tags 设备群组
-// @Summary 设备群组详情
-// @Description 设备群组详情
+// Detail device group
+// @Tags device group
+// @Summary Device Group Details
+// @Description Device group details
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
@@ -35,13 +35,13 @@ func (ct *DeviceGroup) Detail(c *gin.Context) {
 	return
 }
 
-// Create 创建设备群组
-// @Tags 设备群组
-// @Summary 创建设备群组
-// @Description 创建设备群组
+// Create Create a device group
+// @Tags device group
+// @Summary Create device group
+// @Description Create device group
 // @Accept  json
 // @Produce  json
-// @Param body body admin.DeviceGroupForm true "设备群组信息"
+// @Param body body admin.DeviceGroupForm true "Device group information"
 // @Success 200 {object} response.Response{data=model.DeviceGroup}
 // @Failure 500 {object} response.Response
 // @Router /admin/device_group/create [post]
@@ -66,14 +66,14 @@ func (ct *DeviceGroup) Create(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// List 列表
-// @Tags 群组
-// @Summary 群组列表
-// @Description 群组列表
+// List list
+// @Tags group
+// @Summary Group List
+// @Description Group list
 // @Accept  json
 // @Produce  json
-// @Param page query int false "页码"
-// @Param page_size query int false "页大小"
+// @Param page query int false "page number"
+// @Param page_size query int false "page size"
 // @Success 200 {object} response.Response{data=model.GroupList}
 // @Failure 500 {object} response.Response
 // @Router /admin/device_group/list [get]
@@ -88,13 +88,13 @@ func (ct *DeviceGroup) List(c *gin.Context) {
 	response.Success(c, res)
 }
 
-// Update 编辑
-// @Tags 设备群组
-// @Summary 设备群组编辑
-// @Description 设备群组编辑
+// Update Edit
+// @Tags device group
+// @Summary Device Group Editing
+// @Description Device group editing
 // @Accept  json
 // @Produce  json
-// @Param body body admin.DeviceGroupForm true "群组信息"
+// @Param body body admin.DeviceGroupForm true "Group information"
 // @Success 200 {object} response.Response{data=model.Group}
 // @Failure 500 {object} response.Response
 // @Router /admin/device_group/update [post]
@@ -123,13 +123,13 @@ func (ct *DeviceGroup) Update(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// Delete 删除
-// @Tags 设备群组
-// @Summary 设备群组删除
-// @Description 设备群组删除
+// Delete Delete
+// @Tags device group
+// @Summary Device group deletion
+// @Description Device group deletion
 // @Accept  json
 // @Produce  json
-// @Param body body admin.DeviceGroupForm true "群组信息"
+// @Param body body admin.DeviceGroupForm true "Group information"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /admin/device_group/delete [post]

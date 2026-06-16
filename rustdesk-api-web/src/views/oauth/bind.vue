@@ -51,7 +51,7 @@
       resStatus.value = 1
       if (res.data.device_type === 'webadmin') {
         ElMessage.success(T('OperationSuccess'))
-        //后台登录
+        //Backend login
         router.push('/')
       } else {
         ElMessage.success(T('OperationSuccessAndCloseAfter3Seconds'))

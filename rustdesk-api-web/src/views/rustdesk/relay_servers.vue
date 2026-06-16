@@ -55,7 +55,7 @@
       get()
     }
   })
-  //为了在设置always_use_relay之后自动重新保存，防止被重置
+  //In order to automatically resave after setting always_use_relay to prevent being reset
   defineExpose({
     save,
   });

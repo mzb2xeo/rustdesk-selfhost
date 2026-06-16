@@ -25,9 +25,9 @@ import (
 
 const DatabaseVersion = 265
 
-// @title 管理系统API
+// @title Management System API
 // @version 1.0
-// @description 接口
+// @description interface
 // @basePath /api
 // @securityDefinitions.apikey token
 // @in header
@@ -111,10 +111,10 @@ func main() {
 }
 
 func InitGlobal() {
-	//配置解析
+	//Configuration analysis
 	global.Viper = config.Init(&global.Config, global.ConfigPath)
 
-	//日志
+	//log
 	global.Logger = logger.New(&logger.Config{
 		Path:         global.Config.Logger.Path,
 		Level:        global.Config.Logger.Level,
@@ -219,11 +219,11 @@ func DatabaseAutoUpdate() {
 	db := global.DB
 
 	if global.Config.Gorm.Type == config.TypeMysql {
-		//检查存不存在数据库，不存在则创建
+		//Check whether the database exists, create it if it does not exist
 		dbName := db.Migrator().CurrentDatabase()
 		if dbName == "" {
 			dbName = global.Config.Mysql.Dbname
-			// 移除 DSN 中的数据库名称，以便初始连接时不指定数据库
+			// Remove database name from DSN so database is not specified on initial connection
 			dsnWithoutDB := fmt.Sprintf("%s:%s@(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 				global.Config.Mysql.Username,
 				global.Config.Mysql.Password,
@@ -231,19 +231,19 @@ func DatabaseAutoUpdate() {
 				"",
 			)
 
-			//新链接
+			//new link
 			dbWithoutDB := orm.NewMysql(&orm.MysqlConfig{
 				Dsn: dsnWithoutDB,
 			}, global.Logger)
-			// 获取底层的 *sql.DB 对象，并确保在程序退出时关闭连接
+			// Get the underlying *sql.DB object and make sure the connection is closed when the program exits
 			sqlDBWithoutDB, err := dbWithoutDB.DB()
 			if err != nil {
-				global.Logger.Errorf("获取底层 *sql.DB 对象失败: %v", err)
+				global.Logger.Errorf("Failed to obtain underlying *sql.DB object:%v", err)
 				return
 			}
 			defer func() {
 				if err := sqlDBWithoutDB.Close(); err != nil {
-					global.Logger.Errorf("关闭连接失败: %v", err)
+					global.Logger.Errorf("Failed to close connection:%v", err)
 				}
 			}()
 
@@ -258,20 +258,20 @@ func DatabaseAutoUpdate() {
 	if !db.Migrator().HasTable(&model.Version{}) {
 		Migrate(uint(version))
 	} else {
-		//查找最后一个version
+		//Find the last version
 		var v model.Version
 		db.Last(&v)
 		if v.Version < uint(version) {
 			Migrate(uint(version))
 		}
 
-		// 245迁移
+		// 245 migration
 		if v.Version < 245 {
-			//oauths 表的 oauth_type 字段设置为 op同样的值
+			//The oauth_type field of the oauths table is set to the same value as op
 			db.Exec("update oauths set oauth_type = op")
 			db.Exec("update oauths set issuer = 'https://accounts.google.com' where op = 'google'")
 			db.Exec("update user_thirds set oauth_type = third_type, op = third_type")
-			//通过email迁移旧的google授权
+			//Migrate old google authorization via email
 			uts := make([]model.UserThird, 0)
 			db.Where("oauth_type = ?", "google").Find(&uts)
 			for _, ut := range uts {
@@ -312,7 +312,7 @@ func Migrate(version uint) {
 		global.Logger.Error("migrate err :=>", err)
 	}
 	global.DB.Create(&model.Version{Version: version})
-	//如果是初次则创建一个默认用户
+	//If this is the first time, create a default user
 	var vc int64
 	global.DB.Model(&model.Version{}).Count(&vc)
 	if vc == 1 {
@@ -334,7 +334,7 @@ func Migrate(version uint) {
 			Type: model.GroupTypeShare,
 		}
 		service.AllService.GroupService.Create(groupShare)
-		//是true
+		//is true
 		is_admin := true
 		admin := &model.User{
 			Username: "admin",
@@ -344,7 +344,7 @@ func Migrate(version uint) {
 			GroupId:  1,
 		}
 
-		// 生成随机密码
+		// Generate random password
 		pwd := utils.RandomString(8)
 		global.Logger.Info("Admin Password Is: ", pwd)
 		var err error

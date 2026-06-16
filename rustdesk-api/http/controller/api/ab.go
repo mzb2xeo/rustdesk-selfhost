@@ -20,9 +20,9 @@ type Ab struct {
 }
 
 // Ab
-// @Tags 地址
-// @Summary 地址列表
-// @Description 地址列表
+// @Tags address
+// @Summary Address List
+// @Description address list
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} response.Response
@@ -36,7 +36,7 @@ func (a *Ab) Ab(c *gin.Context) {
 	tags := service.AllService.TagService.ListByUserIdAndCollectionId(user.Id, 0)
 
 	tagColors := map[string]uint{}
-	//将tags中的name转成一个以逗号分割的字符串
+	//Convert the name in tags to a comma-separated string
 	var tagNames []string
 	for _, tag := range tags.Tags {
 		tagNames = append(tagNames, tag.Name)
@@ -56,12 +56,12 @@ func (a *Ab) Ab(c *gin.Context) {
 }
 
 // UpAb
-// @Tags 地址
-// @Summary 地址更新
-// @Description 地址更新
+// @Tags address
+// @Summary address update
+// @Description Address update
 // @Accept  json
 // @Produce  json
-// @Param body body requstform.AddressBookForm true "地址表单"
+// @Param body body requstform.AddressBookForm true "Address Form"
 // @Success 200 {string} string "null"
 // @Failure 500 {object} response.ErrorResponse
 // @Router /ab [post]
@@ -99,9 +99,9 @@ func (a *Ab) UpAb(c *gin.Context) {
 }
 
 // PTags
-// @Tags 地址[Personal]
-// @Summary 标签
-// @Description 标签
+// @Tags address[Personal]
+// @Summary tag
+// @Description Label
 // @Accept  json
 // @Produce  json
 // @Param guid path string true "guid"
@@ -128,9 +128,9 @@ func (a *Ab) PTags(c *gin.Context) {
 }
 
 // TagAdd
-// @Tags 地址[Personal]
-// @Summary 标签添加
-// @Description 标签
+// @Tags address[Personal]
+// @Summary tag added
+// @Description Label
 // @Accept  json
 // @Produce  json
 // @Param guid path string true "guid"
@@ -177,9 +177,9 @@ func (a *Ab) TagAdd(c *gin.Context) {
 }
 
 // TagRename
-// @Tags 地址[Personal]
-// @Summary 标签重命名
-// @Description 标签
+// @Tags address[Personal]
+// @Summary tag rename
+// @Description Label
 // @Accept  json
 // @Produce  json
 // @Param guid path string true "guid"
@@ -229,9 +229,9 @@ func (a *Ab) TagRename(c *gin.Context) {
 }
 
 // TagUpdate
-// @Tags 地址[Personal]
-// @Summary 标签修改颜色
-// @Description 标签
+// @Tags address[Personal]
+// @Summary tag changes color
+// @Description Label
 // @Accept  json
 // @Produce  json
 // @Param guid path string true "guid"
@@ -275,9 +275,9 @@ func (a *Ab) TagUpdate(c *gin.Context) {
 }
 
 // TagDel
-// @Tags 地址[Personal]
-// @Summary 标签删除
-// @Description 标签
+// @Tags address[Personal]
+// @Summary tag removal
+// @Description Label
 // @Accept  json
 // @Produce  json
 // @Param guid path string true "guid"
@@ -324,9 +324,9 @@ func (a *Ab) TagDel(c *gin.Context) {
 }
 
 // Personal
-// @Tags 地址[Personal]
-// @Summary 个人地址
-// @Description 个人地址
+// @Tags address[Personal]
+// @Summary personal address
+// @Description personal address
 // @Accept  json
 // @Produce  json
 // @Param string body string false  "string valid"
@@ -345,7 +345,7 @@ func (a *Ab) Personal(c *gin.Context) {
 	*/
 	if global.Config.Rustdesk.Personal == 1 {
 		guid := a.ComposeGuid(user.GroupId, user.Id, 0)
-		//如果返回了guid，后面的请求会有变化
+		//If guid is returned, subsequent requests will change.
 		c.JSON(http.StatusOK, gin.H{
 			"guid": guid,
 			"name": user.Username,
@@ -358,9 +358,9 @@ func (a *Ab) Personal(c *gin.Context) {
 }
 
 // Settings
-// @Tags 地址[Personal]
-// @Summary 设置
-// @Description 设置
+// @Tags address[Personal]
+// @Summary Settings
+// @Description set up
 // @Accept  json
 // @Produce  json
 // @Param string body string false  "string valid"
@@ -370,18 +370,18 @@ func (a *Ab) Personal(c *gin.Context) {
 // @Security BearerAuth
 func (a *Ab) Settings(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"max_peer_one_ab": 0, //最大peer数，0表示不限制
+		"max_peer_one_ab": 0, //Maximum number of peers, 0 means no limit
 	})
 }
 
 // SharedProfiles
-// @Tags 地址[Personal]
-// @Summary 共享地址簿
-// @Description 共享
+// @Tags address[Personal]
+// @Summary Shared address book
+// @Description shared
 // @Accept  json
 // @Produce  json
-// @Param current query int false "页码"
-// @Param pageSize query int false "每页数量"
+// @Param current query int false "Page number"
+// @Param pageSize query int false "number per page"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /ab/shared/profiles [post]
@@ -401,14 +401,14 @@ func (a *Ab) SharedProfiles(c *gin.Context) {
 		})
 	}
 
-	allAbIds := make(map[uint]int) //用map去重，并保留最大Rule
+	allAbIds := make(map[uint]int) //Use map to remove duplicates and retain the largest Rule
 	allUserIds := make(map[uint]*model.User)
 	rules := service.AllService.AddressBookService.CollectionReadRules(user)
 	for _, rule := range rules {
-		//先判断是否存在
+		//First determine whether it exists
 		r, ok := allAbIds[rule.CollectionId]
 		if ok {
-			//再判断权限大小
+			//Then determine the size of the permissions
 			if r < rule.Rule {
 				allAbIds[rule.CollectionId] = rule.Rule
 			}
@@ -448,7 +448,7 @@ func (a *Ab) SharedProfiles(c *gin.Context) {
 
 // ParseGuid
 func (a *Ab) ParseGuid(guid string) (gid, uid, cid uint) {
-	//用-切割 guid
+	//cut guid with -
 	guids := strings.Split(guid, "-")
 	if len(guids) < 2 {
 		return 0, 0, 0
@@ -521,13 +521,13 @@ func (a *Ab) CheckGuid(cu *model.User, guid string) (gid, uid, cid uint, err err
 }
 
 // Peers
-// @Tags 地址[Personal]
-// @Summary 地址列表
-// @Description 地址
+// @Tags address[Personal]
+// @Summary Address List
+// @Description address
 // @Accept  json
 // @Produce  json
-// @Param current query int false "页码"
-// @Param pageSize query int false "每页数量"
+// @Param current query int false "Page number"
+// @Param pageSize query int false "number per page"
 // @Param ab query string false "guid"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
@@ -557,9 +557,9 @@ func (a *Ab) Peers(c *gin.Context) {
 }
 
 // PeerAdd
-// @Tags 地址[Personal]
-// @Summary 添加地址
-// @Description 添加地址
+// @Tags address[Personal]
+// @Summary Add address
+// @Description Add address
 // @Accept  json
 // @Produce  json
 // @Param guid path string true "guid"
@@ -568,7 +568,7 @@ func (a *Ab) Peers(c *gin.Context) {
 // @Router /ab/peer/add/{guid} [post]
 // @Security BearerAuth
 func (a *Ab) PeerAdd(c *gin.Context) {
-	// forceAlwaysRelay永远是字符串"false"
+	// forceAlwaysRelay is always the string "false"
 	//f := &gin.H{}
 	f := &requstform.PersonalAddressBookForm{}
 	err := c.ShouldBindJSON(f)
@@ -613,9 +613,9 @@ func (a *Ab) PeerAdd(c *gin.Context) {
 }
 
 // PeerDel
-// @Tags 地址[Personal]
-// @Summary 删除地址
-// @Description 删除地址
+// @Tags address[Personal]
+// @Summary Delete address
+// @Description Delete address
 // @Accept  json
 // @Produce  json
 // @Param guid path string true "guid"
@@ -661,9 +661,9 @@ func (a *Ab) PeerDel(c *gin.Context) {
 }
 
 // PeerUpdate
-// @Tags 地址[Personal]
-// @Summary 更新地址
-// @Description 更新地址
+// @Tags address[Personal]
+// @Summary Update address
+// @Description Update address
 // @Accept  json
 // @Produce  json
 // @Param guid path string true "guid"
@@ -693,7 +693,7 @@ func (a *Ab) PeerUpdate(c *gin.Context) {
 		return
 	}
 	//fmt.Println(f)
-	//判断f["Id"]是否存在
+	//Determine whether f["Id"] exists
 	fid, ok := f["id"]
 	if !ok {
 		response.Error(c, response.TranslateMsg(c, "ParamsError"))
@@ -706,9 +706,9 @@ func (a *Ab) PeerUpdate(c *gin.Context) {
 		response.Error(c, response.TranslateMsg(c, "ItemNotFound"))
 		return
 	}
-	//允许的字段
+	//allowed fields
 	allowUp := []string{"password", "hash", "tags", "alias"}
-	//f中的字段如果不在allowUp中，就删除
+	//If the field in f is not in allowUp, delete it
 	for k := range f {
 		if !utils.InArray(k, allowUp) {
 			delete(f, k)

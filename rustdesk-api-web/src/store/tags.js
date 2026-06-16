@@ -12,7 +12,7 @@ export const useTagsStore = defineStore({
       //   {
       //     name: 'Home',
       //     path: '/Home',
-      //     title: '首页',
+      //     title: 'Home',
       //     active: false,
       //     closeable: false,
       //     keepAlive: false,

@@ -6,7 +6,7 @@
         <el-option v-for="c in collectionListRes.list" :key="c.id" :label="c.name" :value="c.id"></el-option>
       </el-select>
       <div class="aside-tags">
-        <div class="top" style="width: 100%">标签</div>
+        <div class="top" style="width: 100%">Label</div>
         <div v-for="t in tagListRes.list"
              :key="t.id" class="tag"
              :class="{checked: checkedTags.includes(t.name)}"
@@ -44,7 +44,7 @@
         </el-form>
       </el-card>
       <el-card class="list-body" shadow="hover">
-        <!--      <el-tag type="danger" style="margin-bottom: 10px">不建议在此操作地址簿，可能会造成数据不同步</el-tag>-->
+        <!--      <el-tag type="danger" style="margin-bottom: 10px">It is not recommended to operate the address book here, as it may cause the data to be out of sync.</el-tag>-->
         <el-table :data="listRes.list" v-loading="listRes.loading" border>
           <el-table-column prop="id" label="ID" align="center" width="200">
             <template #default="{row}">
@@ -61,8 +61,8 @@
           <el-table-column prop="hostname" :label="T('Hostname')" align="center" width="150"/>
           <el-table-column prop="platform" :label="T('Platform')" align="center" width="120"/>
           <el-table-column prop="tags" :label="T('Tags')" align="center"/>
-          <!--        <el-table-column prop="created_at" label="创建时间" align="center"/>-->
-          <!--        <el-table-column prop="updated_at" label="更新时间" align="center"/>-->
+          <!--        <el-table-column prop="created_at" label="creation time" align="center"/>-->
+          <!--        <el-table-column prop="updated_at" label="Update time" align="center"/>-->
           <el-table-column prop="alias" :label="T('Alias')" align="center" width="150"/>
           <el-table-column prop="hash" :label="T('Hash')" align="center" width="150" show-overflow-tooltip/>
           <el-table-column :label="T('Actions')" align="center" class-name="table-actions" width="600" fixed="right">
@@ -132,19 +132,19 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="强制中继" prop="forceAlwaysRelay" required>
+        <!-- <el-form-item label="forced relay" prop="forceAlwaysRelay" required>
                  <el-switch v-model="formData.forceAlwaysRelay"></el-switch>
                </el-form-item>
-          <el-form-item label="在线" prop="online">
+          <el-form-item label="online" prop="online">
                  <el-switch v-model="formData.online"></el-switch>
                </el-form-item>
-               <el-form-item label="rdp端口" prop="rdpPort">
+               <el-form-item label="rdp port" prop="rdpPort">
                  <el-input v-model="formData.rdpPort"></el-input>
                </el-form-item>
-               <el-form-item label="rdp用户名" prop="rdpUsername">
+               <el-form-item label="rdpusername" prop="rdpUsername">
                  <el-input v-model="formData.rdpUsername"></el-input>
                </el-form-item>
-               <el-form-item label="同一服务器" prop="sameServer">
+               <el-form-item label="same server" prop="sameServer">
                  <el-switch v-model="formData.sameServer"></el-switch>
                </el-form-item>-->
 

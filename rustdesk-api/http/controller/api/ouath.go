@@ -65,37 +65,37 @@ func (o *Oauth) OidcAuthQueryPre(c *gin.Context) (*model.User, *model.UserToken)
 	var ut *model.UserToken
 	q := &api.OidcAuthQuery{}
 
-	// 解析查询参数并处理错误
+	// Parse query parameters and handle errors
 	if err := c.ShouldBindQuery(q); err != nil {
 		response.Error(c, response.TranslateMsg(c, "ParamsError")+": "+err.Error())
 		return nil, nil
 	}
 
-	// 获取 OAuth 缓存
+	// Get OAuth cache
 	v := service.AllService.OauthService.GetOauthCache(q.Code)
 	if v == nil {
 		response.Error(c, response.TranslateMsg(c, "OauthExpired"))
 		return nil, nil
 	}
 
-	// 如果 UserId 为 0，说明还在授权中
+	// If UserId is 0, it means it is still being authorized.
 	if v.UserId == 0 {
 		//fix: 1.4.2 webclient oidc
 		c.JSON(http.StatusOK, gin.H{"message": "Authorization in progress, please login and bind", "error": "No authed oidc is found"})
 		return nil, nil
 	}
 
-	// 获取用户信息
+	// Get user information
 	u = service.AllService.UserService.InfoById(v.UserId)
 	if u == nil {
 		response.Error(c, response.TranslateMsg(c, "UserNotFound"))
 		return nil, nil
 	}
 
-	// 删除 OAuth 缓存
+	// Delete OAuth cache
 	service.AllService.OauthService.DeleteOauthCache(q.Code)
 
-	// 创建登录日志并生成用户令牌
+	// Create login log and generate user token
 	ut = service.AllService.UserService.Login(u, &model.LoginLog{
 		UserId:   u.Id,
 		Client:   v.DeviceType,
@@ -111,7 +111,7 @@ func (o *Oauth) OidcAuthQueryPre(c *gin.Context) (*model.User, *model.UserToken)
 		return nil, nil
 	}
 
-	// 返回用户令牌
+	// Return user token
 	return u, ut
 }
 
@@ -136,7 +136,7 @@ func (o *Oauth) OidcAuthQuery(c *gin.Context) {
 	})
 }
 
-// OauthCallback 回调
+// OauthCallback callback
 // @Tags Oauth
 // @Summary OauthCallback
 // @Description OauthCallback
@@ -156,7 +156,7 @@ func (o *Oauth) OauthCallback(c *gin.Context) {
 	}
 	cacheKey := state
 	oauthService := service.AllService.OauthService
-	//从缓存中获取
+	//Get from cache
 	oauthCache := oauthService.GetOauthCache(cacheKey)
 	if oauthCache == nil {
 		c.HTML(http.StatusOK, "oauth_fail.html", gin.H{
@@ -169,7 +169,7 @@ func (o *Oauth) OauthCallback(c *gin.Context) {
 	action := oauthCache.Action
 	verifier := oauthCache.Verifier
 	var user *model.User
-	// 获取用户信息
+	// Get user information
 	code := c.Query("code")
 	err, oauthUser := oauthService.Callback(code, verifier, op, nonce)
 	if err != nil {
@@ -184,7 +184,7 @@ func (o *Oauth) OauthCallback(c *gin.Context) {
 	if action == service.OauthActionTypeBind {
 
 		//fmt.Println("bind", ty, userData)
-		// 检查此openid是否已经绑定过
+		// Check whether this openid has been bound
 		utr := oauthService.UserThirdInfo(op, openid)
 		if utr.UserId > 0 {
 			c.HTML(http.StatusOK, "oauth_fail.html", gin.H{
@@ -192,7 +192,7 @@ func (o *Oauth) OauthCallback(c *gin.Context) {
 			})
 			return
 		}
-		//绑定
+		//binding
 		user = service.AllService.UserService.InfoById(userId)
 		if user == nil {
 			c.HTML(http.StatusOK, "oauth_fail.html", gin.H{
@@ -200,7 +200,7 @@ func (o *Oauth) OauthCallback(c *gin.Context) {
 			})
 			return
 		}
-		//绑定
+		//binding
 		err := oauthService.BindOauthUser(userId, oauthUser, op)
 		if err != nil {
 			c.HTML(http.StatusOK, "oauth_fail.html", gin.H{
@@ -214,7 +214,7 @@ func (o *Oauth) OauthCallback(c *gin.Context) {
 		return
 
 	} else if action == service.OauthActionTypeLogin {
-		//登录
+		//Log in
 		if userId != 0 {
 			c.HTML(http.StatusOK, "oauth_fail.html", gin.H{
 				"message": "OauthHasBeenSuccess",
@@ -225,13 +225,13 @@ func (o *Oauth) OauthCallback(c *gin.Context) {
 		if user == nil {
 			oauthConfig := oauthService.InfoByOp(op)
 			if !*oauthConfig.AutoRegister {
-				//c.String(http.StatusInternalServerError, "还未绑定用户，请先绑定")
+				//c.String(http.StatusInternalServerError, "The user has not been bound yet, please bind first")
 				oauthCache.UpdateFromOauthUser(oauthUser)
 				c.Redirect(http.StatusFound, "/_admin/#/oauth/bind/"+cacheKey)
 				return
 			}
 
-			//自动注册
+			//Automatic registration
 			err, user = service.AllService.UserService.RegisterByOauth(oauthUser, op)
 			if err != nil {
 				c.HTML(http.StatusOK, "oauth_fail.html", gin.H{
@@ -242,7 +242,7 @@ func (o *Oauth) OauthCallback(c *gin.Context) {
 		}
 		oauthCache.UserId = user.Id
 		oauthService.SetOauthCache(cacheKey, oauthCache, 0)
-		// 如果是webadmin，登录成功后跳转到webadmin
+		// If it is webadmin, jump to webadmin after successful login.
 		if oauthCache.DeviceType == model.LoginLogClientWebAdmin {
 			/*service.AllService.UserService.Login(u, &model.LoginLog{
 				UserId:   u.Id,
@@ -299,7 +299,7 @@ func (o *Oauth) Message(c *gin.Context) {
 		}
 	}
 
-	//返回js内容
+	//Return js content
 	c.Header("Content-Type", "application/javascript")
 	c.String(http.StatusOK, res)
 }

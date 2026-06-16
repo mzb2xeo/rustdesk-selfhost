@@ -8,7 +8,7 @@ import (
 type LoginLogService struct {
 }
 
-// InfoById 根据用户id取用户信息
+// InfoById gets user information based on user id
 func (us *LoginLogService) InfoById(id uint) *model.LoginLog {
 	u := &model.LoginLog{}
 	DB.Where("id = ?", id).First(u)
@@ -29,7 +29,7 @@ func (us *LoginLogService) List(page, pageSize uint, where func(tx *gorm.DB)) (r
 	return
 }
 
-// Create 创建
+// Create
 func (us *LoginLogService) Create(u *model.LoginLog) error {
 	res := DB.Create(u).Error
 	return res
@@ -38,7 +38,7 @@ func (us *LoginLogService) Delete(u *model.LoginLog) error {
 	return DB.Delete(u).Error
 }
 
-// Update 更新
+// Update update
 func (us *LoginLogService) Update(u *model.LoginLog) error {
 	return DB.Model(u).Updates(u).Error
 }

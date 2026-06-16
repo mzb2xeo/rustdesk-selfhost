@@ -119,7 +119,7 @@ type OidcUser struct {
 
 func (ou *OidcUser) ToOauthUser() *OauthUser {
 	var username string
-	// 使用 PreferredUsername，如果不存在，降级到 Email 前缀
+	// Use PreferredUsername, if not present, fall back to Email prefix
 	if ou.PreferredUsername != "" {
 		username = ou.PreferredUsername
 	} else {
@@ -169,7 +169,7 @@ func (lu *LinuxdoUser) ToOauthUser() *OauthUser {
 		Name:          lu.Name,
 		Username:      strings.ToLower(lu.Username),
 		Email:         lu.Email,
-		VerifiedEmail: true, // linux.do 用户邮箱默认已验证
+		VerifiedEmail: true, // linux.do user email is verified by default
 		Picture:       lu.Avatar,
 	}
 }

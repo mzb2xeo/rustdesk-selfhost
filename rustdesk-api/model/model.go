@@ -7,8 +7,8 @@ import (
 type StatusCode int
 
 const (
-	COMMON_STATUS_ENABLE   StatusCode = 1 //通用状态 启用
-	COMMON_STATUS_DISABLED StatusCode = 2 //通用状态 禁用
+	COMMON_STATUS_ENABLE   StatusCode = 1 //General status enabled
+	COMMON_STATUS_DISABLED StatusCode = 2 //General status disabled
 )
 
 type IdModel struct {

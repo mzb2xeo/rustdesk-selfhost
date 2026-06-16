@@ -16,13 +16,13 @@ import (
 type Login struct {
 }
 
-// Login 登录
-// @Tags 登录
-// @Summary 登录
-// @Description 登录
+// Login Login
+// @Tags login
+// @Summary Login
+// @Description Log in
 // @Accept  json
 // @Produce  json
-// @Param body body api.LoginForm true "登录表单"
+// @Param body body api.LoginForm true "Login form"
 // @Success 200 {object} apiResp.LoginRes
 // @Failure 500 {object} response.ErrorResponse
 // @Router /login [post]
@@ -32,7 +32,7 @@ func (l *Login) Login(c *gin.Context) {
 		return
 	}
 
-	// 检查登录限制
+	// Check login restrictions
 	loginLimiter := global.LoginLimiter
 	clientIp := c.ClientIP()
 
@@ -68,7 +68,7 @@ func (l *Login) Login(c *gin.Context) {
 		return
 	}
 
-	//根据refer判断是webclient还是app
+	//Determine whether it is webclient or app based on the referral
 	ref := c.GetHeader("referer")
 	if ref != "" {
 		f.DeviceInfo.Type = model.LoginLogClientWeb
@@ -92,9 +92,9 @@ func (l *Login) Login(c *gin.Context) {
 }
 
 // LoginOptions
-// @Tags 登录
-// @Summary 登录选项
-// @Description 登录选项
+// @Tags login
+// @Summary Login options
+// @Description Login options
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} []string
@@ -123,9 +123,9 @@ func (l *Login) LoginOptions(c *gin.Context) {
 }
 
 // Logout
-// @Tags 登录
-// @Summary 登出
-// @Description 登出
+// @Tags login
+// @Summary Sign out
+// @Description Sign out
 // @Accept  json
 // @Produce  json
 // @Success 200 {string} string

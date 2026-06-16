@@ -33,7 +33,7 @@ func TestSecurityWorkflow(t *testing.T) {
 	limiter := NewLoginLimiter(policy)
 	ip := "192.168.1.100"
 
-	// 测试正常失败记录
+	// Test normal failure record
 	for i := 0; i < 3; i++ {
 		limiter.RecordFailedAttempt(ip)
 	}
@@ -45,14 +45,14 @@ func TestSecurityWorkflow(t *testing.T) {
 	if !capRequired {
 		t.Error("Captcha should be required")
 	}
-	// 测试触发封禁
+	// Testing triggers ban
 	for i := 0; i < 3; i++ {
 		limiter.RecordFailedAttempt(ip)
 		isBanned, capRequired = limiter.CheckSecurityStatus(ip)
 		fmt.Printf("IP: %s, Banned: %v, Captcha Required: %v\n", ip, isBanned, capRequired)
 	}
 
-	// 测试封禁状态
+	// Test ban status
 	if isBanned, _ = limiter.CheckSecurityStatus(ip); !isBanned {
 		t.Error("IP should be banned")
 	}
@@ -64,36 +64,37 @@ func TestCaptchaFlow(t *testing.T) {
 	limiter.RegisterProvider(&MockCaptchaProvider{})
 	ip := "10.0.0.1"
 
-	// 触发验证码要求
+	// Trigger verification code requirement
 	limiter.RecordFailedAttempt(ip)
 	limiter.RecordFailedAttempt(ip)
 
-	// 检查状态
+	// check status
 	if _, need := limiter.CheckSecurityStatus(ip); !need {
-		t.Error("应该需要验证码")
+		t.Error("Verification code should be required")
 	}
 
-	// 生成验证码
+	// Generate verification code
 	err, capc := limiter.RequireCaptcha()
 	if err != nil {
-		t.Fatalf("生成验证码失败: %v", err)
+		t.Fatalf("Failed to generate verification code:%v", err)
 	}
-	fmt.Printf("验证码内容: %#v\n", capc)
+	fmt.Printf("Verification code content: %#v
+", capc)
 
-	// 验证成功
+	// Verification successful
 	if !limiter.VerifyCaptcha(capc.Id, capc.Answer) {
-		t.Error("验证码应该验证成功")
+		t.Error("The verification code should be verified successfully")
 	}
 
-	// 验证已删除
+	// Verify deleted
 	if limiter.VerifyCaptcha(capc.Id, capc.Answer) {
-		t.Error("验证码应该已删除")
+		t.Error("The verification code should have been deleted")
 	}
 
 	limiter.RemoveAttempts(ip)
-	// 验证后状态
+	// Post-verification status
 	if banned, need := limiter.CheckSecurityStatus(ip); banned || need {
-		t.Error("验证成功后应该重置状态")
+		t.Error("The status should be reset after successful verification")
 	}
 }
 
@@ -103,26 +104,27 @@ func TestCaptchaMustFlow(t *testing.T) {
 	limiter.RegisterProvider(&MockCaptchaProvider{})
 	ip := "10.0.0.1"
 
-	// 检查状态
+	// check status
 	if _, need := limiter.CheckSecurityStatus(ip); !need {
-		t.Error("应该需要验证码")
+		t.Error("Verification code should be required")
 	}
 
-	// 生成验证码
+	// Generate verification code
 	err, capc := limiter.RequireCaptcha()
 	if err != nil {
-		t.Fatalf("生成验证码失败: %v", err)
+		t.Fatalf("Failed to generate verification code:%v", err)
 	}
-	fmt.Printf("验证码内容: %#v\n", capc)
+	fmt.Printf("Verification code content: %#v
+", capc)
 
-	// 验证成功
+	// Verification successful
 	if !limiter.VerifyCaptcha(capc.Id, capc.Answer) {
-		t.Error("验证码应该验证成功")
+		t.Error("The verification code should be verified successfully")
 	}
 
-	// 验证后状态
+	// Post-verification status
 	if _, need := limiter.CheckSecurityStatus(ip); !need {
-		t.Error("应该需要验证码")
+		t.Error("Verification code should be required")
 	}
 }
 func TestAttemptTimeout(t *testing.T) {
@@ -131,28 +133,28 @@ func TestAttemptTimeout(t *testing.T) {
 	limiter.RegisterProvider(&MockCaptchaProvider{})
 	ip := "10.0.0.1"
 
-	// 触发验证码要求
+	// Trigger verification code requirement
 	limiter.RecordFailedAttempt(ip)
 	limiter.RecordFailedAttempt(ip)
 
-	// 检查状态
+	// check status
 	if _, need := limiter.CheckSecurityStatus(ip); !need {
-		t.Error("应该需要验证码")
+		t.Error("Verification code should be required")
 	}
 
-	// 生成验证码
+	// Generate verification code
 	err, _ := limiter.RequireCaptcha()
 	if err != nil {
-		t.Fatalf("生成验证码失败: %v", err)
+		t.Fatalf("Failed to generate verification code:%v", err)
 	}
-	// 等待超过 AttemptsWindow
+	// Wait longer than AttemptsWindow
 	time.Sleep(2 * time.Second)
-	// 触发验证码要求
+	// Trigger verification code requirement
 	limiter.RecordFailedAttempt(ip)
 
-	// 检查状态
+	// check status
 	if _, need := limiter.CheckSecurityStatus(ip); need {
-		t.Error("不应该需要验证码")
+		t.Error("Verification code should not be required")
 	}
 }
 
@@ -162,27 +164,27 @@ func TestCaptchaTimeout(t *testing.T) {
 	limiter.RegisterProvider(&MockCaptchaProvider{})
 	ip := "10.0.0.1"
 
-	// 触发验证码要求
+	// Trigger verification code requirement
 	limiter.RecordFailedAttempt(ip)
 	limiter.RecordFailedAttempt(ip)
 
-	// 检查状态
+	// check status
 	if _, need := limiter.CheckSecurityStatus(ip); !need {
-		t.Error("应该需要验证码")
+		t.Error("Verification code should be required")
 	}
 
-	// 生成验证码
+	// Generate verification code
 	err, capc := limiter.RequireCaptcha()
 	if err != nil {
-		t.Fatalf("生成验证码失败: %v", err)
+		t.Fatalf("Failed to generate verification code:%v", err)
 	}
 
-	// 等待超过 CaptchaValidPeriod
+	// Waiting longer than CaptchaValidPeriod
 	time.Sleep(3 * time.Second)
 
-	// 验证成功
+	// Verification successful
 	if limiter.VerifyCaptcha(capc.Id, capc.Answer) {
-		t.Error("验证码应该已过期")
+		t.Error("Verification code should have expired")
 	}
 
 }
@@ -191,12 +193,12 @@ func TestBanFlow(t *testing.T) {
 	policy := SecurityPolicy{BanThreshold: 5}
 	limiter := NewLoginLimiter(policy)
 	ip := "10.0.0.1"
-	// 触发ban
+	// trigger ban
 	for i := 0; i < 5; i++ {
 		limiter.RecordFailedAttempt(ip)
 	}
 
-	// 检查状态
+	// check status
 	if banned, _ := limiter.CheckSecurityStatus(ip); !banned {
 		t.Error("should be banned")
 	}
@@ -205,12 +207,12 @@ func TestBanDisableFlow(t *testing.T) {
 	policy := SecurityPolicy{BanThreshold: 0}
 	limiter := NewLoginLimiter(policy)
 	ip := "10.0.0.1"
-	// 触发ban
+	// trigger ban
 	for i := 0; i < 5; i++ {
 		limiter.RecordFailedAttempt(ip)
 	}
 
-	// 检查状态
+	// check status
 	if banned, _ := limiter.CheckSecurityStatus(ip); banned {
 		t.Error("should not be banned")
 	}
@@ -219,15 +221,15 @@ func TestBanTimeout(t *testing.T) {
 	policy := SecurityPolicy{BanThreshold: 5, BanDuration: 1 * time.Second}
 	limiter := NewLoginLimiter(policy)
 	ip := "10.0.0.1"
-	// 触发ban
-	// 触发ban
+	// trigger ban
+	// trigger ban
 	for i := 0; i < 5; i++ {
 		limiter.RecordFailedAttempt(ip)
 	}
 
 	time.Sleep(2 * time.Second)
 
-	// 检查状态
+	// check status
 	if banned, _ := limiter.CheckSecurityStatus(ip); banned {
 		t.Error("should not be banned")
 	}
@@ -237,12 +239,12 @@ func TestLimiterDisabled(t *testing.T) {
 	policy := SecurityPolicy{BanThreshold: 0, CaptchaThreshold: -1}
 	limiter := NewLoginLimiter(policy)
 	ip := "10.0.0.1"
-	// 触发ban
+	// trigger ban
 	for i := 0; i < 5; i++ {
 		limiter.RecordFailedAttempt(ip)
 	}
 
-	// 检查状态
+	// check status
 	if banned, capNeed := limiter.CheckSecurityStatus(ip); banned || capNeed {
 		fmt.Printf("IP: %s, Banned: %v, Captcha Required: %v\n", ip, banned, capNeed)
 		t.Error("should not be banned or need captcha")
@@ -254,37 +256,39 @@ func TestB64CaptchaFlow(t *testing.T) {
 	limiter.RegisterProvider(B64StringCaptchaProvider{})
 	ip := "10.0.0.1"
 
-	// 触发验证码要求
+	// Trigger verification code requirement
 	limiter.RecordFailedAttempt(ip)
 	limiter.RecordFailedAttempt(ip)
 	limiter.RecordFailedAttempt(ip)
 
-	// 检查状态
+	// check status
 	if _, need := limiter.CheckSecurityStatus(ip); !need {
-		t.Error("应该需要验证码")
+		t.Error("Verification code should be required")
 	}
 
-	// 生成验证码
+	// Generate verification code
 	err, capc := limiter.RequireCaptcha()
 	if err != nil {
-		t.Fatalf("生成验证码失败: %v", err)
+		t.Fatalf("Failed to generate verification code:%v", err)
 	}
-	fmt.Printf("验证码内容: %#v\n", capc)
+	fmt.Printf("Verification code content: %#v
+", capc)
 
 	//draw
 	err, b64 := limiter.DrawCaptcha(capc.Content)
 	if err != nil {
-		t.Fatalf("绘制验证码失败: %v", err)
+		t.Fatalf("Failed to draw verification code:%v", err)
 	}
-	fmt.Printf("验证码内容: %#v\n", b64)
+	fmt.Printf("Verification code content: %#v
+", b64)
 
-	// 验证成功
+	// Verification successful
 	if !limiter.VerifyCaptcha(capc.Id, capc.Answer) {
-		t.Error("验证码应该验证成功")
+		t.Error("The verification code should be verified successfully")
 	}
 	limiter.RemoveAttempts(ip)
-	// 验证后状态
+	// Post-verification status
 	if banned, need := limiter.CheckSecurityStatus(ip); banned || need {
-		t.Error("验证成功后应该重置状态")
+		t.Error("The status should be reset after successful verification")
 	}
 }

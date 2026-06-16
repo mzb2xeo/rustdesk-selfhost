@@ -146,8 +146,9 @@ definitions:
       collection_id:
         type: integer
       color:
-        description: color 是flutter的颜色值,从0x00000000 到 0xFFFFFFFF; 前两位表示透明度，后面6位表示颜色,
-          可以转成rgba
+        description: color is the color value of flutter, from 0x00000000 to 0xFFFFFFFF;
+          the first two digits represent transparency, and the last 6 digits represent
+          color, which can be converted to rgba
         type: integer
       created_at:
         type: string
@@ -194,15 +195,15 @@ definitions:
     type: object
 info:
   contact: {}
-  description: 接口
-  title: 管理系统API
+  description: interface
+  title: Management System API
   version: "1.0"
 paths:
   /:
     get:
       consumes:
       - application/json
-      description: 首页
+      description: front page
       produces:
       - application/json
       responses:
@@ -214,14 +215,14 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 首页
+      summary: Home Page
       tags:
-      - 首页
+      - Home Page
   /ab:
     get:
       consumes:
       - application/json
-      description: 地址列表
+      description: address list
       produces:
       - application/json
       responses:
@@ -235,15 +236,15 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 地址列表
+      summary: Address List
       tags:
-      - 地址
+      - address
     post:
       consumes:
       - application/json
-      description: 地址更新
+      description: Address update
       parameters:
-      - description: 地址表单
+      - description: Address Form
         in: body
         name: body
         required: true
@@ -262,14 +263,14 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 地址更新
+      summary: address update
       tags:
-      - 地址
+      - address
   /ab/peer/add/{guid}:
     delete:
       consumes:
       - application/json
-      description: 删除地址
+      description: Delete address
       parameters:
       - description: guid
         in: path
@@ -289,13 +290,13 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 删除地址
+      summary: Delete address
       tags:
-      - 地址[Personal]
+      - address[Personal]
     post:
       consumes:
       - application/json
-      description: 添加地址
+      description: Add address
       parameters:
       - description: guid
         in: path
@@ -315,14 +316,14 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 添加地址
+      summary: Add address
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/peer/update/{guid}:
     put:
       consumes:
       - application/json
-      description: 更新地址
+      description: Update address
       parameters:
       - description: guid
         in: path
@@ -342,20 +343,20 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 更新地址
+      summary: Update address
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/peers:
     post:
       consumes:
       - application/json
-      description: 地址
+      description: address
       parameters:
-      - description: 页码
+      - description: Page number
         in: query
         name: current
         type: integer
-      - description: 每页数量
+      - description: number per page
         in: query
         name: pageSize
         type: integer
@@ -376,14 +377,14 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
-      summary: 地址列表
+      summary: Address List
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/personal:
     post:
       consumes:
       - application/json
-      description: 个人地址
+      description: personal address
       parameters:
       - description: string valid
         in: body
@@ -403,14 +404,14 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
-      summary: 个人地址
+      summary: personal address
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/settings:
     post:
       consumes:
       - application/json
-      description: 设置
+      description: set up
       parameters:
       - description: string valid
         in: body
@@ -430,20 +431,20 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
-      summary: 设置
+      summary: Settings
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/shared/profiles:
     post:
       consumes:
       - application/json
-      description: 共享
+      description: shared
       parameters:
-      - description: 页码
+      - description: Page number
         in: query
         name: current
         type: integer
-      - description: 每页数量
+      - description: number per page
         in: query
         name: pageSize
         type: integer
@@ -460,14 +461,14 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
-      summary: 共享地址簿
+      summary: Shared address book
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/tag/{guid}:
     delete:
       consumes:
       - application/json
-      description: 标签
+      description: Label
       parameters:
       - description: guid
         in: path
@@ -487,14 +488,14 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 标签删除
+      summary: tag removal
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/tag/add/{guid}:
     post:
       consumes:
       - application/json
-      description: 标签
+      description: Label
       parameters:
       - description: guid
         in: path
@@ -514,14 +515,14 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 标签添加
+      summary: tag added
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/tag/rename/{guid}:
     put:
       consumes:
       - application/json
-      description: 标签
+      description: Label
       parameters:
       - description: guid
         in: path
@@ -541,14 +542,14 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 标签重命名
+      summary: tag rename
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/tag/update/{guid}:
     put:
       consumes:
       - application/json
-      description: 标签
+      description: Label
       parameters:
       - description: guid
         in: path
@@ -568,14 +569,14 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 标签修改颜色
+      summary: tag changes color
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /ab/tags/{guid}:
     post:
       consumes:
       - application/json
-      description: 标签
+      description: Label
       parameters:
       - description: guid
         in: path
@@ -595,16 +596,16 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 标签
+      summary: tag
       tags:
-      - 地址[Personal]
+      - address[Personal]
   /audit/conn:
     post:
       consumes:
       - application/json
-      description: 审计连接
+      description: Audit connection
       parameters:
-      - description: 审计连接
+      - description: Audit connection
         in: body
         name: body
         required: true
@@ -621,16 +622,16 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 审计连接
+      summary: Audit connection
       tags:
-      - 审计
+      - Audit
   /audit/file:
     post:
       consumes:
       - application/json
-      description: 审计文件
+      description: audit documents
       parameters:
-      - description: 审计文件
+      - description: Audit file
         in: body
         name: body
         required: true
@@ -647,14 +648,14 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 审计文件
+      summary: audit file
       tags:
-      - 审计
+      - Audit
   /currentUser:
     get:
       consumes:
       - application/json
-      description: 用户信息
+      description: User information
       produces:
       - application/json
       responses:
@@ -668,24 +669,24 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - token: []
-      summary: 用户信息
+      summary: User information
       tags:
-      - 用户
+      - user
   /device-group/accessible:
     get:
       consumes:
       - application/json
-      description: 机器
+      description: machine
       parameters:
-      - description: 页码
+      - description: page number
         in: query
         name: page
         type: integer
-      - description: 每页数量
+      - description: number per page
         in: query
         name: pageSize
         type: integer
-      - description: 状态
+      - description: status
         in: query
         name: status
         type: integer
@@ -706,14 +707,14 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
-      summary: 设备
+      summary: Equipment
       tags:
-      - 群组
+      - group
   /heartbeat:
     post:
       consumes:
       - application/json
-      description: 心跳
+      description: heartbeat
       produces:
       - application/json
       responses:
@@ -723,16 +724,16 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 心跳
+      summary: heartbeat
       tags:
-      - 首页
+      - Home Page
   /login:
     post:
       consumes:
       - application/json
-      description: 登录
+      description: Log in
       parameters:
-      - description: 登录表单
+      - description: Login form
         in: body
         name: body
         required: true
@@ -749,14 +750,14 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: 登录
+      summary: Login
       tags:
-      - 登录
+      - login
   /login-options:
     get:
       consumes:
       - application/json
-      description: 登录选项
+      description: Login options
       produces:
       - application/json
       responses:
@@ -770,14 +771,14 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: 登录选项
+      summary: Login options
       tags:
-      - 登录
+      - login
   /logout:
     post:
       consumes:
       - application/json
-      description: 登出
+      description: Sign out
       produces:
       - application/json
       responses:
@@ -789,9 +790,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: 登出
+      summary: Sign out
       tags:
-      - 登录
+      - login
   /oidc/auth:
     post:
       consumes:
@@ -853,17 +854,17 @@ paths:
     get:
       consumes:
       - application/json
-      description: 机器
+      description: machine
       parameters:
-      - description: 页码
+      - description: page number
         in: query
         name: page
         type: integer
-      - description: 每页数量
+      - description: number per page
         in: query
         name: pageSize
         type: integer
-      - description: 状态
+      - description: status
         in: query
         name: status
         type: integer
@@ -884,14 +885,14 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
-      summary: 机器
+      summary: Machine
       tags:
-      - 群组
+      - group
   /server-config:
     get:
       consumes:
       - application/json
-      description: 服务配置,给webclient提供api-server
+      description: Service configuration, providing api-server to webclient
       produces:
       - application/json
       responses:
@@ -905,14 +906,14 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - token: []
-      summary: 服务配置
+      summary: Service configuration
       tags:
       - WEBCLIENT
   /server-config-v2:
     get:
       consumes:
       - application/json
-      description: 服务配置,给webclient提供api-server
+      description: Service configuration, providing api-server to webclient
       produces:
       - application/json
       responses:
@@ -926,14 +927,14 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - token: []
-      summary: 服务配置
+      summary: Service configuration
       tags:
       - WEBCLIENT_V2
   /shared-peer:
     post:
       consumes:
       - application/json
-      description: 分享的peer
+      description: Sharing peers
       produces:
       - application/json
       responses:
@@ -945,16 +946,16 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 分享的peer
+      summary: shared by peers
       tags:
       - WEBCLIENT
   /sysinfo:
     post:
       consumes:
       - application/json
-      description: 提交系统信息
+      description: Submit system information
       parameters:
-      - description: 系统信息表单
+      - description: System information form
         in: body
         name: body
         required: true
@@ -971,14 +972,14 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: 提交系统信息
+      summary: Submit system information
       tags:
       - System
   /sysinfo_ver:
     post:
       consumes:
       - application/json
-      description: 获取系统版本信息
+      description: Get system version information
       produces:
       - application/json
       responses:
@@ -990,24 +991,24 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: 获取系统版本信息
+      summary: Get system version information
       tags:
       - System
   /users:
     get:
       consumes:
       - application/json
-      description: 用户列表
+      description: User list
       parameters:
-      - description: 页码
+      - description: page number
         in: query
         name: page
         type: integer
-      - description: 每页数量
+      - description: number per page
         in: query
         name: pageSize
         type: integer
-      - description: 状态
+      - description: status
         in: query
         name: status
         type: integer
@@ -1035,14 +1036,14 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: 用户列表
+      summary: User list
       tags:
-      - 群组
+      - group
   /version:
     get:
       consumes:
       - application/json
-      description: 版本
+      description: Version
       produces:
       - application/json
       responses:
@@ -1054,9 +1055,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 版本
+      summary: version
       tags:
-      - 首页
+      - Home Page
 securityDefinitions:
   BearerAuth:
     in: header

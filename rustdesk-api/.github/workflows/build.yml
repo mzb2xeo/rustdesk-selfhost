@@ -29,7 +29,7 @@ on:
         default: 'https://github.com/lejianwen/rustdesk-api-web'
   push:
     tags:
-      - 'v*.*.*'  # 当推送带有版本号的 tag（例如 v1.0.0）时触发工作流
+      - 'v*.*.*'  # The workflow is triggered when pushing a tag with a version number (e.g. v1.0.0)
       - 'test*'
 
 env:
@@ -66,7 +66,7 @@ jobs:
       - name: Set up Go environment
         uses: actions/setup-go@v4
         with:
-          go-version: '1.23'  # 选择 Go 版本
+          go-version: '1.23'  # Select Go version
 
       - name: Set up npm
         uses: actions/setup-node@v2

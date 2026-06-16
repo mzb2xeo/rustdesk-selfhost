@@ -17,7 +17,7 @@ func TestRedisSet(t *testing.T) {
 	err := rc.Set("123", "ddd", 0)
 	if err != nil {
 		fmt.Println(err.Error())
-		t.Fatalf("写入失败")
+		t.Fatalf("Write failed")
 	}
 }
 
@@ -29,12 +29,12 @@ func TestRedisGet(t *testing.T) {
 	})
 	err := rc.Set("123", "451156", 300)
 	if err != nil {
-		t.Fatalf("写入失败")
+		t.Fatalf("Write failed")
 	}
 	res := ""
 	err = rc.Get("123", &res)
 	if err != nil {
-		t.Fatalf("读取失败")
+		t.Fatalf("Read failed")
 	}
 	fmt.Println("res", res)
 }
@@ -54,16 +54,16 @@ func TestRedisGetJson(t *testing.T) {
 	}
 	err := rc.Set("1233", old, 300)
 	if err != nil {
-		t.Fatalf("写入失败")
+		t.Fatalf("Write failed")
 	}
 
 	res := &r{}
 	err2 := rc.Get("1233", res)
 	if err2 != nil {
-		t.Fatalf("读取失败")
+		t.Fatalf("Read failed")
 	}
 	if !reflect.DeepEqual(res, old) {
-		t.Fatalf("读取错误")
+		t.Fatalf("Read error")
 	}
 	fmt.Println(res, res.Aa)
 }

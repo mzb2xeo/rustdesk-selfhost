@@ -9,25 +9,25 @@ import (
 func TestGetAppVersion(t *testing.T) {
 	s := &AppService{}
 	v := s.GetAppVersion()
-	// 打印结果
+	// Print results
 	t.Logf("App Version: %s", v)
 }
 
 func TestMultipleGetAppVersion(t *testing.T) {
 	s := &AppService{}
-	//并发测试
-	// 使用 WaitGroup 等待所有 goroutine 完成
+	//Concurrency testing
+	// Use WaitGroup to wait for all goroutines to complete
 	wg := sync.WaitGroup{}
-	wg.Add(10) // 启动 10 个 goroutine
-	// 启动 10 个 goroutine
+	wg.Add(10) // Start 10 goroutines
+	// Start 10 goroutines
 	for i := 0; i < 10; i++ {
 		go func() {
-			defer wg.Done() // 完成后减少计数
+			defer wg.Done() // Decrement count after completion
 			v := s.GetAppVersion()
-			// 打印结果
+			// Print results
 			t.Logf("App Version: %s", v)
 		}()
 	}
-	// 等待所有 goroutine 完成
+	// Wait for all goroutines to complete
 	wg.Wait()
 }

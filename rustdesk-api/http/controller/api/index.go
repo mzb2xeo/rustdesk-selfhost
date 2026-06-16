@@ -13,10 +13,10 @@ import (
 type Index struct {
 }
 
-// Index 首页
-// @Tags 首页
-// @Summary 首页
-// @Description 首页
+// Index Home Page
+// @Tags Home Page
+// @Summary Home Page
+// @Description front page
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} response.Response
@@ -29,10 +29,10 @@ func (i *Index) Index(c *gin.Context) {
 	)
 }
 
-// Heartbeat 心跳
-// @Tags 首页
-// @Summary 心跳
-// @Description 心跳
+// Heartbeat
+// @Tags Home Page
+// @Summary heartbeat
+// @Description heartbeat
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} nil
@@ -54,7 +54,7 @@ func (i *Index) Heartbeat(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{})
 		return
 	}
-	//如果在40s以内则不更新
+	//If it is within 40s, it will not be updated.
 	if time.Now().Unix()-peer.LastOnlineTime >= 30 {
 		upp := &model.Peer{RowId: peer.RowId, LastOnlineTime: time.Now().Unix(), LastOnlineIp: c.ClientIP()}
 		service.AllService.PeerService.Update(upp)
@@ -62,17 +62,17 @@ func (i *Index) Heartbeat(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// Version 版本
-// @Tags 首页
-// @Summary 版本
-// @Description 版本
+// Version version
+// @Tags Home Page
+// @Summary version
+// @Description Version
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /version [get]
 func (i *Index) Version(c *gin.Context) {
-	//读取resources/version文件
+	//Read resources/version file
 	v := service.AllService.AppService.GetAppVersion()
 	response.Success(
 		c,

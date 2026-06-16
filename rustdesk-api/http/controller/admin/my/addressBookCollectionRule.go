@@ -13,17 +13,17 @@ import (
 type AddressBookCollectionRule struct {
 }
 
-// List 列表
-// @Tags 我的地址簿规则
-// @Summary 地址簿规则列表
-// @Description 地址簿规则列表
+// List list
+// @Tags My address book rules
+// @Summary List of address book rules
+// @Description Address book rule list
 // @Accept  json
 // @Produce  json
-// @Param page query int false "页码"
-// @Param page_size query int false "页大小"
-// @Param is_my query int false "是否是我的"
-// @Param user_id query int false "用户id"
-// @Param collection_id query int false "地址簿集合id"
+// @Param page query int false "page number"
+// @Param page_size query int false "page size"
+// @Param is_my query int false "Is it mine"
+// @Param user_id query int false "userid"
+// @Param collection_id query int false "address book collection id"
 // @Success 200 {object} response.Response{data=model.AddressBookCollectionList}
 // @Failure 500 {object} response.Response
 // @Router /admin/my/address_book_collection_rule/list [get]
@@ -46,13 +46,13 @@ func (abcr *AddressBookCollectionRule) List(c *gin.Context) {
 	response.Success(c, res)
 }
 
-// Create 创建地址簿规则
-// @Tags 我的地址簿规则
-// @Summary 创建地址簿规则
-// @Description 创建地址簿规则
+// Create Create address book rules
+// @Tags My address book rules
+// @Summary Create address book rules
+// @Description Create address book rules
 // @Accept  json
 // @Produce  json
-// @Param body body model.AddressBookCollectionRule true "地址簿规则信息"
+// @Param body body model.AddressBookCollectionRule true "Address Book Rule Information"
 // @Success 200 {object} response.Response{data=model.AddressBookCollection}
 // @Failure 500 {object} response.Response
 // @Router /admin/my/address_book_collection_rule/create [post]
@@ -106,12 +106,12 @@ func (abcr *AddressBookCollectionRule) CheckForm(u *model.User, t *model.Address
 		if tou.Id == 0 {
 			return "ItemNotFound", false
 		}
-		//非管理员不能分享给非本组织用户
+		//Non-administrators cannot share with non-organization users
 		//if tou.GroupId != u.GroupId {
 		//	return "NoAccess", false
 		//}
 	} else if t.Type == model.ShareAddressBookRuleTypeGroup {
-		//非管理员不能分享给其他组
+		//Non-administrators cannot share to other groups
 		//if t.ToId != u.GroupId {
 		//	return "NoAccess", false
 		//}
@@ -123,7 +123,7 @@ func (abcr *AddressBookCollectionRule) CheckForm(u *model.User, t *model.Address
 	} else {
 		return "ParamsError", false
 	}
-	// 重复检查
+	// Repeat check
 	ex := service.AllService.AddressBookService.RuleInfoByToIdAndCid(t.Type, t.ToId, t.CollectionId)
 	if t.Id == 0 && ex.Id > 0 {
 		return "ItemExists", false
@@ -134,13 +134,13 @@ func (abcr *AddressBookCollectionRule) CheckForm(u *model.User, t *model.Address
 	return "", true
 }
 
-// Update 编辑
-// @Tags 我的地址簿规则
-// @Summary 地址簿规则编辑
-// @Description 地址簿规则编辑
+// Update Edit
+// @Tags My address book rules
+// @Summary Address book rule editing
+// @Description Address book rule editing
 // @Accept  json
 // @Produce  json
-// @Param body body model.AddressBookCollectionRule true "地址簿规则信息"
+// @Param body body model.AddressBookCollectionRule true "Address Book Rule Information"
 // @Success 200 {object} response.Response{data=model.AddressBookCollection}
 // @Failure 500 {object} response.Response
 // @Router /admin/my/address_book_collection_rule/update [post]
@@ -185,13 +185,13 @@ func (abcr *AddressBookCollectionRule) Update(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// Delete 删除
-// @Tags 我的地址簿规则
-// @Summary 地址簿规则删除
-// @Description 地址簿规则删除
+// Delete Delete
+// @Tags My address book rules
+// @Summary Address book rule deletion
+// @Description Address book rule deletion
 // @Accept  json
 // @Produce  json
-// @Param body body model.AddressBookCollectionRule true "地址簿规则信息"
+// @Param body body model.AddressBookCollectionRule true "Address Book Rule Information"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /admin/my/address_book_collection_rule/delete [post]

@@ -34,30 +34,30 @@ Hj4yO4j5LOWDMTgDcLsZTxbGiTzkNc/HghrNIevDAQdgjJQNl84zDjyyCA4r/MA7
 bYJTtYj8q6J0EDbRdT9b6hMclyzjNXdx2loJxR0R8WUeL1lDEPq8
 -----END RSA PRIVATE KEY-----`
 
-// 测试token生成
+// Test token generation
 func TestGenerateToken(t *testing.T) {
 	jwtService := NewJwt(pk, time.Second*1000)
 	token := jwtService.GenerateToken(1)
 	if token == "" {
-		t.Fatal("token生成失败")
+		t.Fatal("Token generation failed")
 	}
 	fmt.Println(pk, token)
 }
 
-// 测试token解析
+// Test token parsing
 func TestParseToken(t *testing.T) {
 	jwtService := NewJwt(pk, time.Second*1000)
 	token := jwtService.GenerateToken(999)
 	if token == "" {
-		t.Fatal("token生成失败")
+		t.Fatal("Token generation failed")
 	}
 	uid, err := jwtService.ParseToken(token)
 	if err != nil {
 
-		t.Fatal("token解析失败", err)
+		t.Fatal("Token parsing failed", err)
 	}
 	if uid != 999 {
-		t.Fatal("token解析失败")
+		t.Fatal("Token parsing failed")
 	}
 }
 

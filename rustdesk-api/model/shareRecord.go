@@ -11,7 +11,7 @@ type ShareRecord struct {
 	TimeModel
 }
 
-// ShareRecordList 分享记录列表
+// ShareRecordList share record list
 type ShareRecordList struct {
 	ShareRecords []*ShareRecord `json:"list,omitempty"`
 	Pagination

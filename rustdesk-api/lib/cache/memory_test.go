@@ -11,7 +11,7 @@ func TestMemorySet(t *testing.T) {
 	err := mc.Set("123", "44567", 0)
 	if err != nil {
 		fmt.Println(err.Error())
-		t.Fatalf("写入失败")
+		t.Fatalf("Write failed")
 	}
 }
 
@@ -22,10 +22,10 @@ func TestMemoryGet(t *testing.T) {
 	err := mc.Get("123", &res)
 	fmt.Println("res", res)
 	if err != nil {
-		t.Fatalf("读取失败: %v", err)
+		t.Fatalf("Read failed:%v", err)
 	}
 	if res != "44567" {
-		t.Fatalf("读取错误")
+		t.Fatalf("Read error")
 	}
 
 }
@@ -37,30 +37,30 @@ func TestMemorySetExpGet(t *testing.T) {
 	mc.Set("2", "5", 5)
 	err := mc.Set("3", "3", 3)
 	if err != nil {
-		t.Fatalf("写入失败")
+		t.Fatalf("Write failed")
 	}
 
 	res := ""
 	err = mc.Get("3", &res)
 	if err != nil {
-		t.Fatalf("读取失败: %v", err)
+		t.Fatalf("Read failed:%v", err)
 	}
 	fmt.Println("res 3", res)
 	time.Sleep(4 * time.Second)
 	//res = ""
 	err = mc.Get("3", &res)
 	if err != nil {
-		t.Fatalf("读取失败: %v", err)
+		t.Fatalf("Read failed:%v", err)
 	}
 	fmt.Println("res 3", res)
 	err = mc.Get("2", &res)
 	if err != nil {
-		t.Fatalf("读取失败: %v", err)
+		t.Fatalf("Read failed:%v", err)
 	}
 	fmt.Println("res 2", res)
 	err = mc.Get("1", &res)
 	if err != nil {
-		t.Fatalf("读取失败: %v", err)
+		t.Fatalf("Read failed:%v", err)
 	}
 	fmt.Println("res 1", res)
 
@@ -69,29 +69,29 @@ func TestMemoryLru(t *testing.T) {
 	mc := NewMemoryCache(18)
 	mc.Set("1", "1111", 10)
 	mc.Set("2", "2222", 5)
-	//读取一次，2就会被放到最后
+	//Read once, 2 will be placed at the end
 	mc.Get("1", nil)
-	err := mc.Set("3", "三", 3)
+	err := mc.Set("3", "three", 3)
 	if err != nil {
-		//t.Fatalf("写入失败")
+		//t.Fatalf("Write failed")
 	}
 
 	res := ""
 	err = mc.Get("3", &res)
 	if err != nil {
-		t.Fatalf("读取失败: %v", err)
+		t.Fatalf("Read failed:%v", err)
 	}
 	fmt.Println("res3", res)
 	res = ""
 	err = mc.Get("2", &res)
 	if err != nil {
-		t.Fatalf("读取失败: %v", err)
+		t.Fatalf("Read failed:%v", err)
 	}
 	fmt.Println("res2", res)
 	res = ""
 	err = mc.Get("1", &res)
 	if err != nil {
-		t.Fatalf("读取失败: %v", err)
+		t.Fatalf("Read failed:%v", err)
 	}
 	fmt.Println("res1", res)
 

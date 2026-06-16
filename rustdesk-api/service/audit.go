@@ -22,7 +22,7 @@ func (as *AuditService) AuditConnList(page, pageSize uint, where func(tx *gorm.D
 	return
 }
 
-// Create 创建
+// Create
 func (as *AuditService) CreateAuditConn(u *model.AuditConn) error {
 	res := DB.Create(u).Error
 	return res
@@ -31,7 +31,7 @@ func (as *AuditService) DeleteAuditConn(u *model.AuditConn) error {
 	return DB.Delete(u).Error
 }
 
-// Update 更新
+// Update update
 func (as *AuditService) UpdateAuditConn(u *model.AuditConn) error {
 	return DB.Model(u).Updates(u).Error
 }
@@ -86,7 +86,7 @@ func (as *AuditService) DeleteAuditFile(u *model.AuditFile) error {
 	return DB.Delete(u).Error
 }
 
-// Update 更新
+// Update update
 func (as *AuditService) UpdateAuditFile(u *model.AuditFile) error {
 	return DB.Model(u).Updates(u).Error
 }

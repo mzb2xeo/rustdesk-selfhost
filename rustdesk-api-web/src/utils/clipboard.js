@@ -19,7 +19,7 @@ export function handleClipboard (text, event) {
 
 export function copyImage (targetNode) {
   if (window.getSelection) {
-    // chrome等主流浏览器
+    // Chrome and other mainstream browsers
     var selection = window.getSelection()
     selection.removeAllRanges()
     var range = document.createRange()

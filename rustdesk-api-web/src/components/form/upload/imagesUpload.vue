@@ -25,7 +25,7 @@
               <el-icon class="default-icon">
                 <plus/>
               </el-icon>
-              <div class="drag-tips">点击上传<span v-if="drag">或直接拖入文件</span></div>
+              <div class="drag-tips">Click to upload<span v-if="drag">Or drag the file directly</span></div>
             </div>
           </slot>
         </div>
@@ -173,7 +173,7 @@
       }
 
       function onExceed () {
-        ElMessage.error('超出数量限制')
+        ElMessage.error('Quantity limit exceeded')
       }
 
       return {

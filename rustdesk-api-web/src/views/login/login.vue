@@ -54,7 +54,7 @@
   const userStore = useUserStore()
   const route = useRoute()
   const router = useRouter()
-  const options = reactive([]) // 存储 OIDC 登录选项
+  const options = reactive([]) // Storing OIDC login options
 
   let platform = window.navigator.platform
   if (navigator.platform.indexOf('Mac') === 0) {
@@ -131,9 +131,9 @@
     try {
       const res = await loginOptions().catch(_ => false)
       if (!res || !res.data) return console.error('No valid response received')
-      res.data.ops.map(option => (options.push({ name: option }))) // 创建新的对象数组
+      res.data.ops.map(option => (options.push({ name: option }))) // Create new object array
       if (res.data.auto_oidc) {
-        // 如果有自动OIDC登录选项，直接调用第一个
+        // If there is an automatic OIDC login option, call the first one directly
         handleOIDCLogin(res.data.ops[0])
       }
       disablePwd.value = res.data.disable_pwd
@@ -149,17 +149,17 @@
   onMounted(async () => {
     const code = getCode()
     if (code) {
-      // 如果code存在，进行query获取user info
+      // If the code exists, perform a query to obtain user information.
       const res = await userStore.query(code)
       if (res) {
-        // 删除code，确保跳转之前对code进行清楚
+        // Delete the code and make sure to clear the code before jumping
         removeCode()
         ElMessage.success(T('LoginSuccess'))
         router.push({ path: redirect || '/', replace: true })
       }
     } else {
-      // 如果code不存在, 现实登陆页面
-      loadLoginOptions() // 组件挂载后调用登录选项加载函数
+      // If the code does not exist, the login page will be displayed.
+      loadLoginOptions() // After the component is mounted, the login option loading function is called
     }
   })
 

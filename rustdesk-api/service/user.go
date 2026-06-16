@@ -16,35 +16,35 @@ import (
 type UserService struct {
 }
 
-// InfoById 根据用户id取用户信息
+// InfoById gets user information based on user id
 func (us *UserService) InfoById(id uint) *model.User {
 	u := &model.User{}
 	DB.Where("id = ?", id).First(u)
 	return u
 }
 
-// InfoByUsername 根据用户名取用户信息
+// InfoByUsername gets user information based on user name
 func (us *UserService) InfoByUsername(un string) *model.User {
 	u := &model.User{}
 	DB.Where("username = ?", un).First(u)
 	return u
 }
 
-// InfoByEmail 根据邮箱取用户信息
+// InfoByEmail retrieves user information based on email address
 func (us *UserService) InfoByEmail(email string) *model.User {
 	u := &model.User{}
 	DB.Where("email = ?", email).First(u)
 	return u
 }
 
-// InfoByOpenid 根据openid取用户信息
+// InfoByOpenid gets user information based on openid
 func (us *UserService) InfoByOpenid(openid string) *model.User {
 	u := &model.User{}
 	DB.Where("openid = ?", openid).First(u)
 	return u
 }
 
-// InfoByUsernamePassword 根据用户名密码取用户信息
+// InfoByUsernamePassword gets user information based on username and password
 func (us *UserService) InfoByUsernamePassword(username, password string) *model.User {
 	if Config.Ldap.Enable {
 		u, err := AllService.LdapService.Authenticate(username, password)
@@ -70,7 +70,7 @@ func (us *UserService) InfoByUsernamePassword(username, password string) *model.
 	return u
 }
 
-// InfoByAccesstoken 根据accesstoken取用户信息
+// InfoByAccesstoken gets user information based on accesstoken
 func (us *UserService) InfoByAccessToken(token string) (*model.User, *model.UserToken) {
 	u := &model.User{}
 	ut := &model.UserToken{}
@@ -85,7 +85,7 @@ func (us *UserService) InfoByAccessToken(token string) (*model.User, *model.User
 	return u, ut
 }
 
-// GenerateToken 生成token
+// GenerateToken Generate token
 func (us *UserService) GenerateToken(u *model.User) string {
 	if len(Jwt.Key) > 0 {
 		return Jwt.GenerateToken(u.Id)
@@ -93,7 +93,7 @@ func (us *UserService) GenerateToken(u *model.User) string {
 	return utils.Md5(u.Username + time.Now().String())
 }
 
-// Login 登录
+// Login Login
 func (us *UserService) Login(u *model.User, llog *model.LoginLog) *model.UserToken {
 	token := us.GenerateToken(u)
 	ut := &model.UserToken{
@@ -112,7 +112,7 @@ func (us *UserService) Login(u *model.User, llog *model.LoginLog) *model.UserTok
 	return ut
 }
 
-// CurUser 获取当前用户
+// CurUser gets the current user
 func (us *UserService) CurUser(c *gin.Context) *model.User {
 	user, _ := c.Get("curUser")
 	u, ok := user.(*model.User)
@@ -141,7 +141,7 @@ func (us *UserService) ListByIds(ids []uint) (res []*model.User) {
 	return res
 }
 
-// ListByGroupId 根据组id取用户列表
+// ListByGroupId gets the user list based on the group id
 func (us *UserService) ListByGroupId(groupId, page, pageSize uint) (res *model.UserList) {
 	res = us.List(page, pageSize, func(tx *gorm.DB) {
 		tx.Where("group_id = ?", groupId)
@@ -149,25 +149,25 @@ func (us *UserService) ListByGroupId(groupId, page, pageSize uint) (res *model.U
 	return
 }
 
-// ListIdsByGroupId 根据组id取用户id列表
+// ListIdsByGroupId Get the user ID list based on the group ID
 func (us *UserService) ListIdsByGroupId(groupId uint) (ids []uint) {
 	DB.Model(&model.User{}).Where("group_id = ?", groupId).Pluck("id", &ids)
 	return ids
 
 }
 
-// ListIdAndNameByGroupId 根据组id取用户id和用户名列表
+// ListIdAndNameByGroupId gets the list of user id and user name based on group id
 func (us *UserService) ListIdAndNameByGroupId(groupId uint) (res []*model.User) {
 	DB.Model(&model.User{}).Where("group_id = ?", groupId).Select("id, username").Find(&res)
 	return res
 }
 
-// CheckUserEnable 判断用户是否禁用
+// CheckUserEnable determines whether the user is disabled
 func (us *UserService) CheckUserEnable(u *model.User) bool {
 	return u.Status == model.COMMON_STATUS_ENABLE
 }
 
-// Create 创建
+// Create
 func (us *UserService) Create(u *model.User) error {
 	// The initial username should be formatted, and the username should be unique
 	if us.IsUsernameExists(u.Username) {
@@ -183,7 +183,7 @@ func (us *UserService) Create(u *model.User) error {
 	return res
 }
 
-// GetUuidByToken 根据token和user取uuid
+// GetUuidByToken gets uuid based on token and user
 func (us *UserService) GetUuidByToken(u *model.User, token string) string {
 	ut := &model.UserToken{}
 	err := DB.Where("user_id = ? and token = ?", u.Id, token).First(ut).Error
@@ -193,7 +193,7 @@ func (us *UserService) GetUuidByToken(u *model.User, token string) string {
 	return ut.DeviceUuid
 }
 
-// Logout 退出登录 -> 删除token, 解绑uuid
+// Logout -> delete token, unbind uuid
 func (us *UserService) Logout(u *model.User, token string) error {
 	uuid := us.GetUuidByToken(u, token)
 	err := DB.Where("user_id = ? and token = ?", u.Id, token).Delete(&model.UserToken{}).Error
@@ -206,40 +206,40 @@ func (us *UserService) Logout(u *model.User, token string) error {
 	return nil
 }
 
-// Delete 删除用户和oauth信息
+// Delete delete user and oauth information
 func (us *UserService) Delete(u *model.User) error {
 	userCount := us.getAdminUserCount()
 	if userCount <= 1 && us.IsAdmin(u) {
 		return errors.New("The last admin user cannot be deleted")
 	}
 	tx := DB.Begin()
-	// 删除用户
+	// Delete user
 	if err := tx.Delete(u).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	// 删除关联的 OAuth 信息
+	// Delete associated OAuth information
 	if err := tx.Where("user_id = ?", u.Id).Delete(&model.UserThird{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	//  删除关联的ab
+	//  Delete associated ab
 	if err := tx.Where("user_id = ?", u.Id).Delete(&model.AddressBook{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	//  删除关联的abc
+	//  Delete associated abc
 	if err := tx.Where("user_id = ?", u.Id).Delete(&model.AddressBookCollection{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	//  删除关联的abcr
+	//  Delete associated abcr
 	if err := tx.Where("user_id = ?", u.Id).Delete(&model.AddressBookCollectionRule{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 	tx.Commit()
-	// 删除关联的peer
+	// Delete associated peer
 	if err := AllService.PeerService.EraseUserId(u.Id); err != nil {
 		Logger.Warn("User deleted successfully, but failed to unlink peer.")
 		return nil
@@ -247,13 +247,13 @@ func (us *UserService) Delete(u *model.User) error {
 	return nil
 }
 
-// Update 更新
+// Update update
 func (us *UserService) Update(u *model.User) error {
 	currentUser := us.InfoById(u.Id)
-	// 如果当前用户是管理员并且 IsAdmin 不为空，进行检查
+	// Check if the current user is an administrator and IsAdmin is not empty
 	if us.IsAdmin(currentUser) {
 		adminCount := us.getAdminUserCount()
-		// 如果这是唯一的管理员，确保不能禁用或取消管理员权限
+		// If this is the only administrator, make sure administrator privileges cannot be disabled or revoked
 		if adminCount <= 1 && (!us.IsAdmin(u) || u.Status == model.COMMON_STATUS_DISABLED) {
 			return errors.New("The last admin user cannot be disabled or demoted")
 		}
@@ -261,22 +261,22 @@ func (us *UserService) Update(u *model.User) error {
 	return DB.Model(u).Updates(u).Error
 }
 
-// FlushToken 清空token
+// FlushToken Clear token
 func (us *UserService) FlushToken(u *model.User) error {
 	return DB.Where("user_id = ?", u.Id).Delete(&model.UserToken{}).Error
 }
 
-// FlushTokenByUuid 清空token
+// FlushTokenByUuid clears token
 func (us *UserService) FlushTokenByUuid(uuid string) error {
 	return DB.Where("device_uuid = ?", uuid).Delete(&model.UserToken{}).Error
 }
 
-// FlushTokenByUuids 清空token
+// FlushTokenByUuids Clear token
 func (us *UserService) FlushTokenByUuids(uuids []string) error {
 	return DB.Where("device_uuid in (?)", uuids).Delete(&model.UserToken{}).Error
 }
 
-// UpdatePassword 更新密码
+// UpdatePassword update password
 func (us *UserService) UpdatePassword(u *model.User, password string) error {
 	var err error
 	u.Password, err = utils.EncryptPassword(password)
@@ -291,7 +291,7 @@ func (us *UserService) UpdatePassword(u *model.User, password string) error {
 	return err
 }
 
-// IsAdmin 是否管理员
+// IsAdmin Is it an administrator?
 func (us *UserService) IsAdmin(u *model.User) bool {
 	return u != nil && *u.IsAdmin
 }
@@ -304,7 +304,7 @@ func (us *UserService) RouteNames(u *model.User) []string {
 	return model.UserRouteNames
 }
 
-// InfoByOauthId 根据oauth的name和openId取用户信息
+// InfoByOauthId gets user information based on oauth name and openId
 func (us *UserService) InfoByOauthId(op string, openId string) *model.User {
 	ut := AllService.OauthService.UserThirdInfo(op, openId)
 	if ut.Id == 0 {
@@ -317,7 +317,7 @@ func (us *UserService) InfoByOauthId(op string, openId string) *model.User {
 	return u
 }
 
-// RegisterByOauth 注册
+// RegisterByOauth Register
 func (us *UserService) RegisterByOauth(oauthUser *model.OauthUser, op string) (error, *model.User) {
 	Lock.Lock("registerByOauth")
 	defer Lock.UnLock("registerByOauth")
@@ -375,7 +375,7 @@ func (us *UserService) RegisterByOauth(oauthUser *model.OauthUser, op string) (e
 	return nil, user
 }
 
-// GenerateUsernameByOauth 生成用户名
+// GenerateUsernameByOauth generates username
 func (us *UserService) GenerateUsernameByOauth(name string) string {
 	for us.IsUsernameExists(name) {
 		name += strconv.Itoa(rand.Intn(10)) // Append a random digit (0-9)
@@ -395,14 +395,14 @@ func (us *UserService) UserThirdInfo(userId uint, op string) *model.UserThird {
 	return ut
 }
 
-// FindLatestUserIdFromLoginLogByUuid 根据uuid和设备id查找最后登录的用户id
+// FindLatestUserIdFromLoginLogByUuid Find the last logged in user id based on uuid and device id
 func (us *UserService) FindLatestUserIdFromLoginLogByUuid(uuid string, deviceId string) uint {
 	llog := &model.LoginLog{}
 	DB.Where("uuid = ? and device_id = ?", uuid, deviceId).Order("id desc").First(llog)
 	return llog.UserId
 }
 
-// IsPasswordEmptyById 根据用户id判断密码是否为空，主要用于第三方登录的自动注册
+// IsPasswordEmptyById determines whether the password is empty based on the user ID. It is mainly used for automatic registration of third-party logins.
 func (us *UserService) IsPasswordEmptyById(id uint) bool {
 	u := &model.User{}
 	if DB.Where("id = ?", id).First(u).Error != nil {
@@ -411,7 +411,7 @@ func (us *UserService) IsPasswordEmptyById(id uint) bool {
 	return u.Password == ""
 }
 
-// IsPasswordEmptyByUsername 根据用户id判断密码是否为空，主要用于第三方登录的自动注册
+// IsPasswordEmptyByUsername determines whether the password is empty based on the user ID. It is mainly used for automatic registration of third-party logins.
 func (us *UserService) IsPasswordEmptyByUsername(username string) bool {
 	u := &model.User{}
 	if DB.Where("username = ?", username).First(u).Error != nil {
@@ -420,12 +420,12 @@ func (us *UserService) IsPasswordEmptyByUsername(username string) bool {
 	return u.Password == ""
 }
 
-// IsPasswordEmptyByUser 判断密码是否为空，主要用于第三方登录的自动注册
+// IsPasswordEmptyByUser determines whether the password is empty, mainly used for automatic registration of third-party logins
 func (us *UserService) IsPasswordEmptyByUser(u *model.User) bool {
 	return us.IsPasswordEmptyById(u.Id)
 }
 
-// Register 注册, 如果用户名已存在则返回nil
+// Register, if the username already exists, returns nil
 func (us *UserService) Register(username string, email string, password string, status model.StatusCode) *model.User {
 	u := &model.User{
 		Username: username,
@@ -486,11 +486,11 @@ func (us *UserService) getAdminUserCount() int64 {
 	return count
 }
 
-// UserTokenExpireTimestamp 生成用户token过期时间
+// UserTokenExpireTimestamp generates user token expiration time
 func (us *UserService) UserTokenExpireTimestamp() int64 {
 	exp := Config.App.TokenExpire
 	if exp == 0 {
-		//默认七天
+		//Default seven days
 		exp = 604800
 	}
 	return time.Now().Add(exp).Unix()
@@ -515,7 +515,7 @@ func (us *UserService) VerifyJWT(token string) (uint, error) {
 	return Jwt.ParseToken(token)
 }
 
-// IsUsernameExists 判断用户名是否存在, it will check the internal database and LDAP(if enabled)
+// IsUsernameExists determines whether the username exists, it will check the internal database and LDAP(if enabled)
 func (us *UserService) IsUsernameExists(username string) bool {
 	return us.IsUsernameExistsLocal(username) || AllService.LdapService.IsUsernameExists(username)
 }

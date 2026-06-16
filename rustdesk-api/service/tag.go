@@ -34,24 +34,24 @@ func (s *TagService) ListByUserIdAndCollectionId(userId, cid uint) (res *model.T
 }
 func (s *TagService) UpdateTags(userId uint, tags map[string]uint) {
 	tx := DB.Begin()
-	//先查询所有tag
+	//First query all tags
 	var allTags []*model.Tag
 	tx.Where("user_id = ?", userId).Find(&allTags)
 	for _, t := range allTags {
 		if _, ok := tags[t.Name]; !ok {
-			//删除
+			//delete
 			tx.Delete(t)
 		} else {
 			if tags[t.Name] != t.Color {
-				//更新
+				//renew
 				t.Color = tags[t.Name]
 				tx.Save(t)
 			}
-			//移除
+			//Remove
 			delete(tags, t.Name)
 		}
 	}
-	//新增
+	//New
 	for tag, color := range tags {
 		t := &model.Tag{}
 		t.Name = tag
@@ -62,7 +62,7 @@ func (s *TagService) UpdateTags(userId uint, tags map[string]uint) {
 	tx.Commit()
 }
 
-// InfoById 根据用户id取用户信息
+// InfoById gets user information based on user id
 func (s *TagService) InfoById(id uint) *model.Tag {
 	u := &model.Tag{}
 	DB.Where("id = ?", id).First(u)
@@ -83,7 +83,7 @@ func (s *TagService) List(page, pageSize uint, where func(tx *gorm.DB)) (res *mo
 	return
 }
 
-// Create 创建
+// Create
 func (s *TagService) Create(u *model.Tag) error {
 	res := DB.Create(u).Error
 	return res
@@ -92,7 +92,7 @@ func (s *TagService) Delete(u *model.Tag) error {
 	return DB.Delete(u).Error
 }
 
-// Update 更新
+// Update update
 func (s *TagService) Update(u *model.Tag) error {
 	return DB.Model(u).Select("*").Omit("created_at").Updates(u).Error
 }

@@ -66,7 +66,7 @@
   import { update } from '@/api/user'
   import { ElMessageBox, ElMessage } from 'element-plus'
   import { onMounted, watch } from 'vue'
-  //列表
+  //list
   const {
     listRes,
     listQuery,
@@ -87,7 +87,7 @@
 
   const { changePass } = useChangePwd()
 
-  //删除
+  //delete
   const { del } = useDel()
   const remove = async (row) => {
     const res = await del(row.id)

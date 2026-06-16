@@ -64,7 +64,7 @@ func (o *Oauth) ToBind(c *gin.Context) {
 	})
 }
 
-// Confirm 确认授权登录
+// Confirm Confirm authorized login
 func (o *Oauth) Confirm(c *gin.Context) {
 	j := &adminReq.OauthConfirmForm{}
 	err := c.ShouldBindJSON(j)
@@ -140,8 +140,8 @@ func (o *Oauth) Unbind(c *gin.Context) {
 
 // Detail Oauth
 // @Tags Oauth
-// @Summary Oauth详情
-// @Description Oauth详情
+// @Summary Oauth details
+// @Description Oauth details
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
@@ -161,13 +161,13 @@ func (o *Oauth) Detail(c *gin.Context) {
 	return
 }
 
-// Create 创建Oauth
+// Create Create Oauth
 // @Tags Oauth
-// @Summary 创建Oauth
-// @Description 创建Oauth
+// @Summary Create Oauth
+// @Description Create Oauth
 // @Accept  json
 // @Produce  json
-// @Param body body admin.OauthForm true "Oauth信息"
+// @Param body body admin.OauthForm true "Oauth information"
 // @Success 200 {object} response.Response{data=model.Oauth}
 // @Failure 500 {object} response.Response
 // @Router /admin/oauth/create [post]
@@ -202,14 +202,14 @@ func (o *Oauth) Create(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// List 列表
+// List list
 // @Tags Oauth
-// @Summary Oauth列表
-// @Description Oauth列表
+// @Summary Oauth list
+// @Description Oauth list
 // @Accept  json
 // @Produce  json
-// @Param page query int false "页码"
-// @Param page_size query int false "页大小"
+// @Param page query int false "page number"
+// @Param page_size query int false "page size"
 // @Success 200 {object} response.Response{data=model.OauthList}
 // @Failure 500 {object} response.Response
 // @Router /admin/oauth/list [get]
@@ -224,13 +224,13 @@ func (o *Oauth) List(c *gin.Context) {
 	response.Success(c, res)
 }
 
-// Update 编辑
+// Update Edit
 // @Tags Oauth
-// @Summary Oauth编辑
-// @Description Oauth编辑
+// @Summary OauthEdit
+// @Description OauthEdit
 // @Accept  json
 // @Produce  json
-// @Param body body admin.OauthForm true "Oauth信息"
+// @Param body body admin.OauthForm true "Oauth information"
 // @Success 200 {object} response.Response{data=model.OauthList}
 // @Failure 500 {object} response.Response
 // @Router /admin/oauth/update [post]
@@ -259,13 +259,13 @@ func (o *Oauth) Update(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// Delete 删除
+// Delete Delete
 // @Tags Oauth
-// @Summary Oauth删除
-// @Description Oauth删除
+// @Summary Oauth deleted
+// @Description Oauthdelete
 // @Accept  json
 // @Produce  json
-// @Param body body admin.OauthForm true "Oauth信息"
+// @Param body body admin.OauthForm true "Oauth information"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /admin/oauth/delete [post]

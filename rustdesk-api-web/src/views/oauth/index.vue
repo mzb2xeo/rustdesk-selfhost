@@ -196,7 +196,7 @@
           if (!allowedValues.includes(value)) {
             callback(new Error(T('InvalidParam', { param: 'pkce_method' })))
           } else {
-            callback() // 校验通过
+            callback() // Verification passed
           }
         },
         trigger: 'change',

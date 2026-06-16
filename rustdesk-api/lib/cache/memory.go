@@ -11,8 +11,8 @@ import (
 
 type MemoryCache struct {
 	data      map[string]*CacheItem
-	ll        *list.List    // 用于实现LRU
-	pq        PriorityQueue // 用于实现TTL
+	ll        *list.List    // Used to implement LRU
+	pq        PriorityQueue // Used to implement TTL
 	quit      chan struct{}
 	mu        sync.Mutex
 	maxBytes  int64
@@ -58,12 +58,12 @@ func (pq *PriorityQueue) Pop() interface{} {
 }
 
 func (m *MemoryCache) Get(key string, value interface{}) error {
-	// 使用反射将存储的值设置到传入的指针变量中
+	// Use reflection to set the stored value into the passed pointer variable
 	val := reflect.ValueOf(value)
 	if val.Kind() != reflect.Ptr {
 		return errors.New("value must be a pointer")
 	}
-	//设为空值
+	//set to null
 	val.Elem().Set(reflect.Zero(val.Elem().Type()))
 
 	m.mu.Lock()
@@ -78,7 +78,7 @@ func (m *MemoryCache) Get(key string, value interface{}) error {
 			m.deleteItem(item)
 			return nil
 		}
-		//移动到队列尾部
+		//Move to the end of the queue
 		m.ll.MoveToBack(item.ListEle)
 
 		err := DecodeValue(item.Value, value)
@@ -97,11 +97,11 @@ func (m *MemoryCache) Set(key string, value interface{}, exp int) error {
 	if err != nil {
 		return err
 	}
-	//key 所占用的内存
+	//memory occupied by key
 	keyBytes := int64(len(key))
-	//value所占用的内存空间大小
+	//The amount of memory space occupied by value
 	valueBytes := int64(len(v))
-	//判断是否超过最大内存限制
+	//Determine whether the maximum memory limit is exceeded
 	if m.maxBytes != 0 && m.maxBytes < keyBytes+valueBytes {
 		return errors.New("exceed maxBytes")
 	}
@@ -176,7 +176,7 @@ func (m *MemoryCache) startEviction() {
 	}()
 }
 
-// stopEviction 停止定时清理
+// stopEviction stops scheduled cleaning
 func (m *MemoryCache) stopEviction() {
 	close(m.quit)
 }

@@ -25,7 +25,7 @@ func ApiInit() {
 	}
 
 	if global.Config.Gin.Mode == gin.ReleaseMode {
-		//修改gin Recovery日志 输出为logger的输出点
+		//Modify the gin Recovery log and output it as the output point of the logger.
 		if global.Logger != nil {
 			gin.DefaultErrorWriter = global.Logger.WriterLevel(logrus.ErrorLevel)
 		}

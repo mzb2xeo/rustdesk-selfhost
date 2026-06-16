@@ -15,29 +15,29 @@ export function removeToken () {
   return localStorage.removeItem(TokenKey)
 }
 
-// 设置 code，并存储当前时间戳（单位：毫秒）
+// Set code and store the current timestamp (unit: milliseconds)
 export function setCode(code) {
-  const now = Date.now(); // 当前时间戳（毫秒）
-  const expiry = now + 60 * 1000; // 60 秒后过期
+  const now = Date.now(); // Current timestamp (milliseconds)
+  const expiry = now + 60 * 1000; // Expires in 60 seconds
 
-  localStorage.setItem(OidcCode, code); // 存储 code
-  localStorage.setItem(OidcCodeExpiry, expiry); // 存储过期时间戳
+  localStorage.setItem(OidcCode, code); // store code
+  localStorage.setItem(OidcCodeExpiry, expiry); // Store expiration timestamp
 }
 
-// 获取 code，如果已过期则删除并返回 null
+// Get the code, delete it and return null if it has expired
 export function getCode() {
-  const expiry = localStorage.getItem(OidcCodeExpiry); // 获取过期时间戳
-  const now = Date.now(); // 当前时间戳
+  const expiry = localStorage.getItem(OidcCodeExpiry); // Get expiration timestamp
+  const now = Date.now(); // current timestamp
 
   if (expiry && now > parseInt(expiry)) {
-    // 如果已过期，删除 code 和过期时间
+    // If it has expired, delete the code and expiration time
     removeCode();
     return null;
   }
-  return localStorage.getItem(OidcCode); // 返回 code（如果未过期）
+  return localStorage.getItem(OidcCode); // Return code (if not expired)
 }
 
-// 删除 code 和过期时间
+// Delete code and expiration time
 export function removeCode() {
   localStorage.removeItem(OidcCode);
   localStorage.removeItem(OidcCodeExpiry);

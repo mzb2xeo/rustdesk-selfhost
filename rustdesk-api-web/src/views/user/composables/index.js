@@ -33,7 +33,7 @@ export function useRepositories () {
       getList()
     } else {
       listQuery.page = 1
-      //由watch 触发
+      //Triggered by watch
     }
   }
 

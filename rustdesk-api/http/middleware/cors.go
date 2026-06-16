@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Cors 跨域
+// Cors cross domain
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.GetHeader("Origin")

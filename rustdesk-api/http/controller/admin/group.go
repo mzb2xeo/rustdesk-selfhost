@@ -12,10 +12,10 @@ import (
 type Group struct {
 }
 
-// Detail 群组
-// @Tags 群组
-// @Summary 群组详情
-// @Description 群组详情
+// Detail group
+// @Tags group
+// @Summary Group details
+// @Description Group details
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
@@ -35,13 +35,13 @@ func (ct *Group) Detail(c *gin.Context) {
 	return
 }
 
-// Create 创建群组
-// @Tags 群组
-// @Summary 创建群组
-// @Description 创建群组
+// Create Create a group
+// @Tags group
+// @Summary Create a group
+// @Description Create group
 // @Accept  json
 // @Produce  json
-// @Param body body admin.GroupForm true "群组信息"
+// @Param body body admin.GroupForm true "Group information"
 // @Success 200 {object} response.Response{data=model.Group}
 // @Failure 500 {object} response.Response
 // @Router /admin/group/create [post]
@@ -66,14 +66,14 @@ func (ct *Group) Create(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// List 列表
-// @Tags 群组
-// @Summary 群组列表
-// @Description 群组列表
+// List list
+// @Tags group
+// @Summary Group List
+// @Description Group list
 // @Accept  json
 // @Produce  json
-// @Param page query int false "页码"
-// @Param page_size query int false "页大小"
+// @Param page query int false "page number"
+// @Param page_size query int false "page size"
 // @Success 200 {object} response.Response{data=model.GroupList}
 // @Failure 500 {object} response.Response
 // @Router /admin/group/list [get]
@@ -88,13 +88,13 @@ func (ct *Group) List(c *gin.Context) {
 	response.Success(c, res)
 }
 
-// Update 编辑
-// @Tags 群组
-// @Summary 群组编辑
-// @Description 群组编辑
+// Update Edit
+// @Tags group
+// @Summary Group Editor
+// @Description Group editing
 // @Accept  json
 // @Produce  json
-// @Param body body admin.GroupForm true "群组信息"
+// @Param body body admin.GroupForm true "Group information"
 // @Success 200 {object} response.Response{data=model.Group}
 // @Failure 500 {object} response.Response
 // @Router /admin/group/update [post]
@@ -123,13 +123,13 @@ func (ct *Group) Update(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// Delete 删除
-// @Tags 群组
-// @Summary 群组删除
-// @Description 群组删除
+// Delete Delete
+// @Tags group
+// @Summary Group deletion
+// @Description Group delete
 // @Accept  json
 // @Produce  json
-// @Param body body admin.GroupForm true "群组信息"
+// @Param body body admin.GroupForm true "Group information"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /admin/group/delete [post]

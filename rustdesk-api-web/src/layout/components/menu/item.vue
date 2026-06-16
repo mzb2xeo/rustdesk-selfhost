@@ -34,7 +34,7 @@
     mounted () {
     },
     setup (props) {
-      //判断仅有一个子项的route
+      //Determine a route with only one child
       const parseRoute = (route) => {
         if (route.children && route.children.filter(c => !c.meta?.hide).length === 1) {
           return route.children.filter(c => !c.meta?.hide)[0]

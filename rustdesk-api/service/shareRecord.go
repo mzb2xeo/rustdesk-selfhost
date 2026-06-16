@@ -8,7 +8,7 @@ import (
 type ShareRecordService struct {
 }
 
-// InfoById 根据用户id取用户信息
+// InfoById gets user information based on user id
 func (srs *ShareRecordService) InfoById(id uint) *model.ShareRecord {
 	u := &model.ShareRecord{}
 	DB.Where("id = ?", id).First(u)
@@ -29,7 +29,7 @@ func (srs *ShareRecordService) List(page, pageSize uint, where func(tx *gorm.DB)
 	return
 }
 
-// Create 创建
+// Create
 func (srs *ShareRecordService) Create(u *model.ShareRecord) error {
 	res := DB.Create(u).Error
 	return res
@@ -38,7 +38,7 @@ func (srs *ShareRecordService) Delete(u *model.ShareRecord) error {
 	return DB.Delete(u).Error
 }
 
-// Update 更新
+// Update update
 func (srs *ShareRecordService) Update(u *model.ShareRecord) error {
 	return DB.Model(u).Updates(u).Error
 }

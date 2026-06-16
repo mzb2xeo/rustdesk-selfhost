@@ -35,10 +35,10 @@ func NewPostgresql(conf *PostgresqlConfig, logwriter logger.Writer) *gorm.DB {
 	if err2 != nil {
 		fmt.Println(err2)
 	}
-	// SetMaxIdleConns 设置空闲连接池中连接的最大数量
+	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool
 	sqlDB.SetMaxIdleConns(conf.MaxIdleConns)
 
-	// SetMaxOpenConns 设置打开数据库连接的最大数量。
+	// SetMaxOpenConns sets the maximum number of open database connections.
 	sqlDB.SetMaxOpenConns(conf.MaxOpenConns)
 
 	return db

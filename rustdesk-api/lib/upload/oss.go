@@ -240,11 +240,11 @@ func getMD5FromNewAuthString(r *http.Request) ([]byte, error) {
 }
 
 /*  VerifySignature
-*   VerifySignature需要三个重要的数据信息来进行签名验证： 1>获取公钥PublicKey;  2>生成新的MD5鉴权串;  3>解码Request携带的鉴权串;
-*   1>获取公钥PublicKey : 从RequestHeader的"x-oss-pub-key-url"字段中获取 URL, 读取URL链接的包含的公钥内容， 进行解码解析， 将其作为rsa.VerifyPKCS1v15的入参。
-*   2>生成新的MD5鉴权串 : 把Request中的url中的path部分进行urldecode， 加上url的query部分， 再加上body， 组合之后进行MD5编码， 得到MD5鉴权字节串。
-*   3>解码Request携带的鉴权串 ： 获取RequestHeader的"authorization"字段， 对其进行Base64解码，作为签名验证的鉴权对比串。
-*   rsa.VerifyPKCS1v15进行签名验证，返回验证结果。
+*   VerifySignature requires three important pieces of data to verify the signature: 1> Get the public key PublicKey; 2> Generate a new MD5 authentication string; 3> Decode the authentication string carried by the Request;
+*   1> Get the public key PublicKey: Get the URL from the "x-oss-pub-key-url" field of the RequestHeader, read the public key content contained in the URL link, decode and parse it, and use it as the input parameter for rsa.VerifyPKCS1v15.
+*   2> Generate a new MD5 authentication string: Url decode the path part in the request url, add the query part of the url, and then add the body. After combination, perform MD5 encoding to get the MD5 authentication byte string.
+*   3> Decode the authentication string carried by the Request: Get the "authorization" field of RequestHeader, decode it using Base64, and use it as the authentication comparison string for signature verification.
+*   rsa.VerifyPKCS1v15 performs signature verification and returns the verification result.
 * */
 func verifySignature(bytePublicKey []byte, byteMd5 []byte, authorization []byte) bool {
 	pubBlock, _ := pem.Decode(bytePublicKey)

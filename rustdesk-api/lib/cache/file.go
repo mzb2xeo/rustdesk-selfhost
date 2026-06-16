@@ -32,12 +32,12 @@ func (c *FileCache) Get(key string, value interface{}) error {
 	return err
 }
 
-// 获取值,如果文件不存在或者过期，返回空，过滤掉错误
+// Get the value. If the file does not exist or expires, return empty and filter out errors.
 func (c *FileCache) getValue(key string) (string, error) {
 	f := c.fileName(key)
 	fileInfo, err := os.Stat(f)
 	if err != nil {
-		//文件不存在
+		//File does not exist
 		return "", nil
 	}
 	difT := time.Now().Sub(fileInfo.ModTime())
@@ -52,7 +52,7 @@ func (c *FileCache) getValue(key string) (string, error) {
 	return string(data), nil
 }
 
-// 保存值
+// Save value
 func (c *FileCache) saveValue(key string, value string, exp int) error {
 	f := c.fileName(key)
 	lock := c.getLock(f)
@@ -91,7 +91,7 @@ func (c *FileCache) fileName(key string) string {
 }
 
 func (c *FileCache) Gc() error {
-	//检查文件过期时间，并删除
+	//Check file expiration time and delete
 	return nil
 }
 

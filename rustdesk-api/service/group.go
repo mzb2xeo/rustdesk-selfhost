@@ -8,7 +8,7 @@ import (
 type GroupService struct {
 }
 
-// InfoById 根据用户id取用户信息
+// InfoById gets user information based on user id
 func (us *GroupService) InfoById(id uint) *model.Group {
 	u := &model.Group{}
 	DB.Where("id = ?", id).First(u)
@@ -29,7 +29,7 @@ func (us *GroupService) List(page, pageSize uint, where func(tx *gorm.DB)) (res 
 	return
 }
 
-// Create 创建
+// Create
 func (us *GroupService) Create(u *model.Group) error {
 	res := DB.Create(u).Error
 	return res
@@ -38,12 +38,12 @@ func (us *GroupService) Delete(u *model.Group) error {
 	return DB.Delete(u).Error
 }
 
-// Update 更新
+// Update update
 func (us *GroupService) Update(u *model.Group) error {
 	return DB.Model(u).Updates(u).Error
 }
 
-// DeviceGroupInfoById 根据用户id取用户信息
+// DeviceGroupInfoById gets user information based on user id
 func (us *GroupService) DeviceGroupInfoById(id uint) *model.DeviceGroup {
 	u := &model.DeviceGroup{}
 	DB.Where("id = ?", id).First(u)

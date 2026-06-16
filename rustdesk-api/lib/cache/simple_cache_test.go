@@ -9,11 +9,11 @@ func TestSimpleCache_Set(t *testing.T) {
 	s := NewSimpleCache()
 	err := s.Set("key", "value", 0)
 	if err != nil {
-		t.Fatalf("写入失败")
+		t.Fatalf("Write failed")
 	}
 	err = s.Set("key", 111, 0)
 	if err != nil {
-		t.Fatalf("写入失败")
+		t.Fatalf("Write failed")
 	}
 }
 
@@ -24,7 +24,7 @@ func TestSimpleCache_Get(t *testing.T) {
 	err = s.Get("key", &value)
 	fmt.Println("value", value)
 	if err != nil {
-		t.Fatalf("读取失败")
+		t.Fatalf("Read failed")
 	}
 
 	err = s.Set("key1", 11, 0)
@@ -32,7 +32,7 @@ func TestSimpleCache_Get(t *testing.T) {
 	err = s.Get("key1", &value1)
 	fmt.Println("value1", value1)
 	if err != nil {
-		t.Fatalf("读取失败")
+		t.Fatalf("Read failed")
 	}
 
 	err = s.Set("key2", []byte{'a', 'b'}, 0)
@@ -40,7 +40,7 @@ func TestSimpleCache_Get(t *testing.T) {
 	err = s.Get("key2", &value2)
 	fmt.Println("value2", string(value2))
 	if err != nil {
-		t.Fatalf("读取失败")
+		t.Fatalf("Read failed")
 	}
 
 	err = s.Set("key3", 33.33, 0)
@@ -48,7 +48,7 @@ func TestSimpleCache_Get(t *testing.T) {
 	err = s.Get("key3", &value3)
 	fmt.Println("value3", value3)
 	if err != nil {
-		t.Fatalf("读取失败")
+		t.Fatalf("Read failed")
 	}
 
 }
@@ -80,18 +80,18 @@ func TestSimpleCache_GetStruct(t *testing.T) {
 	}
 	err := s.Set("key", old, 300)
 	if err != nil {
-		t.Fatalf("写入失败")
+		t.Fatalf("Write failed")
 	}
 
 	res := &r{}
 	err2 := s.Get("key", res)
 	fmt.Println("res", res)
 	if err2 != nil {
-		t.Fatalf("读取失败: %v", err2)
+		t.Fatalf("Read failed:%v", err2)
 
 	}
 
-	//修改原始值，看后面是否会变化
+	//Modify the original value to see if it changes later
 	old.A = "aa"
 	old_rr.AA = "aaa"
 	fmt.Println("old", old)
@@ -99,10 +99,10 @@ func TestSimpleCache_GetStruct(t *testing.T) {
 	err3 := s.Get("key", res2)
 	fmt.Println("res2", res2, res2.R.AA, res2.R.BB)
 	if err3 != nil {
-		t.Fatalf("读取失败: %v", err3)
+		t.Fatalf("Read failed:%v", err3)
 
 	}
 	//if reflect.DeepEqual(res, old) {
-	//	t.Fatalf("读取错误")
+	//	t.Fatalf("Read error")
 	//}
 }

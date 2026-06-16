@@ -2,7 +2,7 @@
   <div>
     <el-card class="list-query" shadow="hover">
       <el-form inline label-width="80px">
-        <!--        <el-form-item label="名称">
+        <!--        <el-form-item label="name">
                   <el-input v-model="listQuery.name"></el-input>
                 </el-form-item>-->
         <el-form-item>

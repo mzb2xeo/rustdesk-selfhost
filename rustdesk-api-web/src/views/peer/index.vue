@@ -339,14 +339,14 @@
 
   const toEdit = (row) => {
     formVisible.value = true
-    //将row中的数据赋值给formData
+    //Assign the data in row to formData
     Object.keys(formData).forEach(key => {
       formData[key] = row[key]
     })
   }
   const toAdd = () => {
     formVisible.value = true
-    //重置formData
+    //Reset formData
     formData.row_id = 0
     formData.cpu = ''
     formData.hostname = ''
@@ -409,20 +409,20 @@
     reader.onload = async (e) => {
       const data = e.target.result
       console.log(data)
-      //组装数据
+      //Assemble data
       const rows = data.split('\n')
       const keys = rows[0].split(',')
       console.log(keys, rows.slice(1).map(row => row.split(',')))
       const values = rows.slice(1).map(row => {
         const obj = {}
         row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).forEach((v, i) => {
-          //去掉两边的"
+          //Remove both sides"
           obj[keys[i]] = v.trim().replace(/^"|"$/g, '')
         })
         return obj
       }).filter(item => item.id)
       // console.log(values)
-      //移除不需要的key
+      //Remove unnecessary keys
       values.forEach(item => {
         item.group_id = parseInt(item.group_id)
         Object.keys(item).forEach(key => {
@@ -447,7 +447,7 @@
     return false
   }
   const toImport = () => {
-    ElMessage.warning('暂未实现')
+    ElMessage.warning('Not yet implemented')
   }
 
   const ABFormVisible = ref(false)
@@ -482,7 +482,7 @@
     }
   }
 
-  // 批量添加到地址簿 start
+  // Add to address book in batches start
   const { allUsers, getAllUsers } = loadAllUsers()
   onMounted(getAllUsers)
   const {
@@ -523,7 +523,7 @@
       batchABFormVisible.value = false
     }
   }
-  // 批量添加到地址簿 end
+  // Add to address book in batches end
 
   const columnSettingVisible = ref(false)
   const allColumns = ref([

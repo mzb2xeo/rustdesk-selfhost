@@ -9,7 +9,7 @@ import (
 
 func JwtAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//测试先关闭
+		//Test close first
 		token := c.GetHeader("api-token")
 		if token == "" {
 			response.Fail(c, 403, response.TranslateMsg(c, "NeedLogin"))
@@ -31,7 +31,7 @@ func JwtAuth() gin.HandlerFunc {
 		user := service.AllService.UserService.InfoById(uid)
 		//user := &model.User{
 		//	Id:       uid,
-		//	Username: "测试用户",
+		//	Username: "Test User",
 		//}
 		if user.Id == 0 {
 			response.Fail(c, 403, response.TranslateMsg(c, "NeedLogin"))

@@ -15,10 +15,10 @@ import (
 type AddressBook struct {
 }
 
-// Detail 地址簿
-// @Tags 地址簿
-// @Summary 地址簿详情
-// @Description 地址簿详情
+// Detail address book
+// @Tags address book
+// @Summary Address book details
+// @Description Address book details
 // @Accept  json
 // @Produce  json
 // @Param id path int true "ID"
@@ -38,13 +38,13 @@ func (ct *AddressBook) Detail(c *gin.Context) {
 	return
 }
 
-// Create 创建地址簿
-// @Tags 地址簿
-// @Summary 创建地址簿
-// @Description 创建地址簿
+// Create Create address book
+// @Tags address book
+// @Summary Create address book
+// @Description Create address book
 // @Accept  json
 // @Produce  json
-// @Param body body admin.AddressBookForm true "地址簿信息"
+// @Param body body admin.AddressBookForm true "Address Book Information"
 // @Success 200 {object} response.Response{data=model.AddressBook}
 // @Failure 500 {object} response.Response
 // @Router /admin/address_book/create [post]
@@ -84,13 +84,13 @@ func (ct *AddressBook) Create(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// BatchCreate 批量创建地址簿
-// @Tags 地址簿
-// @Summary 批量创建地址簿
-// @Description 批量创建地址簿
+// BatchCreate creates address books in batches
+// @Tags address book
+// @Summary Create address books in batches
+// @Description Create address books in batches
 // @Accept  json
 // @Produce  json
-// @Param body body admin.AddressBookForm true "地址簿信息"
+// @Param body body admin.AddressBookForm true "Address Book Information"
 // @Success 200 {object} response.Response{data=model.AddressBook}
 // @Failure 500 {object} response.Response
 // @Router /admin/address_book/batchCreate [post]
@@ -113,13 +113,13 @@ func (ct *AddressBook) BatchCreate(c *gin.Context) {
 		return
 	}
 	if ul > 1 {
-		//多用户置空标签
+		//Multiple users leave tags blank
 		f.Tags = []string{}
-		//多用户只能创建到默认地址簿
+		//Multiple users can only be created into the default address book
 		f.CollectionId = 0
 	}
 
-	//创建标签
+	//Create tags
 	/*for _, fu := range f.UserIds {
 		if fu == 0 {
 			continue
@@ -148,16 +148,16 @@ func (ct *AddressBook) BatchCreate(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// List 列表
-// @Tags 地址簿
-// @Summary 地址簿列表
-// @Description 地址簿列表
+// List list
+// @Tags address book
+// @Summary Address book list
+// @Description Address book list
 // @Accept  json
 // @Produce  json
-// @Param page query int false "页码"
-// @Param page_size query int false "页大小"
-// @Param user_id query int false "用户id"
-// @Param is_my query int false "是否是我的"
+// @Param page query int false "page number"
+// @Param page_size query int false "page size"
+// @Param user_id query int false "userid"
+// @Param is_my query int false "Is it mine"
 // @Success 200 {object} response.Response{data=model.AddressBookList}
 // @Failure 500 {object} response.Response
 // @Router /admin/address_book/list [get]
@@ -196,13 +196,13 @@ func (ct *AddressBook) List(c *gin.Context) {
 	response.Success(c, res)
 }
 
-// Update 编辑
-// @Tags 地址簿
-// @Summary 地址簿编辑
-// @Description 地址簿编辑
+// Update Edit
+// @Tags address book
+// @Summary Address Book Editing
+// @Description Address book editing
 // @Accept  json
 // @Produce  json
-// @Param body body admin.AddressBookForm true "地址簿信息"
+// @Param body body admin.AddressBookForm true "Address Book Information"
 // @Success 200 {object} response.Response{data=model.AddressBook}
 // @Failure 500 {object} response.Response
 // @Router /admin/address_book/update [post]
@@ -240,13 +240,13 @@ func (ct *AddressBook) Update(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// Delete 删除
-// @Tags 地址簿
-// @Summary 地址簿删除
-// @Description 地址簿删除
+// Delete Delete
+// @Tags address book
+// @Summary Address book deletion
+// @Description Address book deletion
 // @Accept  json
 // @Produce  json
-// @Param body body admin.AddressBookForm true "地址簿信息"
+// @Param body body admin.AddressBookForm true "Address Book Information"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /admin/address_book/delete [post]
@@ -277,12 +277,12 @@ func (ct *AddressBook) Delete(c *gin.Context) {
 }
 
 // ShareByWebClient
-// @Tags 地址簿
-// @Summary 地址簿分享
-// @Description 地址簿分享
+// @Tags address book
+// @Summary Address book sharing
+// @Description Address book sharing
 // @Accept  json
 // @Produce  json
-// @Param body body admin.ShareByWebClientForm true "地址簿信息"
+// @Param body body admin.ShareByWebClientForm true "Address Book Information"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /admin/address_book/share [post]

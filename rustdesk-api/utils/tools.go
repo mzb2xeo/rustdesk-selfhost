@@ -23,7 +23,7 @@ func CopyStructByJson(src, dst interface{}) {
 	}
 }
 
-// CopyStructToMap 结构体转map
+// CopyStructToMap structure to map
 func CopyStructToMap(src interface{}) map[string]interface{} {
 	var res = map[string]interface{}{}
 	str, _ := json.Marshal(src)
@@ -64,7 +64,7 @@ func SafeGo(f interface{}, params ...interface{}) {
 	}()
 }
 
-// RandomString 生成随机字符串
+// RandomString generates a random string
 func RandomString(n int) string {
 	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	length := len(letterBytes)
@@ -79,7 +79,7 @@ func RandomString(n int) string {
 	return string(b)
 }
 
-// Keys 泛型函数，K 是键类型，V 是值类型
+// Keys generic function, K is the key type, V is the value type
 func Keys[K comparable, V any](m map[K]V) []K {
 	keys := make([]K, 0, len(m))
 	for k := range m {
@@ -88,7 +88,7 @@ func Keys[K comparable, V any](m map[K]V) []K {
 	return keys
 }
 
-// Values 泛型函数，K 是键类型，V 是值类型
+// Values ​​generic function, K is the key type, V is the value type
 func Values[K comparable, V any](m map[K]V) []V {
 	values := make([]V, 0, len(m))
 	for _, v := range m {

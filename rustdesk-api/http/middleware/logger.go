@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Logger 日志中间件
+// Logger log middleware
 func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		global.Logger.WithFields(

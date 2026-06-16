@@ -6,11 +6,11 @@ import (
 	"github.com/lejianwen/rustdesk-api/v2/service"
 )
 
-// BackendUserAuth 后台权限验证中间件
+// BackendUserAuth background permission verification middleware
 func BackendUserAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		//测试先关闭
+		//Test close first
 		token := c.GetHeader("api-token")
 		if token == "" {
 			response.Fail(c, 403, response.TranslateMsg(c, "NeedLogin"))
@@ -34,7 +34,7 @@ func BackendUserAuth() gin.HandlerFunc {
 
 		c.Set("curUser", user)
 		c.Set("token", token)
-		//如果时间小于1天,token自动续期
+		//If the time is less than 1 day, the token will be automatically renewed.
 		service.AllService.UserService.AutoRefreshAccessToken(ut)
 
 		c.Next()

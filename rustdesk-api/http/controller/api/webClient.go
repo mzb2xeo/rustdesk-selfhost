@@ -12,10 +12,10 @@ import (
 type WebClient struct {
 }
 
-// ServerConfig 服务配置
+// ServerConfig service configuration
 // @Tags WEBCLIENT
-// @Summary 服务配置
-// @Description 服务配置,给webclient提供api-server
+// @Summary Service configuration
+// @Description Service configuration, providing api-server to webclient
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} response.Response
@@ -42,10 +42,10 @@ func (i *WebClient) ServerConfig(c *gin.Context) {
 	)
 }
 
-// SharedPeer 分享的peer
+// SharedPeer shared peer
 // @Tags WEBCLIENT
-// @Summary 分享的peer
-// @Description 分享的peer
+// @Summary shared by peers
+// @Description Sharing peers
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} response.Response
@@ -65,7 +65,7 @@ func (i *WebClient) SharedPeer(c *gin.Context) {
 		return
 	}
 	if sr.Expire != 0 {
-		//判断是否过期,created_at + expire > now
+		//Determine whether it has expired, created_at + expire > now
 		ca := time.Time(sr.CreatedAt)
 		if ca.Add(time.Second * time.Duration(sr.Expire)).Before(time.Now()) {
 			response.Fail(c, 101, "share expired")
@@ -89,10 +89,10 @@ func (i *WebClient) SharedPeer(c *gin.Context) {
 	})
 }
 
-// ServerConfigV2 服务配置
+// ServerConfigV2 service configuration
 // @Tags WEBCLIENT_V2
-// @Summary 服务配置
-// @Description 服务配置,给webclient提供api-server
+// @Summary Service configuration
+// @Description Service configuration, providing api-server to webclient
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} response.Response

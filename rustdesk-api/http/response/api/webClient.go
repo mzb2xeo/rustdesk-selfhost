@@ -22,7 +22,7 @@ type WebClientPeerInfoPayload struct {
 
 func (wcpp *WebClientPeerPayload) FromAddressBook(a *model.AddressBook) {
 	wcpp.ViewStyle = "shrink"
-	//24小时前
+	//24 hours ago
 	wcpp.Tm = time.Now().Add(-time.Hour * 24).UnixNano()
 	wcpp.Info = WebClientPeerInfoPayload{
 		Username: a.Username,
@@ -34,7 +34,7 @@ func (wcpp *WebClientPeerPayload) FromAddressBook(a *model.AddressBook) {
 
 func (wcpp *WebClientPeerPayload) FromShareRecord(sr *model.ShareRecord) {
 	wcpp.ViewStyle = "shrink"
-	//24小时前
+	//24 hours ago
 	wcpp.Tm = time.Now().UnixNano()
 	wcpp.Tmppwd = sr.Password
 	wcpp.Info = WebClientPeerInfoPayload{

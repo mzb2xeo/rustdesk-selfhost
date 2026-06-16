@@ -40,15 +40,15 @@ func (is *ServerCmdService) Create(u *model.ServerCmd) error {
 	return res
 }
 
-// SendCmd 发送命令
+// SendCmd Send command
 func (is *ServerCmdService) SendCmd(port int, cmd string, arg string) (string, error) {
-	//组装命令
+	//Assembly command
 	cmd = cmd + " " + arg
 	res, err := is.SendSocketCmd("v6", port, cmd)
 	if err == nil {
 		return res, nil
 	}
-	//v6连接失败，尝试v4
+	//v6 connection failed, try v4
 	res, err = is.SendSocketCmd("v4", port, cmd)
 	if err == nil {
 		return res, nil
@@ -79,14 +79,14 @@ func (is *ServerCmdService) SendSocketCmd(ty string, port int, cmd string) (stri
 		return "", err
 	}
 	defer conn.Close()
-	//发送命令
+	//Send command
 	_, err = conn.Write([]byte(cmd))
 	if err != nil {
 		Logger.Debugf("%s send cmd failed: %v", ty, err)
 		return "", err
 	}
 	time.Sleep(100 * time.Millisecond)
-	//读取返回
+	//read return
 	buf := make([]byte, 1024)
 	n, err := conn.Read(buf)
 	if err != nil && err.Error() != "EOF" {

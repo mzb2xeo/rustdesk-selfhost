@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// AutoTime 自定义时间格式
+// AutoTime custom time format
 type AutoTime time.Time
 
 func (mt AutoTime) Value() (driver.Value, error) {

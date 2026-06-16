@@ -70,13 +70,13 @@ export const useUserStore = defineStore({
       // oidc data need to be implement
       const data = {
         deviceInfo: {
-          name: navigator.userAgent, // 使用浏览器的 User-Agent 作为设备名
-          os: platform, // 获取操作系统信息
+          name: navigator.userAgent, // Use the browser's User-Agent as the device name
+          os: platform, // Get operating system information
           type: 'webadmin', // any vaule
         },
         id: `${platform}-${browser}`,
-        op: provider, // 传入的 provider
-        uuid: '',//crypto.randomUUID(), // 自动生成 UUID
+        op: provider, // Incoming provider
+        uuid: '',//crypto.randomUUID(), // Automatically generate UUID
       }
       const res = await oidcAuth(data).catch(_ => false)
       if (res) {

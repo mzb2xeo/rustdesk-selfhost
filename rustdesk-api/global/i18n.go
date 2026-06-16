@@ -10,14 +10,14 @@ import (
 func InitI18n() {
 	bundle := i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
-	//读取global.Config.Gin.ResourcesPath下的所有语言文件
+	//Read all language files under global.Config.Gin.ResourcesPath
 	dir := Config.Gin.ResourcesPath + "/i18n"
 	fileInfos, err := os.ReadDir(dir)
 	if err != nil {
 		panic(err)
 	}
 	for _, fileInfo := range fileInfos {
-		//如果文件名不是.toml结尾
+		//If the file name does not end with .toml
 		if fileInfo.IsDir() || fileInfo.Name()[len(fileInfo.Name())-5:] != ".toml" {
 			continue
 		}

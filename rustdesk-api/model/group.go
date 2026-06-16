@@ -1,8 +1,8 @@
 package model
 
 const (
-	GroupTypeDefault = 1 // 默认
-	GroupTypeShare   = 2 // 共享
+	GroupTypeDefault = 1 // default
+	GroupTypeShare   = 2 // shared
 )
 
 type Group struct {

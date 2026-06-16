@@ -13,15 +13,15 @@ import (
 type Group struct {
 }
 
-// Users 用户列表
-// @Tags 群组
-// @Summary 用户列表
-// @Description 用户列表
+// Users user list
+// @Tags group
+// @Summary User list
+// @Description User list
 // @Accept  json
 // @Produce  json
-// @Param page query int false "页码"
-// @Param pageSize query int false "每页数量"
-// @Param status query int false "状态"
+// @Param page query int false "page number"
+// @Param pageSize query int false "number per page"
+// @Param status query int false "status"
 // @Param accessible query string false "accessible"
 // @Success 200 {object} response.DataResponse{data=[]apiResp.UserPayload}
 // @Failure 500 {object} response.ErrorResponse
@@ -38,7 +38,7 @@ func (g *Group) Users(c *gin.Context) {
 	gr := service.AllService.GroupService.InfoById(u.GroupId)
 	userList := &model.UserList{}
 	if !*u.IsAdmin && gr.Type != model.GroupTypeShare {
-		//仅能获取到自己
+		//You can only get yourself
 		userList.Users = append(userList.Users, u)
 		userList.Total = 1
 	} else {
@@ -58,14 +58,14 @@ func (g *Group) Users(c *gin.Context) {
 }
 
 // Peers
-// @Tags 群组
-// @Summary 机器
-// @Description 机器
+// @Tags group
+// @Summary Machine
+// @Description machine
 // @Accept  json
 // @Produce  json
-// @Param page query int false "页码"
-// @Param pageSize query int false "每页数量"
-// @Param status query int false "状态"
+// @Param page query int false "page number"
+// @Param pageSize query int false "number per page"
+// @Param status query int false "status"
 // @Param accessible query string false "accessible"
 // @Success 200 {object} response.DataResponse
 // @Failure 500 {object} response.Response
@@ -82,7 +82,7 @@ func (g *Group) Peers(c *gin.Context) {
 	gr := service.AllService.GroupService.InfoById(u.GroupId)
 	users := make([]*model.User, 0, 1)
 	if !*u.IsAdmin && gr.Type != model.GroupTypeShare {
-		//仅能获取到自己
+		//You can only get yourself
 		users = append(users, u)
 	} else {
 		users = service.AllService.UserService.ListIdAndNameByGroupId(u.GroupId)
@@ -122,14 +122,14 @@ func (g *Group) Peers(c *gin.Context) {
 }
 
 // Device
-// @Tags 群组
-// @Summary 设备
-// @Description 机器
+// @Tags group
+// @Summary Equipment
+// @Description machine
 // @Accept  json
 // @Produce  json
-// @Param page query int false "页码"
-// @Param pageSize query int false "每页数量"
-// @Param status query int false "状态"
+// @Param page query int false "page number"
+// @Param pageSize query int false "number per page"
+// @Param status query int false "status"
 // @Param accessible query string false "accessible"
 // @Success 200 {object} response.DataResponse
 // @Failure 500 {object} response.Response

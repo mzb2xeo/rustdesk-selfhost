@@ -18,7 +18,7 @@ func ApiInit(g *gin.Engine) {
 	if global.Config.App.ShowSwagger == 1 {
 		g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.InstanceName("api")))
 	}
-	// 加载 HTML 模板
+	// Load HTML template
 	g.LoadHTMLGlob("resources/templates/*")
 
 	frg := g.Group("/api")
@@ -33,7 +33,7 @@ func ApiInit(g *gin.Engine) {
 
 	{
 		l := &api.Login{}
-		// 如果返回oidc则可以通过oidc登录
+		// If oidc is returned, you can log in through oidc
 		frg.GET("/login-options", l.LoginOptions)
 		frg.POST("/login", l.Login)
 
@@ -56,7 +56,7 @@ func ApiInit(g *gin.Engine) {
 	}
 	{
 		pe := &api.Peer{}
-		//提交系统信息
+		//Submit system information
 		frg.POST("/sysinfo", pe.SysInfo)
 		frg.POST("/sysinfo_ver", pe.SysInfoVer)
 	}
@@ -105,14 +105,14 @@ func ApiInit(g *gin.Engine) {
 
 	{
 		ab := &api.Ab{}
-		//获取地址
+		//Get address
 		frg.GET("/ab", ab.Ab)
-		//更新地址
+		//Update address
 		frg.POST("/ab", ab.UpAb)
 	}
 
 	PersonalRoutes(frg)
-	//访问静态文件
+	//Access static files
 	g.StaticFS("/upload", http.Dir(global.Config.Gin.ResourcesPath+"/public/upload"))
 }
 

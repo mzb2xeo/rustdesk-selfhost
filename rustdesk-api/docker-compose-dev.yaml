@@ -18,7 +18,7 @@ services:
     ports:
       - 21114:21114
     volumes:
-      - ./data/rustdesk/api:/app/data #将数据库挂载出来方便备份
+      - ./data/rustdesk/api:/app/data #Mount the database for easy backup
       - ./conf:/app/conf # config
-      # - ./resources:/app/resources # 静态资源
+      # - ./resources:/app/resources # Static resources
     restart: unless-stopped

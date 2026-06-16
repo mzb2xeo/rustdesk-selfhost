@@ -59,7 +59,7 @@
       {
         validator: (rule, value, callback) => {
           if (value === changePwdForm.old_password) {
-            callback(new Error(T('NewPasswordEqualOldPassword'))) //'新密码不能与旧密码相同'
+            callback(new Error(T('NewPasswordEqualOldPassword'))) //'The new password cannot be the same as the old password'
           } else {
             callback()
           }
@@ -88,7 +88,7 @@
   const userStore = useUserStore()
 
   const changePassword = async () => {
-    //验证
+    //verify
     const valid = await cpwd.value.validate().catch(_ => false)
     if (!valid) {
       return

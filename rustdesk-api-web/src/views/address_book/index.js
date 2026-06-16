@@ -80,7 +80,7 @@ export function useRepositories (api_type = 'my') {
     }
   }
 
-  //创建或者修改
+  //Create or modify
   const platformList = [
     { label: 'Windows', value: 'Windows', icon: 'windows' },
     { label: 'Linux', value: 'Linux', icon: 'linux' },
@@ -123,7 +123,7 @@ export function useRepositories (api_type = 'my') {
 
   const toEdit = (row) => {
     formVisible.value = true
-    //将row中的数据赋值给formData
+    //Assign the data in row to formData
     Object.keys(formData).forEach(key => {
       formData[key] = row[key]
     })
@@ -135,7 +135,7 @@ export function useRepositories (api_type = 'my') {
   }
   const toAdd = () => {
     formVisible.value = true
-    //重置formData
+    //Reset formData
     formData.row_id = 0
     formData.alias = ''
     formData.forceAlwaysRelay = false
@@ -197,7 +197,7 @@ export function useRepositories (api_type = 'my') {
     formData.id = peer.id
     formData.username = peer.username
     formData.hostname = peer.hostname
-    //匹配os
+    //match os
     if (peer.os.indexOf('windows') !== -1) {
       formData.platform = platformList.find(item => item.label === 'Windows').value
     } else if (peer.os.indexOf('linux') !== -1) {

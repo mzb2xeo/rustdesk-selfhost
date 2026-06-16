@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-// AutoJson 数据类型
+// AutoJson data type
 type AutoJson json.RawMessage
 
 func (j *AutoJson) Scan(value interface{}) error {
@@ -33,7 +33,7 @@ func (j *AutoJson) Scan(value interface{}) error {
 	}
 	result := &json.RawMessage{}
 	err := json.Unmarshal(bytes, result)
-	//解析json错误 返回空
+	//Parsing json error returns empty
 	if err != nil {
 		*j = AutoJson(json.RawMessage{'[', ']'})
 		return nil

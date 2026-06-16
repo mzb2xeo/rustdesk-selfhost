@@ -260,7 +260,7 @@
 
   const toView = (row) => {
     formVisible.value = true
-    //将row中的数据赋值给formData
+    //Assign the data in row to formData
     Object.keys(formData).forEach(key => {
       formData[key] = row[key]
     })

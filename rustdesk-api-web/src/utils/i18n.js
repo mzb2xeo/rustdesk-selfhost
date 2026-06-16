@@ -18,6 +18,7 @@ const trans = {
   'vi': vi,
   'zh-TW': zhTW,
 }
+
 export function T (key, params, num = 0) {
   const appStore = useAppStore()
   const lang = appStore.setting.lang
@@ -26,9 +27,9 @@ export function T (key, params, num = 0) {
     return key
   }
   const msg = num > 1 ? (tran.Other ? tran.Other : tran.One) : tran.One
-  //msg 是这样 {name} is name
-  //params 是这样 {name: 'zhangsan'}
-  //替换
+  // msg looks like: {name} is name
+  // params looks like: {name: 'zhangsan'}
+  // replace
   return msg.replace(/{(\w+)}/g, function (match, key) {
     return params[key] || match
   })

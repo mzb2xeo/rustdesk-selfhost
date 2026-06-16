@@ -13,10 +13,10 @@ import (
 type File struct {
 }
 
-// OssToken 文件
-// @Tags 文件
-// @Summary 获取ossToken
-// @Description 获取ossToken
+// OssToken file
+// @Tags file
+// @Summary Get ossToken
+// @Description Get ossToken
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} response.Response
@@ -33,7 +33,7 @@ type FileBack struct {
 	Url string `json:"url"`
 }
 
-// Notify 上传成功后回调
+// Notify callback after successful upload
 func (f *File) Notify(c *gin.Context) {
 
 	res := global.Oss.Verify(c.Request)
@@ -50,13 +50,13 @@ func (f *File) Notify(c *gin.Context) {
 
 }
 
-// Upload 上传文件到本地
-// @Tags 文件
-// @Summary 上传文件到本地
-// @Description 上传文件到本地
+// Upload upload files to local
+// @Tags file
+// @Summary Upload files to local
+// @Description Upload files to local
 // @Accept  multipart/form-data
 // @Produce  json
-// @Param file formData file true "上传文件示例"
+// @Param file formData file true "Upload file example"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /admin/file/upload [post]
@@ -71,12 +71,12 @@ func (f *File) Upload(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	// 上传文件至指定目录
+	// Upload files to the specified directory
 	err = c.SaveUploadedFile(file, dst)
 	if err != nil {
 		return
 	}
-	// 返回文件web地址
+	// Return file web address
 	response.Success(c, gin.H{
 		"url": webPath + file.Filename,
 	})

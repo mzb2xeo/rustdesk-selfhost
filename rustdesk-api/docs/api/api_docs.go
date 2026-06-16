@@ -17,7 +17,7 @@ const docTemplateapi = `{
     "paths": {
         "/": {
             "get": {
-                "description": "首页",
+                "description": "front page",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,9 +25,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "首页"
+                    "Home Page"
                 ],
-                "summary": "首页",
+                "summary": "Home Page",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -51,7 +51,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "地址列表",
+                "description": "address list",
                 "consumes": [
                     "application/json"
                 ],
@@ -59,9 +59,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址"
+                    "address"
                 ],
-                "summary": "地址列表",
+                "summary": "Address List",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -83,7 +83,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "地址更新",
+                "description": "Address update",
                 "consumes": [
                     "application/json"
                 ],
@@ -91,12 +91,12 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址"
+                    "address"
                 ],
-                "summary": "地址更新",
+                "summary": "address update",
                 "parameters": [
                     {
-                        "description": "地址表单",
+                        "description": "Address Form",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -128,7 +128,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "添加地址",
+                "description": "Add address",
                 "consumes": [
                     "application/json"
                 ],
@@ -136,9 +136,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "添加地址",
+                "summary": "Add address",
                 "parameters": [
                     {
                         "type": "string",
@@ -169,7 +169,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "删除地址",
+                "description": "Delete address",
                 "consumes": [
                     "application/json"
                 ],
@@ -177,9 +177,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "删除地址",
+                "summary": "Delete address",
                 "parameters": [
                     {
                         "type": "string",
@@ -212,7 +212,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "更新地址",
+                "description": "Update address",
                 "consumes": [
                     "application/json"
                 ],
@@ -220,9 +220,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "更新地址",
+                "summary": "Update address",
                 "parameters": [
                     {
                         "type": "string",
@@ -255,7 +255,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "地址",
+                "description": "address",
                 "consumes": [
                     "application/json"
                 ],
@@ -263,19 +263,19 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "地址列表",
+                "summary": "Address List",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "页码",
+                        "description": "Page number",
                         "name": "current",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "每页数量",
+                        "description": "number per page",
                         "name": "pageSize",
                         "in": "query"
                     },
@@ -309,7 +309,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "个人地址",
+                "description": "personal address",
                 "consumes": [
                     "application/json"
                 ],
@@ -317,9 +317,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "个人地址",
+                "summary": "personal address",
                 "parameters": [
                     {
                         "description": "string valid",
@@ -353,7 +353,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "设置",
+                "description": "set up",
                 "consumes": [
                     "application/json"
                 ],
@@ -361,9 +361,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "设置",
+                "summary": "Settings",
                 "parameters": [
                     {
                         "description": "string valid",
@@ -397,7 +397,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "共享",
+                "description": "shared",
                 "consumes": [
                     "application/json"
                 ],
@@ -405,19 +405,19 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "共享地址簿",
+                "summary": "Shared address book",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "页码",
+                        "description": "Page number",
                         "name": "current",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "每页数量",
+                        "description": "number per page",
                         "name": "pageSize",
                         "in": "query"
                     }
@@ -445,7 +445,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "标签",
+                "description": "Label",
                 "consumes": [
                     "application/json"
                 ],
@@ -453,9 +453,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "标签添加",
+                "summary": "tag added",
                 "parameters": [
                     {
                         "type": "string",
@@ -488,7 +488,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "标签",
+                "description": "Label",
                 "consumes": [
                     "application/json"
                 ],
@@ -496,9 +496,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "标签重命名",
+                "summary": "tag rename",
                 "parameters": [
                     {
                         "type": "string",
@@ -531,7 +531,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "标签",
+                "description": "Label",
                 "consumes": [
                     "application/json"
                 ],
@@ -539,9 +539,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "标签修改颜色",
+                "summary": "tag changes color",
                 "parameters": [
                     {
                         "type": "string",
@@ -574,7 +574,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "标签",
+                "description": "Label",
                 "consumes": [
                     "application/json"
                 ],
@@ -582,9 +582,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "标签删除",
+                "summary": "tag removal",
                 "parameters": [
                     {
                         "type": "string",
@@ -617,7 +617,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "标签",
+                "description": "Label",
                 "consumes": [
                     "application/json"
                 ],
@@ -625,9 +625,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "地址[Personal]"
+                    "address[Personal]"
                 ],
-                "summary": "标签",
+                "summary": "tag",
                 "parameters": [
                     {
                         "type": "string",
@@ -655,7 +655,7 @@ const docTemplateapi = `{
         },
         "/audit/conn": {
             "post": {
-                "description": "审计连接",
+                "description": "Audit connection",
                 "consumes": [
                     "application/json"
                 ],
@@ -663,12 +663,12 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "审计"
+                    "Audit"
                 ],
-                "summary": "审计连接",
+                "summary": "Audit connection",
                 "parameters": [
                     {
-                        "description": "审计连接",
+                        "description": "Audit connection",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -695,7 +695,7 @@ const docTemplateapi = `{
         },
         "/audit/file": {
             "post": {
-                "description": "审计文件",
+                "description": "audit documents",
                 "consumes": [
                     "application/json"
                 ],
@@ -703,12 +703,12 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "审计"
+                    "Audit"
                 ],
-                "summary": "审计文件",
+                "summary": "audit file",
                 "parameters": [
                     {
-                        "description": "审计文件",
+                        "description": "Audit file",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -740,7 +740,7 @@ const docTemplateapi = `{
                         "token": []
                     }
                 ],
-                "description": "用户信息",
+                "description": "User information",
                 "consumes": [
                     "application/json"
                 ],
@@ -748,9 +748,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "用户"
+                    "user"
                 ],
-                "summary": "用户信息",
+                "summary": "User information",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -774,7 +774,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "机器",
+                "description": "machine",
                 "consumes": [
                     "application/json"
                 ],
@@ -782,25 +782,25 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "群组"
+                    "group"
                 ],
-                "summary": "设备",
+                "summary": "Equipment",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "页码",
+                        "description": "page number",
                         "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "每页数量",
+                        "description": "number per page",
                         "name": "pageSize",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "状态",
+                        "description": "status",
                         "name": "status",
                         "in": "query"
                     },
@@ -829,7 +829,7 @@ const docTemplateapi = `{
         },
         "/heartbeat": {
             "post": {
-                "description": "心跳",
+                "description": "heartbeat",
                 "consumes": [
                     "application/json"
                 ],
@@ -837,9 +837,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "首页"
+                    "Home Page"
                 ],
-                "summary": "心跳",
+                "summary": "heartbeat",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -855,7 +855,7 @@ const docTemplateapi = `{
         },
         "/login": {
             "post": {
-                "description": "登录",
+                "description": "Log in",
                 "consumes": [
                     "application/json"
                 ],
@@ -863,12 +863,12 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "登录"
+                    "login"
                 ],
-                "summary": "登录",
+                "summary": "Login",
                 "parameters": [
                     {
-                        "description": "登录表单",
+                        "description": "Login form",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -895,7 +895,7 @@ const docTemplateapi = `{
         },
         "/login-options": {
             "get": {
-                "description": "登录选项",
+                "description": "Login options",
                 "consumes": [
                     "application/json"
                 ],
@@ -903,9 +903,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "登录"
+                    "login"
                 ],
-                "summary": "登录选项",
+                "summary": "Login options",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -927,7 +927,7 @@ const docTemplateapi = `{
         },
         "/logout": {
             "post": {
-                "description": "登出",
+                "description": "Sign out",
                 "consumes": [
                     "application/json"
                 ],
@@ -935,9 +935,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "登录"
+                    "login"
                 ],
-                "summary": "登出",
+                "summary": "Sign out",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1048,7 +1048,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "机器",
+                "description": "machine",
                 "consumes": [
                     "application/json"
                 ],
@@ -1056,25 +1056,25 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "群组"
+                    "group"
                 ],
-                "summary": "机器",
+                "summary": "Machine",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "页码",
+                        "description": "page number",
                         "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "每页数量",
+                        "description": "number per page",
                         "name": "pageSize",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "状态",
+                        "description": "status",
                         "name": "status",
                         "in": "query"
                     },
@@ -1108,7 +1108,7 @@ const docTemplateapi = `{
                         "token": []
                     }
                 ],
-                "description": "服务配置,给webclient提供api-server",
+                "description": "Service configuration, providing api-server to webclient",
                 "consumes": [
                     "application/json"
                 ],
@@ -1118,7 +1118,7 @@ const docTemplateapi = `{
                 "tags": [
                     "WEBCLIENT"
                 ],
-                "summary": "服务配置",
+                "summary": "Service configuration",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1142,7 +1142,7 @@ const docTemplateapi = `{
                         "token": []
                     }
                 ],
-                "description": "服务配置,给webclient提供api-server",
+                "description": "Service configuration, providing api-server to webclient",
                 "consumes": [
                     "application/json"
                 ],
@@ -1152,7 +1152,7 @@ const docTemplateapi = `{
                 "tags": [
                     "WEBCLIENT_V2"
                 ],
-                "summary": "服务配置",
+                "summary": "Service configuration",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1171,7 +1171,7 @@ const docTemplateapi = `{
         },
         "/shared-peer": {
             "post": {
-                "description": "分享的peer",
+                "description": "Sharing peers",
                 "consumes": [
                     "application/json"
                 ],
@@ -1181,7 +1181,7 @@ const docTemplateapi = `{
                 "tags": [
                     "WEBCLIENT"
                 ],
-                "summary": "分享的peer",
+                "summary": "shared by peers",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1200,7 +1200,7 @@ const docTemplateapi = `{
         },
         "/sysinfo": {
             "post": {
-                "description": "提交系统信息",
+                "description": "Submit system information",
                 "consumes": [
                     "application/json"
                 ],
@@ -1210,10 +1210,10 @@ const docTemplateapi = `{
                 "tags": [
                     "System"
                 ],
-                "summary": "提交系统信息",
+                "summary": "Submit system information",
                 "parameters": [
                     {
-                        "description": "系统信息表单",
+                        "description": "System information form",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -1240,7 +1240,7 @@ const docTemplateapi = `{
         },
         "/sysinfo_ver": {
             "post": {
-                "description": "获取系统版本信息",
+                "description": "Get system version information",
                 "consumes": [
                     "application/json"
                 ],
@@ -1250,7 +1250,7 @@ const docTemplateapi = `{
                 "tags": [
                     "System"
                 ],
-                "summary": "获取系统版本信息",
+                "summary": "Get system version information",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1274,7 +1274,7 @@ const docTemplateapi = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "用户列表",
+                "description": "User list",
                 "consumes": [
                     "application/json"
                 ],
@@ -1282,25 +1282,25 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "群组"
+                    "group"
                 ],
-                "summary": "用户列表",
+                "summary": "User list",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "页码",
+                        "description": "page number",
                         "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "每页数量",
+                        "description": "number per page",
                         "name": "pageSize",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "状态",
+                        "description": "status",
                         "name": "status",
                         "in": "query"
                     },
@@ -1344,7 +1344,7 @@ const docTemplateapi = `{
         },
         "/version": {
             "get": {
-                "description": "版本",
+                "description": "Version",
                 "consumes": [
                     "application/json"
                 ],
@@ -1352,9 +1352,9 @@ const docTemplateapi = `{
                     "application/json"
                 ],
                 "tags": [
-                    "首页"
+                    "Home Page"
                 ],
-                "summary": "版本",
+                "summary": "version",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1593,7 +1593,7 @@ const docTemplateapi = `{
                     "type": "integer"
                 },
                 "color": {
-                    "description": "color 是flutter的颜色值,从0x00000000 到 0xFFFFFFFF; 前两位表示透明度，后面6位表示颜色, 可以转成rgba",
+                    "description": "color is the color value of flutter, from 0x00000000 to 0xFFFFFFFF; the first two digits represent transparency, and the last 6 digits represent color, which can be converted to rgba",
                     "type": "integer"
                 },
                 "created_at": {
@@ -1683,8 +1683,8 @@ var SwaggerInfoapi = &swag.Spec{
 	Host:             "",
 	BasePath:         "/api",
 	Schemes:          []string{},
-	Title:            "管理系统API",
-	Description:      "接口",
+	Title:            "Management System API",
+	Description:      "interface",
 	InfoInstanceName: "api",
 	SwaggerTemplate:  docTemplateapi,
 	LeftDelim:        "{{",

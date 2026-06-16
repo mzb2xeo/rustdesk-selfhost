@@ -29,10 +29,10 @@ export function useRepositories (api_type = 'my') {
     const res = await apis[api_type].list(listQuery).catch(_ => false)
     listRes.loading = false
     if (res) {
-      //通过uuid补全peer信息
+      //Complete peer information through uuid
       const uuids = res.data.list.filter(item => item.uuid && item.client === 'client' && !item.device_id).map(item => item.uuid)
       if (uuids.length > 0) {
-        //uuids去重
+        //uuids remove duplicates
         const uniqueUuids = [...new Set(uuids)]
         const peers = await apis[api_type].fetchPeers({ uuids: uniqueUuids }).catch(_ => false)
         if (peers?.data?.list) {

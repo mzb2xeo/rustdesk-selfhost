@@ -17,13 +17,13 @@ import (
 type Login struct {
 }
 
-// Login 登录
-// @Tags 登录
-// @Summary 登录
-// @Description 登录
+// Login Login
+// @Tags login
+// @Summary Login
+// @Description Log in
 // @Accept  json
 // @Produce  json
-// @Param body body admin.Login true "登录信息"
+// @Param body body admin.Login true "Login information"
 // @Success 200 {object} response.Response{data=adResp.LoginPayload}
 // @Failure 500 {object} response.Response
 // @Router /admin/login [post]
@@ -34,7 +34,7 @@ func (ct *Login) Login(c *gin.Context) {
 		return
 	}
 
-	// 检查登录限制
+	// Check login restrictions
 	loginLimiter := global.LoginLimiter
 	clientIp := c.ClientIP()
 	_, needCaptcha := loginLimiter.CheckSecurityStatus(clientIp)
@@ -56,7 +56,7 @@ func (ct *Login) Login(c *gin.Context) {
 		return
 	}
 
-	// 检查是否需要验证码
+	// Check if a verification code is required
 	if needCaptcha {
 		if f.CaptchaId == "" || f.Captcha == "" || !loginLimiter.VerifyCaptcha(f.CaptchaId, f.Captcha) {
 			response.Fail(c, 101, response.TranslateMsg(c, "CaptchaError"))
@@ -95,7 +95,7 @@ func (ct *Login) Login(c *gin.Context) {
 		Platform: f.Platform,
 	})
 
-	// 登录成功，清除登录限制
+	// Login successful, clear login restrictions
 	loginLimiter.RemoveAttempts(clientIp)
 	responseLoginSuccess(c, u, ut.Token)
 }
@@ -129,10 +129,10 @@ func (ct *Login) Captcha(c *gin.Context) {
 	})
 }
 
-// Logout 登出
-// @Tags 登录
-// @Summary 登出
-// @Description 登出
+// Logout
+// @Tags login
+// @Summary Sign out
+// @Description Sign out
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} response.Response
@@ -148,9 +148,9 @@ func (ct *Login) Logout(c *gin.Context) {
 }
 
 // LoginOptions
-// @Tags 登录
-// @Summary 登录选项
-// @Description 登录选项
+// @Tags login
+// @Summary Login options
+// @Description Login options
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} []string
