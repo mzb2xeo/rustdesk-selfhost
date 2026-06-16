@@ -142,6 +142,8 @@ The script will:
 - Sync the device into the `My Devices` address book.
 - Revoke the deploy token after successful setup.
 
+The API first loads the deployment template from `data/templates/deploy-host.ps1`. In Docker this maps to `./data/api/templates/deploy-host.ps1` on the host, so the script template can be edited without rebuilding the Go binary. If that file does not exist, the API uses the default template at `resources/templates/deploy-host.ps1`, then falls back to the embedded template in code.
+
 You can also run the wrapper manually if you already have a token:
 
 ```powershell

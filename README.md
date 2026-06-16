@@ -142,6 +142,8 @@ Script sẽ:
 - Đồng bộ thiết bị vào address book `My Devices`.
 - Thu hồi deploy token sau khi hoàn tất.
 
+API ưu tiên đọc template deploy từ `data/templates/deploy-host.ps1`. Trong Docker, đường dẫn này tương ứng với `./data/api/templates/deploy-host.ps1` trên host, nên có thể sửa template script mà không cần build lại binary Go. Nếu file này không tồn tại, API dùng template mặc định trong `resources/templates/deploy-host.ps1`, rồi mới fallback về template embed trong code.
+
 Có thể chạy wrapper thủ công nếu đã có token:
 
 ```powershell
