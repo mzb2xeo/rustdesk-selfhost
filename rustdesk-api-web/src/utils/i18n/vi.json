@@ -83,6 +83,9 @@
   "ViewRemotePassword": {
     "One": "Xem mật khẩu"
   },
+  "DecodedRemotePassword": {
+    "One": "Mật khẩu đã giải mã"
+  },
   "NoRemotePassword": {
     "One": "Chưa có mật khẩu remote. Hãy chạy deploy hoặc thêm thiết bị vào Address Book."
   },

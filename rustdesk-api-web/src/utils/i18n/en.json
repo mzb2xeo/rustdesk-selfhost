@@ -83,6 +83,9 @@
   "ViewRemotePassword": {
     "One": "View password"
   },
+  "DecodedRemotePassword": {
+    "One": "Decoded password"
+  },
   "NoRemotePassword": {
     "One": "No remote password stored. Run deploy or add the device to Address Book."
   },

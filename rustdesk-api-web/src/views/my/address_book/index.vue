@@ -90,8 +90,15 @@
         <el-form-item :label="T('Alias')" prop="alias">
           <el-input v-model="formData.alias"></el-input>
         </el-form-item>
+        <el-form-item :label="T('RemotePassword') || 'Mat khau remote'">
+          <el-input :value="decodedRemotePassword" readonly class="copy-input">
+            <template #append>
+              <el-button @click="copyDecodedPassword">{{ T('Copy') || 'Copy' }}</el-button>
+            </template>
+          </el-input>
+        </el-form-item>
         <el-form-item :label="T('Hash')" prop="hash">
-          <el-input v-model="formData.hash"></el-input>
+          <el-input v-model="formData.hash" type="password" show-password></el-input>
         </el-form-item>
         <el-form-item :label="T('Hostname')" prop="hostname">
           <el-input v-model="formData.hostname"></el-input>
@@ -174,25 +181,18 @@
 </template>
 
 <script setup>
-  import { onActivated, onMounted, reactive, ref, watch } from 'vue'
+  import { onActivated, onMounted, reactive, ref, watch, computed } from 'vue'
   import { useBatchUpdateTagsRepositories, useRepositories } from '@/views/address_book'
   import { toWebClientLink } from '@/utils/webclient'
   import { T } from '@/utils/i18n'
+  import { ElMessage } from 'element-plus'
   import shareByWebClient from '@/views/address_book/components/shareByWebClient.vue'
   import { useAppStore } from '@/store/app'
   import { connectByClient } from '@/utils/peer'
   import { handleClipboard } from '@/utils/clipboard'
   import { CopyDocument } from '@element-plus/icons'
   import PlatformIcons from '@/components/icons/platform.vue'
-  import { showRemotePasswordDialog } from '@/utils/remotePassword'
-
-  const viewRemotePassword = (row) => {
-    showRemotePasswordDialog(row.hash || row.password, {
-      id: row.id,
-      hostname: row.hostname,
-      alias: row.alias,
-    })
-  }
+  import { showRemotePasswordDialog, decodeRemotePassword } from '@/utils/remotePassword'
 
   const appStore = useAppStore()
   const {
@@ -218,6 +218,29 @@
     // collectionListQuery,
 
   } = useRepositories('my')
+
+  const decodedRemotePassword = computed(() => {
+    return decodeRemotePassword(formData.hash || formData.password, formData.id)
+  })
+
+  const copyDecodedPassword = async () => {
+    const text = decodedRemotePassword.value
+    if (!text) return
+    try {
+      await navigator.clipboard.writeText(text)
+      ElMessage.success(T('CopySuccess') || 'Sao chep thanh cong')
+    } catch (_) {
+      ElMessage.error(T('CopyFailed') || 'Sao chep that bai')
+    }
+  }
+
+  const viewRemotePassword = (row) => {
+    showRemotePasswordDialog(row.hash || row.password, {
+      id: row.id,
+      hostname: row.hostname,
+      alias: row.alias,
+    })
+  }
 
   onMounted(getCollectionList)
   onMounted(getCollectionListForUpdate)
