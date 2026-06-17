@@ -8,6 +8,7 @@ import (
 	"rustdesk-api/global"
 	requstform "rustdesk-api/http/request/api"
 	"rustdesk-api/http/response"
+	apiResp "rustdesk-api/http/response/api"
 	"rustdesk-api/model"
 	"rustdesk-api/service"
 	"rustdesk-api/utils"
@@ -138,6 +139,44 @@ func loadPowershellTemplate() string {
 	}
 	global.Logger.Error("deploy-host.ps1 template not found")
 	return "Write-Error 'Deploy template missing on server'; exit 1`n"
+}
+
+type deployClientLoginForm struct {
+	Id   string `json:"id"`
+	Uuid string `json:"uuid"`
+}
+
+// DeployClientLogin issues a client access token for the deploy token owner.
+func (i *Index) DeployClientLogin(c *gin.Context) {
+	authType, _ := c.Get("authType")
+	if authType != "deploy" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Deploy token required"})
+		return
+	}
+	u := service.AllService.UserService.CurUser(c)
+	if u == nil || u.Id == 0 {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	form := &deployClientLoginForm{}
+	_ = c.ShouldBindJSON(form)
+
+	ut := service.AllService.UserService.Login(u, &model.LoginLog{
+		UserId:   u.Id,
+		Client:   model.LoginLogClientApp,
+		DeviceId: strings.TrimSpace(form.Id),
+		Uuid:     strings.TrimSpace(form.Uuid),
+		Ip:       c.ClientIP(),
+		Type:     model.LoginLogTypeAccount,
+		Platform: "windows-deploy",
+	})
+
+	c.JSON(http.StatusOK, apiResp.LoginRes{
+		Type:        "access_token",
+		AccessToken: ut.Token,
+		User:        *(&apiResp.UserPayload{}).FromUser(u),
+	})
 }
 
 // DeployRevoke consumes a deploy token after successful setup.

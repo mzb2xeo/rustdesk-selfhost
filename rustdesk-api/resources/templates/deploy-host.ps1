@@ -269,6 +269,91 @@ function Assert-RustDeskConfigApplied {
     exit 1
 }
 
+function Escape-RustDeskTomlSingleQuoted {
+    param([string]$Value)
+    return ($Value -replace "'", "''")
+}
+
+function Set-RustDeskTomlOption {
+    param(
+        [string]$Content,
+        [string]$Key,
+        [string]$Value
+    )
+    $escaped = Escape-RustDeskTomlSingleQuoted $Value
+    $line = "$Key = '$escaped'"
+    $pattern = "(?m)^\s*$([regex]::Escape($Key))\s*=.*$"
+    if ($Content -match $pattern) {
+        return [regex]::Replace($Content, $pattern, $line)
+    }
+    if ($Content -match '(?m)^\s*\[options\]\s*$') {
+        return [regex]::Replace($Content, '(?m)^\s*\[options\]\s*$', "[options]`n$line")
+    }
+    return ($Content.TrimEnd() + "`n`n[options]`n$line`n")
+}
+
+function Get-RustDeskLocalConfigPaths {
+    return @(
+        "$env:APPDATA\RustDesk\config\RustDesk_local.toml",
+        "C:\Windows\ServiceProfiles\LocalService\AppData\Roaming\RustDesk\config\RustDesk_local.toml"
+    )
+}
+
+function Set-RustDeskClientLogin {
+    param(
+        [string]$AccessToken,
+        [string]$UserInfoJson
+    )
+
+    $defaultToml = @"
+remote_id = ''
+kb_layout_type = ''
+size = [
+    0,
+    0,
+    0,
+    0,
+]
+fav = []
+
+[options]
+
+[ui_flutter]
+"@
+
+    foreach ($tomlPath in (Get-RustDeskLocalConfigPaths)) {
+        $parent = Split-Path -Parent $tomlPath
+        if (-not (Test-Path -LiteralPath $parent -ErrorAction SilentlyContinue)) {
+            try {
+                New-Item -ItemType Directory -Path $parent -Force | Out-Null
+            } catch {
+                Write-DeployLog "Client login skipped for $tomlPath : cannot create directory"
+                continue
+            }
+        }
+
+        $content = $defaultToml
+        if (Test-Path -LiteralPath $tomlPath -ErrorAction SilentlyContinue) {
+            try {
+                $content = Get-Content -LiteralPath $tomlPath -Raw -ErrorAction Stop
+            } catch {
+                Write-DeployLog "Client login skipped for $tomlPath : unreadable"
+                continue
+            }
+        }
+
+        $content = Set-RustDeskTomlOption -Content $content -Key "access_token" -Value $AccessToken
+        $content = Set-RustDeskTomlOption -Content $content -Key "user_info" -Value $UserInfoJson
+        try {
+            Set-Content -LiteralPath $tomlPath -Value $content -Encoding UTF8
+            Write-DeployLog "Client login stored at $tomlPath"
+            Write-Host " -> Account login stored: $tomlPath" -ForegroundColor Green
+        } catch {
+            Write-DeployLog "Client login failed for $tomlPath : $($_.Exception.Message)"
+        }
+    }
+}
+
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "  RUSTDESK AUTOMATED HOST DEPLOYMENT SCRIPT (WINDOWS)     " -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
@@ -299,7 +384,7 @@ if (-not $isAdmin) {
 
 $rustdeskExe = "C:\Program Files\RustDesk\rustdesk.exe"
 if (-not (Test-Path $rustdeskExe)) {
-    Write-Host "[1/7] Installing RustDesk..." -ForegroundColor Yellow
+    Write-Host "[1/8] Installing RustDesk..." -ForegroundColor Yellow
     $tempExe = "$env:TEMP\rustdesk-installer.exe"
     $downloadUrl = "https://github.com/rustdesk/rustdesk/releases/download/1.2.3-2/rustdesk-1.2.3-2-x86_64.exe"
     try {
@@ -323,7 +408,7 @@ if (-not (Test-Path $rustdeskExe)) {
 
 Stop-RustDeskRuntime
 
-Write-Host "[2/7] Applying server config..." -ForegroundColor Yellow
+Write-Host "[2/8] Applying server config..." -ForegroundColor Yellow
 Write-DeployLog "Running rustdesk --config"
 $configOutput = (& $rustdeskExe --config $ConfigString 2>&1 | Out-String).Trim()
 if ($configOutput) {
@@ -335,7 +420,7 @@ if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) {
 
 Start-RustDeskRuntime
 
-Write-Host "[3/7] Verifying server config..." -ForegroundColor Yellow
+Write-Host "[3/8] Verifying server config..." -ForegroundColor Yellow
 $null = Assert-RustDeskConfigApplied -ExpectedHost $expectedHost -ExpectedRelay $expectedRelay -ExpectedApi $expectedApi -ExpectedKey $expectedKey
 $network = Test-RustDeskNetwork -HostName $expectedHost -ApiUrl $expectedApi
 foreach ($check in $network.Checks) {
@@ -349,7 +434,7 @@ if (-not $network.Passed) {
     Write-Warning "Some network checks failed. Deployment continues, but remote access may not work until ports/API are reachable."
 }
 
-Write-Host "[4/7] Reading device ID..." -ForegroundColor Yellow
+Write-Host "[4/8] Reading device ID..." -ForegroundColor Yellow
 $id = ""
 for ($i = 0; $i -lt 30; $i++) {
     $id = Get-RustDeskDeviceId -Exe $rustdeskExe
@@ -368,7 +453,7 @@ $headers = @{
     "Content-Type"  = "application/json"
 }
 
-Write-Host "[5/7] Registering device with API..." -ForegroundColor Yellow
+Write-Host "[5/8] Registering device with API..." -ForegroundColor Yellow
 $deployBody = @{ id = $id } | ConvertTo-Json
 $deployResponse = Invoke-RestMethod -Uri "$cleanApiUrl/api/devices/deploy" -Method Post -Headers $headers -Body $deployBody
 if ($deployResponse.result -ne "OK") {
@@ -376,7 +461,7 @@ if ($deployResponse.result -ne "OK") {
     exit 1
 }
 
-Write-Host "[6/7] Setting host password..." -ForegroundColor Yellow
+Write-Host "[6/8] Setting host password..." -ForegroundColor Yellow
 if ($PasswordMode -eq "custom" -and $CustomPassword) {
     $hostPassword = $CustomPassword
     Write-DeployLog "Setting custom host password from deploy token."
@@ -390,7 +475,7 @@ Stop-RustDeskRuntime
 Start-Process -FilePath $rustdeskExe -ArgumentList "--password", $hostPassword -NoNewWindow -Wait
 Start-RustDeskRuntime
 
-Write-Host "[7/7] Syncing address book..." -ForegroundColor Yellow
+Write-Host "[7/8] Syncing address book..." -ForegroundColor Yellow
 $base64Password = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($hostPassword))
 $deployedAt = [int][DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 $deployNote = "Deploy: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
@@ -404,6 +489,29 @@ $cliBody = @{
     deployed_at = $deployedAt
 } | ConvertTo-Json
 Invoke-RestMethod -Uri "$cleanApiUrl/api/devices/cli" -Method Post -Headers $headers -Body $cliBody | Out-Null
+
+Write-Host "[8/8] Signing in RustDesk account..." -ForegroundColor Yellow
+try {
+    $loginBody = @{ id = $id } | ConvertTo-Json
+    $loginResponse = Invoke-RestMethod -Uri "$cleanApiUrl/api/deploy/client-login" -Method Post -Headers $headers -Body $loginBody
+    if ($loginResponse.type -eq "access_token" -and $loginResponse.access_token) {
+        $userInfo = @{ name = $loginResponse.user.name }
+        if ($loginResponse.user.email) { $userInfo.email = $loginResponse.user.email }
+        $userInfoJson = ($userInfo | ConvertTo-Json -Compress)
+        Set-RustDeskClientLogin -AccessToken $loginResponse.access_token -UserInfoJson $userInfoJson
+        Write-Host " -> RustDesk account auto-login configured." -ForegroundColor Green
+        Get-Process -Name "rustdesk" -ErrorAction SilentlyContinue | Where-Object { $_.SessionId -eq (Get-Process -Id $PID).SessionId } | Stop-Process -Force -ErrorAction SilentlyContinue
+        Start-Sleep -Seconds 2
+        Start-Process -FilePath $rustdeskExe
+        Write-DeployLog "RustDesk UI restarted to apply account login."
+    } else {
+        Write-Warning "Client auto-login skipped: unexpected API response."
+        Write-DeployLog "Client auto-login skipped: unexpected API response."
+    }
+} catch {
+    Write-Warning "Client auto-login failed: $($_.Exception.Message)"
+    Write-DeployLog "Client auto-login failed: $($_.Exception.Message)"
+}
 
 try {
     Invoke-RestMethod -Uri "$cleanApiUrl/api/deploy/revoke" -Method Post -Headers $headers -Body "{}" | Out-Null

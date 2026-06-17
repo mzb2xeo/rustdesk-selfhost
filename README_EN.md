@@ -141,6 +141,7 @@ The script will:
 - Call `/api/devices/deploy` directly with the short-lived deploy token.
 - Generate a random static password for unattended access.
 - Sync the device into the `My Devices` address book.
+- Auto sign in the RustDesk account on the client (`access_token` in `RustDesk_local.toml`).
 - Revoke the deploy token after successful setup.
 
 The API first loads the deployment template from `data/templates/deploy-host.ps1`. In Docker this maps to `./data/api/templates/deploy-host.ps1` on the host, so the script template can be edited without rebuilding the Go binary. If that file does not exist, the API uses the default template at `resources/templates/deploy-host.ps1`, then falls back to the embedded template in code.

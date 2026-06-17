@@ -141,6 +141,7 @@ Script sẽ:
 - Gọi API `/api/devices/deploy` trực tiếp bằng deploy token ngắn hạn.
 - Sinh mật khẩu tĩnh ngẫu nhiên cho unattended access.
 - Đồng bộ thiết bị vào address book `My Devices`.
+- Tự đăng nhập tài khoản RustDesk trên client (ghi `access_token` vào `RustDesk_local.toml`).
 - Thu hồi deploy token sau khi hoàn tất.
 
 API ưu tiên đọc template deploy từ `data/templates/deploy-host.ps1`. Trong Docker, đường dẫn này tương ứng với `./data/api/templates/deploy-host.ps1` trên host, nên có thể sửa template script mà không cần build lại binary Go. Nếu file này không tồn tại, API dùng template mặc định trong `resources/templates/deploy-host.ps1`, rồi mới fallback về template embed trong code.

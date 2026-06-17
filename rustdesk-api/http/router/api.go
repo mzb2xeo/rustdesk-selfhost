@@ -82,6 +82,7 @@ func ApiInit(g *gin.Engine) {
 		deployRoutes.POST("/devices/deploy", pe.Deploy)
 		deployRoutes.POST("/devices/cli", pe.Cli)
 		i := &api.Index{}
+		deployRoutes.POST("/deploy/client-login", i.DeployClientLogin)
 		deployRoutes.POST("/deploy/revoke", i.DeployRevoke)
 	}
 
