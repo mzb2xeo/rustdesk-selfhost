@@ -1,13 +1,32 @@
-# Ignore git folder
+# VCS & IDE
 .git
 .gitignore
+**/.git
+.cursor
+.agents
+agent-transcripts
 
-# Ignore cargo build artifacts
-**/target*
-
-# Ignore node modules
-**/node_modules
-
-# Ignore OS files
+# OS
 .DS_Store
 Thumbs.db
+
+# Runtime / local data (not needed in image)
+data/
+*.log
+
+# Build artifacts
+**/target
+**/target/**
+**/node_modules
+**/dist
+rustdesk-api/release
+rustdesk-api/docs
+
+# Docs & scripts (not used in Docker build)
+*.md
+!rustdesk-api/resources/**
+*.ps1
+deploy-host.ps1
+
+# Unrelated sibling projects
+rustdeskclient
