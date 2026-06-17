@@ -171,7 +171,7 @@ CLI_JSON=$(cat <<EOF
   "id": "$ID",
   "uuid": "$UUID",
   "address_book_name": "My Devices",
-  "address_book_password": "$BASE64_PASSWORD",
+  "address_book_password": "$RAND_PASSWORD",
   "address_book_alias": "$HOSTNAME"
 }
 EOF

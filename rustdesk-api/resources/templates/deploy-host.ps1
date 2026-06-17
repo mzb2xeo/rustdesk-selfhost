@@ -471,19 +471,24 @@ if ($PasswordMode -eq "custom" -and $CustomPassword) {
     Write-DeployLog "Setting structured host password: $hostPassword"
 }
 Write-Host " -> Host password: $hostPassword" -ForegroundColor Green
-Stop-RustDeskRuntime
-Start-Process -FilePath $rustdeskExe -ArgumentList "--password", $hostPassword -NoNewWindow -Wait
 Start-RustDeskRuntime
+$pwdOutput = (& $rustdeskExe --password $hostPassword 2>&1 | Out-String).Trim()
+Write-DeployLog "rustdesk --password output: $pwdOutput"
+if ($pwdOutput -notmatch 'Done') {
+    Write-Error "Failed to set permanent password on RustDesk service. Output: $pwdOutput"
+    exit 1
+}
+$null = (& $rustdeskExe --option verification-method use-permanent-password 2>&1 | Out-String)
+Write-DeployLog "verification-method set to use-permanent-password"
 
 Write-Host "[7/8] Syncing address book..." -ForegroundColor Yellow
-$base64Password = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($hostPassword))
 $deployedAt = [int][DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 $deployNote = "Deploy: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 $cliBody = @{
     id = $id
     address_book_name = "My Devices"
     address_book_tag = "deploy"
-    address_book_password = $base64Password
+    address_book_password = $hostPassword
     address_book_alias = $env:COMPUTERNAME
     address_book_note = $deployNote
     deployed_at = $deployedAt

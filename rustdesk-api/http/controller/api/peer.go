@@ -12,6 +12,7 @@ import (
 	"rustdesk-api/model"
 	"rustdesk-api/model/custom_types"
 	"rustdesk-api/service"
+	"rustdesk-api/utils"
 	"strings"
 	"time"
 )
@@ -233,10 +234,12 @@ func (p *Peer) Cli(c *gin.Context) {
 			tags = custom_types.AutoJson([]byte("[]"))
 		}
 
+		plainPassword := utils.DecodeAddressBookPassword(form.AddressBookPassword)
+
 		if ab.RowId > 0 {
 			ab.Alias = form.AddressBookAlias
-			ab.Password = form.AddressBookPassword
-			ab.Hash = form.AddressBookPassword
+			ab.Password = plainPassword
+			ab.Hash = ""
 			ab.Tags = tags
 			ab.LoginName = deployNote
 			if form.DeviceUsername != "" {
@@ -252,8 +255,8 @@ func (p *Peer) Cli(c *gin.Context) {
 				UserId:       currentUser.Id,
 				CollectionId: collection.Id,
 				Alias:        form.AddressBookAlias,
-				Password:     form.AddressBookPassword,
-				Hash:         form.AddressBookPassword,
+				Password:     plainPassword,
+				Hash:         "",
 				Tags:         tags,
 				Username:     form.DeviceUsername,
 				Hostname:     form.DeviceName,
