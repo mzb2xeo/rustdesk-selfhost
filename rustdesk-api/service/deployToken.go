@@ -12,8 +12,7 @@ import (
 type DeployTokenService struct{}
 
 func (s *DeployTokenService) Create(userId uint, passwordMode, customPassword string) (*model.DeployToken, error) {
-	now := time.Now().Unix()
-	DB.Where("user_id = ? AND used_at = 0 AND expires_at < ?", userId, now).Delete(&model.DeployToken{})
+	s.CleanupForUser(userId)
 
 	if passwordMode == "" {
 		passwordMode = model.DeployPasswordModeStructured
@@ -35,6 +34,55 @@ func (s *DeployTokenService) Create(userId uint, passwordMode, customPassword st
 		return nil, err
 	}
 	return dt, nil
+}
+
+func (s *DeployTokenService) CleanupForUser(userId uint) {
+	now := time.Now().Unix()
+	retention := time.Now().AddDate(0, 0, -model.DeployTokenRetentionDays).Unix()
+	DB.Where("user_id = ? AND used_at = 0 AND expires_at < ?", userId, now).Delete(&model.DeployToken{})
+	DB.Where("user_id = ? AND used_at > 0 AND used_at < ?", userId, retention).Delete(&model.DeployToken{})
+}
+
+func (s *DeployTokenService) List(page, pageSize uint, userId uint) *model.DeployTokenList {
+	s.CleanupForUser(userId)
+
+	res := &model.DeployTokenList{}
+	res.Page = int64(page)
+	res.PageSize = int64(pageSize)
+
+	tx := DB.Model(&model.DeployToken{}).Where("user_id = ?", userId)
+	tx.Count(&res.Total)
+	tx.Order("id desc").Scopes(Paginate(page, pageSize))
+
+	var rows []*model.DeployToken
+	tx.Find(&rows)
+	for _, row := range rows {
+		res.List = append(res.List, row.ToListItem())
+	}
+	return res
+}
+
+func (s *DeployTokenService) InfoByIdForUser(id, userId uint) (*model.DeployToken, error) {
+	dt := &model.DeployToken{}
+	if err := DB.Where("id = ? AND user_id = ?", id, userId).First(dt).Error; err != nil {
+		return nil, errors.New("deploy token not found")
+	}
+	return dt, nil
+}
+
+func (s *DeployTokenService) RevokeById(id, userId uint) error {
+	dt, err := s.InfoByIdForUser(id, userId)
+	if err != nil {
+		return err
+	}
+	if dt.IsUsed() {
+		return errors.New("deploy token already revoked")
+	}
+	if dt.IsExpired() {
+		return errors.New("deploy token already expired")
+	}
+	now := time.Now().Unix()
+	return DB.Model(dt).Update("used_at", now).Error
 }
 
 func (s *DeployTokenService) FindValid(token string) (*model.DeployToken, error) {

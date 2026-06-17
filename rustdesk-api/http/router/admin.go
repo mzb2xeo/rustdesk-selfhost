@@ -313,7 +313,9 @@ func MyBind(rg *gin.RouterGroup) {
 	}
 	{
 		cont := &my.Deploy{}
+		rg.GET("/my/deploy/token/list", cont.ListTokens)
 		rg.POST("/my/deploy/token", cont.CreateToken)
+		rg.POST("/my/deploy/token/revoke", cont.RevokeToken)
 	}
 }
 

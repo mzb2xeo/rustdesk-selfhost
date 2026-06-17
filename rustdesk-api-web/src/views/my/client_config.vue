@@ -113,6 +113,66 @@
           </p>
         </el-form-item>
       </el-form>
+
+      <div class="deploy-token-section">
+        <div class="deploy-token-header">
+          <h4>{{ T('DeployTokenList') || 'Token deploy' }}</h4>
+          <el-button size="small" :loading="tokenListLoading" @click="loadDeployTokens">
+            {{ T('Refresh') || 'Làm mới' }}
+          </el-button>
+        </div>
+        <p class="deploy-token-hint">
+          {{ T('DeployTokenListHint') || 'Theo dõi token deploy. Token hết hạn hoặc đã dùng sẽ tự động xóa sau 7 ngày.' }}
+        </p>
+        <el-table v-loading="tokenListLoading" :data="deployTokens" size="small" stripe>
+          <el-table-column prop="token_preview" :label="T('DeployToken') || 'Token'" min-width="160" />
+          <el-table-column :label="T('Status') || 'Trạng thái'" width="110">
+            <template #default="{ row }">
+              <el-tag :type="deployTokenTagType(row.status)" size="small">
+                {{ deployTokenStatusLabel(row.status) }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column :label="T('DeployPasswordMode') || 'Mật khẩu remote'" width="140">
+            <template #default="{ row }">
+              {{ row.password_mode === 'custom' ? (T('DeployPasswordCustom') || 'Tự nhập') : (T('DeployPasswordStructured') || 'Cấu trúc') }}
+            </template>
+          </el-table-column>
+          <el-table-column :label="T('CreatedAt') || 'Tạo lúc'" width="170">
+            <template #default="{ row }">{{ formatExpire(row.created_at) }}</template>
+          </el-table-column>
+          <el-table-column :label="T('ExpiresAt') || 'Hết hạn'" width="170">
+            <template #default="{ row }">{{ formatExpire(row.expires_at) }}</template>
+          </el-table-column>
+          <el-table-column :label="T('UsedAt') || 'Dùng lúc'" width="170">
+            <template #default="{ row }">{{ row.used_at ? formatExpire(row.used_at) : '-' }}</template>
+          </el-table-column>
+          <el-table-column :label="T('Actions') || 'Thao tác'" width="120" fixed="right">
+            <template #default="{ row }">
+              <el-button
+                v-if="row.status === 'active'"
+                type="danger"
+                link
+                size="small"
+                :loading="revokingId === row.id"
+                @click="revokeToken(row)"
+              >
+                {{ T('RevokeDeployToken') || 'Hủy token' }}
+              </el-button>
+              <span v-else class="token-action-muted">-</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          v-if="tokenTotal > tokenPageSize"
+          class="deploy-token-pagination"
+          layout="prev, pager, next"
+          :total="tokenTotal"
+          :page-size="tokenPageSize"
+          :current-page="tokenPage"
+          @current-change="onTokenPageChange"
+        />
+      </div>
     </el-card>
 
     <!-- Guide / Steps Card -->
@@ -208,10 +268,10 @@
 <script setup>
   import { onMounted, ref } from 'vue'
   import { useAppStore } from '@/store/app'
-  import { ElMessage } from 'element-plus'
+  import { ElMessage, ElMessageBox } from 'element-plus'
   import { T } from '@/utils/i18n'
   import { Cpu, Notebook, Download, Tools } from '@element-plus/icons'
-  import { createDeployToken } from '@/api/my/deploy'
+  import { createDeployToken, listDeployTokens, revokeDeployToken } from '@/api/my/deploy'
 
   const appStore = useAppStore()
   const powershellCommand = ref('')
@@ -221,10 +281,77 @@
   const generating = ref(false)
   const passwordMode = ref('structured')
   const customPassword = ref('')
+  const deployTokens = ref([])
+  const tokenListLoading = ref(false)
+  const tokenPage = ref(1)
+  const tokenPageSize = ref(10)
+  const tokenTotal = ref(0)
+  const revokingId = ref(0)
 
   onMounted(() => {
     appStore.loadRustdeskConfig()
+    loadDeployTokens()
   })
+
+  const loadDeployTokens = async () => {
+    tokenListLoading.value = true
+    try {
+      const res = await listDeployTokens({
+        page: tokenPage.value,
+        page_size: tokenPageSize.value,
+      })
+      deployTokens.value = res.data.list || []
+      tokenTotal.value = res.data.total || 0
+    } catch (e) {
+      deployTokens.value = []
+    } finally {
+      tokenListLoading.value = false
+    }
+  }
+
+  const onTokenPageChange = (page) => {
+    tokenPage.value = page
+    loadDeployTokens()
+  }
+
+  const deployTokenStatusLabel = (status) => {
+    const map = {
+      active: T('DeployTokenActive') || 'Dang hoat dong',
+      used: T('DeployTokenUsed') || 'Da dung / da huy',
+      expired: T('DeployTokenExpired') || 'Het han',
+    }
+    return map[status] || status
+  }
+
+  const deployTokenTagType = (status) => {
+    if (status === 'active') return 'success'
+    if (status === 'expired') return 'warning'
+    return 'info'
+  }
+
+  const revokeToken = async (row) => {
+    const cf = await ElMessageBox.confirm(
+      T('RevokeDeployTokenConfirm') || 'Huy token nay? Script deploy dang chay se khong dung duoc nua.',
+      T('Confirm') || 'Xac nhan',
+      {
+        confirmButtonText: T('Confirm') || 'Xac nhan',
+        cancelButtonText: T('Cancel') || 'Huy',
+        type: 'warning',
+      },
+    ).catch(() => false)
+    if (!cf) return
+
+    revokingId.value = row.id
+    try {
+      await revokeDeployToken({ id: row.id })
+      ElMessage.success(T('RevokeDeployTokenSuccess') || 'Da huy token deploy.')
+      loadDeployTokens()
+    } catch (e) {
+      ElMessage.error(T('RevokeDeployTokenFailed') || 'Khong the huy token.')
+    } finally {
+      revokingId.value = 0
+    }
+  }
 
   const generateDeployCommand = async () => {
     if (passwordMode.value === 'custom') {
@@ -245,6 +372,8 @@
       scriptUrl.value = res.data.script_url
       tokenExpiresAt.value = res.data.expires_at
       ElMessage.success(T('GenerateDeployCommandSuccess') || 'Đã tạo lệnh triển khai mới!')
+      tokenPage.value = 1
+      loadDeployTokens()
     } catch (e) {
       ElMessage.error(T('GenerateDeployCommandFailed') || 'Không thể tạo lệnh triển khai.')
     } finally {
@@ -461,5 +590,40 @@
   margin-top: 8px;
   font-size: 12px;
   color: #909399;
+}
+
+.deploy-token-section {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+
+.deploy-token-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+
+  h4 {
+    margin: 0;
+    font-size: 15px;
+    color: var(--header-text-color);
+  }
+}
+
+.deploy-token-hint {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: #909399;
+  line-height: 1.5;
+}
+
+.deploy-token-pagination {
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+.token-action-muted {
+  color: #c0c4cc;
 }
 </style>

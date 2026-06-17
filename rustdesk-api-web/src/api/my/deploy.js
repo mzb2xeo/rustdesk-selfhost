@@ -7,3 +7,19 @@ export function createDeployToken (data = {}) {
     data,
   })
 }
+
+export function listDeployTokens (params = {}) {
+  return request({
+    url: '/my/deploy/token/list',
+    method: 'get',
+    params,
+  })
+}
+
+export function revokeDeployToken (data = {}) {
+  return request({
+    url: '/my/deploy/token/revoke',
+    method: 'post',
+    data,
+  })
+}

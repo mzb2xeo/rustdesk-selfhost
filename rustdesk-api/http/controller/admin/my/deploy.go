@@ -2,6 +2,7 @@ package my
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 
@@ -17,6 +18,10 @@ type Deploy struct{}
 type createDeployTokenForm struct {
 	PasswordMode   string `json:"password_mode"`
 	CustomPassword string `json:"custom_password"`
+}
+
+type revokeDeployTokenForm struct {
+	Id uint `json:"id"`
 }
 
 // CreateToken issues a short-lived deploy token for automated client setup.
@@ -75,6 +80,56 @@ func (ct *Deploy) CreateToken(c *gin.Context) {
 		"powershell_command":   powershellCommand,
 		"download_run_command": downloadRunCommand,
 	})
+}
+
+// ListTokens returns deploy tokens for the current user (masked, for monitoring).
+func (ct *Deploy) ListTokens(c *gin.Context) {
+	u := service.AllService.UserService.CurUser(c)
+	if u == nil || u.Id == 0 {
+		response.Fail(c, 403, response.TranslateMsg(c, "NeedLogin"))
+		return
+	}
+
+	page := uint(1)
+	pageSize := uint(20)
+	if p := c.Query("page"); p != "" {
+		if v, err := strconv.ParseUint(p, 10, 64); err == nil && v > 0 {
+			page = uint(v)
+		}
+	}
+	if ps := c.Query("page_size"); ps != "" {
+		if v, err := strconv.ParseUint(ps, 10, 64); err == nil && v > 0 && v <= 100 {
+			pageSize = uint(v)
+		}
+	}
+
+	res := service.AllService.DeployTokenService.List(page, pageSize, u.Id)
+	response.Success(c, res)
+}
+
+// RevokeToken force-revokes an active deploy token.
+func (ct *Deploy) RevokeToken(c *gin.Context) {
+	u := service.AllService.UserService.CurUser(c)
+	if u == nil || u.Id == 0 {
+		response.Fail(c, 403, response.TranslateMsg(c, "NeedLogin"))
+		return
+	}
+
+	form := &revokeDeployTokenForm{}
+	if err := c.ShouldBindJSON(form); err != nil {
+		response.Fail(c, 101, response.TranslateMsg(c, "ParamsError")+err.Error())
+		return
+	}
+	if form.Id == 0 {
+		response.Fail(c, 101, response.TranslateMsg(c, "ParamsError"))
+		return
+	}
+
+	if err := service.AllService.DeployTokenService.RevokeById(form.Id, u.Id); err != nil {
+		response.Fail(c, 101, response.TranslateMsg(c, "OperationFailed")+err.Error())
+		return
+	}
+	response.Success(c, nil)
 }
 
 func resolveApiServer(c *gin.Context) string {

@@ -98,6 +98,42 @@
   "DeployCustomPasswordHint": {
     "One": "Mật khẩu tùy chỉnh: 4–32 ký tự"
   },
+  "DeployTokenList": {
+    "One": "Danh sách token deploy"
+  },
+  "DeployTokenListHint": {
+    "One": "Theo dõi token deploy. Token hết hạn hoặc đã dùng sẽ tự động xóa sau 7 ngày."
+  },
+  "DeployToken": {
+    "One": "Token"
+  },
+  "DeployTokenActive": {
+    "One": "Đang hoạt động"
+  },
+  "DeployTokenUsed": {
+    "One": "Đã dùng / đã hủy"
+  },
+  "DeployTokenExpired": {
+    "One": "Hết hạn"
+  },
+  "RevokeDeployToken": {
+    "One": "Hủy token"
+  },
+  "RevokeDeployTokenConfirm": {
+    "One": "Hủy token này? Script deploy đang chạy sẽ không dùng được nữa."
+  },
+  "RevokeDeployTokenSuccess": {
+    "One": "Đã hủy token deploy."
+  },
+  "RevokeDeployTokenFailed": {
+    "One": "Không thể hủy token."
+  },
+  "ExpiresAt": {
+    "One": "Hết hạn"
+  },
+  "UsedAt": {
+    "One": "Dùng lúc"
+  },
   "DecodedRemotePassword": {
     "One": "Mật khẩu đã giải mã"
   },

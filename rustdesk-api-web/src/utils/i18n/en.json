@@ -98,6 +98,42 @@
   "DeployCustomPasswordHint": {
     "One": "Custom password: 4–32 characters"
   },
+  "DeployTokenList": {
+    "One": "Deploy tokens"
+  },
+  "DeployTokenListHint": {
+    "One": "Monitor deploy tokens. Used or expired tokens are auto-removed after 7 days."
+  },
+  "DeployToken": {
+    "One": "Token"
+  },
+  "DeployTokenActive": {
+    "One": "Active"
+  },
+  "DeployTokenUsed": {
+    "One": "Used / revoked"
+  },
+  "DeployTokenExpired": {
+    "One": "Expired"
+  },
+  "RevokeDeployToken": {
+    "One": "Revoke"
+  },
+  "RevokeDeployTokenConfirm": {
+    "One": "Revoke this token? Any running deploy script will stop working."
+  },
+  "RevokeDeployTokenSuccess": {
+    "One": "Deploy token revoked."
+  },
+  "RevokeDeployTokenFailed": {
+    "One": "Failed to revoke token."
+  },
+  "ExpiresAt": {
+    "One": "Expires at"
+  },
+  "UsedAt": {
+    "One": "Used at"
+  },
   "DecodedRemotePassword": {
     "One": "Decoded password"
   },
