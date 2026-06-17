@@ -77,6 +77,15 @@
   "Hash": {
     "One": "Mã băm"
   },
+  "RemotePassword": {
+    "One": "Mật khẩu remote"
+  },
+  "ViewRemotePassword": {
+    "One": "Xem mật khẩu"
+  },
+  "NoRemotePassword": {
+    "One": "Chưa có mật khẩu remote. Hãy chạy deploy hoặc thêm thiết bị vào Address Book."
+  },
   "Tags": {
     "One": "Thẻ"
   },

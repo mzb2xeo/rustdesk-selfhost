@@ -77,6 +77,15 @@
   "Hash": {
     "One": "Hash"
   },
+  "RemotePassword": {
+    "One": "Remote password"
+  },
+  "ViewRemotePassword": {
+    "One": "View password"
+  },
+  "NoRemotePassword": {
+    "One": "No remote password stored. Run deploy or add the device to Address Book."
+  },
   "Tags": {
     "One": "Tags"
   },

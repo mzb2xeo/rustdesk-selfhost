@@ -3,9 +3,7 @@
 param (
     [string]$DeployToken = "{{.DeployToken}}",
     [string]$ApiUrl = "{{.ApiUrl}}",
-    [string]$IdServer = "{{.IdServer}}",
-    [string]$RelayServer = "{{.RelayServer}}",
-    [string]$Key = "{{.Key}}"
+    [string]$ConfigString = "{{.ConfigString}}"
 )
 
 $ErrorActionPreference = "Stop"
@@ -15,16 +13,32 @@ function Write-DeployLog($message) {
     Add-Content -Path $logPath -Value $line -Encoding UTF8
 }
 
+function Stop-RustDeskRuntime {
+    Write-DeployLog "Stopping RustDesk service and processes."
+    Stop-Service -Name "rustdesk" -ErrorAction SilentlyContinue
+    Get-Process -Name "rustdesk" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 2
+}
+
+function Start-RustDeskRuntime {
+    Write-DeployLog "Starting RustDesk service."
+    Start-Service -Name "rustdesk" -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 5
+}
+
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "  RUSTDESK AUTOMATED HOST DEPLOYMENT SCRIPT (WINDOWS)     " -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "Deploy log: $logPath" -ForegroundColor Cyan
 Write-DeployLog "Starting RustDesk deployment."
-Write-DeployLog "UserName=$env:USERNAME UserProfile=$env:USERPROFILE AppData=$env:APPDATA Temp=$env:TEMP"
-Write-DeployLog "ApiUrl=$ApiUrl IdServer=$IdServer RelayServer=$RelayServer KeyLength=$($Key.Length)"
+Write-DeployLog "UserName=$env:USERNAME ApiUrl=$ApiUrl ConfigLength=$($ConfigString.Length)"
 
 if (-not $DeployToken) {
     Write-Error "Deploy token is missing. Generate a new command from Web Admin."
+    exit 1
+}
+if (-not $ConfigString) {
+    Write-Error "Server config string is missing. Regenerate deploy command from Web Admin."
     exit 1
 }
 
@@ -47,121 +61,30 @@ if (-not (Test-Path $rustdeskExe)) {
     Invoke-WebRequest -Uri $downloadUrl -OutFile $tempExe -UseBasicParsing
     Start-Process -FilePath $tempExe -ArgumentList "--silent-install" -NoNewWindow -Wait
     $waitCount = 0
-    while (-not (Test-Path $rustdeskExe) -and $waitCount -lt 15) {
-        Start-Sleep -Seconds 1
+    while (-not (Test-Path $rustdeskExe) -and $waitCount -lt 30) {
+        Start-Sleep -Seconds 2
         $waitCount++
     }
     if (-not (Test-Path $rustdeskExe)) {
         Write-Error "RustDesk install failed."
         exit 1
     }
+    Write-DeployLog "RustDesk installed."
 }
 
-Stop-Service -Name "rustdesk" -ErrorAction SilentlyContinue
+Stop-RustDeskRuntime
 
-Write-Host "[2/6] Writing server config..." -ForegroundColor Yellow
-$configPaths = @(
-    "C:\Windows\ServiceProfiles\LocalService\AppData\Roaming\RustDesk\config\RustDesk.toml",
-    "C:\Windows\System32\config\systemprofile\AppData\Roaming\RustDesk\config\RustDesk.toml",
-    "C:\ProgramData\RustDesk\config\RustDesk.toml",
-    "$env:APPDATA\RustDesk\config\RustDesk.toml"
-)
-$optionsConfigPaths = @(
-    "C:\Windows\ServiceProfiles\LocalService\AppData\Roaming\RustDesk\config\RustDesk2.toml",
-    "C:\Windows\System32\config\systemprofile\AppData\Roaming\RustDesk\config\RustDesk2.toml",
-    "C:\ProgramData\RustDesk\config\RustDesk2.toml",
-    "$env:APPDATA\RustDesk\config\RustDesk2.toml"
-)
-
-function Set-TomlKey($lines, $key, $value) {
-    $newLines = @()
-    $found = $false
-    foreach ($line in $lines) {
-        if ($line -match "^$key\s*=") {
-            $newLines += "$key = '$value'"
-            $found = $true
-        } else {
-            $newLines += $line
-        }
-    }
-    if (-not $found) { $newLines += "$key = '$value'" }
-    return $newLines
+Write-Host "[2/6] Applying server config..." -ForegroundColor Yellow
+Write-DeployLog "Running rustdesk --config"
+$configOutput = & $rustdeskExe --config $ConfigString 2>&1
+if ($configOutput) {
+    Write-DeployLog "rustdesk --config output: $configOutput"
+}
+if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) {
+    Write-Warning "rustdesk --config exit code: $LASTEXITCODE"
 }
 
-function Set-TomlSectionKey($lines, $section, $key, $value) {
-    $newLines = @()
-    $inSection = $false
-    $sectionFound = $false
-    $keyFound = $false
-    foreach ($line in $lines) {
-        if ($line -match "^\s*\[$section\]\s*$") {
-            $sectionFound = $true
-            $inSection = $true
-            $newLines += $line
-            continue
-        }
-        if ($inSection -and $line -match "^\s*\[.+\]\s*$") {
-            if (-not $keyFound) {
-                $newLines += "$key = '$value'"
-                $keyFound = $true
-            }
-            $inSection = $false
-            $newLines += $line
-            continue
-        }
-        if ($inSection -and $line -match "^$key\s*=") {
-            $newLines += "$key = '$value'"
-            $keyFound = $true
-        } else {
-            $newLines += $line
-        }
-    }
-    if (-not $sectionFound) {
-        if ($newLines.Count -gt 0 -and $newLines[-1] -ne "") { $newLines += "" }
-        $newLines += "[$section]"
-        $newLines += "$key = '$value'"
-    } elseif ($inSection -and -not $keyFound) {
-        $newLines += "$key = '$value'"
-    }
-    return $newLines
-}
-
-foreach ($tomlPath in $configPaths) {
-    $dir = Split-Path $tomlPath
-    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Force -Path $dir | Out-Null }
-    Write-DeployLog "Writing legacy config: $tomlPath"
-    $content = @()
-    if (Test-Path $tomlPath) { $content = Get-Content $tomlPath }
-    $content = Set-TomlKey $content "custom-rendezvous-server" ($IdServer -replace ':21116$','')
-    $content = Set-TomlKey $content "relay-server" ($RelayServer -replace ':21117$','')
-    $content = Set-TomlKey $content "api-server" $ApiUrl
-    $content = Set-TomlKey $content "key" $Key
-    $content | Set-Content $tomlPath -Force -Encoding UTF8
-    Write-DeployLog "Wrote legacy config: $tomlPath"
-    Write-DeployLog "Legacy config content begin: $tomlPath"
-    Get-Content $tomlPath -Raw | Add-Content -Path $logPath -Encoding UTF8
-    Write-DeployLog "Legacy config content end: $tomlPath"
-}
-
-foreach ($tomlPath in $optionsConfigPaths) {
-    $dir = Split-Path $tomlPath
-    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Force -Path $dir | Out-Null }
-    Write-DeployLog "Writing options config: $tomlPath"
-    $content = @()
-    if (Test-Path $tomlPath) { $content = Get-Content $tomlPath }
-    $content = Set-TomlSectionKey $content "options" "custom-rendezvous-server" ($IdServer -replace ':21116$','')
-    $content = Set-TomlSectionKey $content "options" "relay-server" ($RelayServer -replace ':21117$','')
-    $content = Set-TomlSectionKey $content "options" "api-server" $ApiUrl
-    $content = Set-TomlSectionKey $content "options" "key" $Key
-    $content | Set-Content $tomlPath -Force -Encoding UTF8
-    Write-DeployLog "Wrote options config: $tomlPath"
-    Write-DeployLog "Options config content begin: $tomlPath"
-    Get-Content $tomlPath -Raw | Add-Content -Path $logPath -Encoding UTF8
-    Write-DeployLog "Options config content end: $tomlPath"
-}
-
-Start-Service -Name "rustdesk" -ErrorAction SilentlyContinue
-Start-Sleep -Seconds 5
+Start-RustDeskRuntime
 
 Write-Host "[3/6] Reading device ID..." -ForegroundColor Yellow
 $id = ""
@@ -175,6 +98,7 @@ if (-not $id) {
     Write-Error "Cannot read device ID from RustDesk CLI."
     exit 1
 }
+Write-DeployLog "Device ID: $id"
 
 $cleanApiUrl = $ApiUrl.TrimEnd('/')
 $headers = @{
@@ -192,8 +116,13 @@ if ($deployResponse.result -ne "OK") {
 
 Write-Host "[5/6] Setting host password..." -ForegroundColor Yellow
 $charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-$randomPassword = -join ((1..12) | ForEach-Object { $charset[(Get-Random -Maximum $charset.Length)] })
+$idTail = if ($id.Length -ge 4) { $id.Substring($id.Length - 4) } else { $id.PadLeft(4, '0') }
+$suffix = -join ((1..6) | ForEach-Object { $charset[(Get-Random -Maximum $charset.Length)] })
+$randomPassword = "Rd-$idTail-$suffix"
+Write-DeployLog "Setting structured host password."
+Stop-RustDeskRuntime
 Start-Process -FilePath $rustdeskExe -ArgumentList "--password", $randomPassword -NoNewWindow -Wait
+Start-RustDeskRuntime
 
 Write-Host "[6/6] Syncing address book..." -ForegroundColor Yellow
 $base64Password = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($randomPassword))
@@ -210,3 +139,5 @@ try {
 } catch {}
 
 Write-Host "Deployment completed successfully." -ForegroundColor Green
+Write-Host "Device ID: $id" -ForegroundColor Green
+Write-DeployLog "Deployment completed successfully."

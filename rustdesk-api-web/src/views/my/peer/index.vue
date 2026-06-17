@@ -54,10 +54,11 @@
         <el-table-column prop="alias" :label="T('Alias')" align="center" width="80"/>
         <el-table-column prop="created_at" :label="T('CreatedAt')" align="center" width="150"/>
         <el-table-column prop="updated_at" :label="T('UpdatedAt')" align="center" width="150"/>
-        <el-table-column :label="T('Actions')" align="center" width="500" class-name="table-actions" fixed="right">
+        <el-table-column :label="T('Actions')" align="center" width="600" class-name="table-actions" fixed="right">
           <template #default="{row}">
             <el-button type="success" @click="connectByClient(row.id)">{{ T('Link') }}</el-button>
             <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">Web Client</el-button>
+            <el-button type="warning" @click="viewRemotePassword(row)">{{ T('ViewRemotePassword') }}</el-button>
             <el-button type="primary" @click="toAddressBook(row)">{{ T('AddToAddressBook') }}</el-button>
             <el-button @click="toView(row)">{{ T('View') }}</el-button>
             <!--            <el-button type="danger" @click="del(row)">{{ T('Delete') }}</el-button>-->
@@ -191,7 +192,8 @@
   import { connectByClient } from '@/utils/peer'
   import { CopyDocument } from '@element-plus/icons'
   import { handleClipboard } from '@/utils/clipboard'
-  import { batchCreateFromPeers } from '@/api/my/address_book'
+  import { batchCreateFromPeers, list as abList } from '@/api/my/address_book'
+  import { showRemotePasswordDialog } from '@/utils/remotePassword'
 
   const appStore = useAppStore()
   const listRes = reactive({
@@ -263,6 +265,20 @@
     //Assign the data in row to formData
     Object.keys(formData).forEach(key => {
       formData[key] = row[key]
+    })
+  }
+
+  const viewRemotePassword = async (row) => {
+    const res = await abList({ id: row.id, page: 1, page_size: 20 }).catch(() => false)
+    if (!res || !res.data.list.length) {
+      ElMessage.warning(T('NoRemotePassword') || 'Khong co mat khau remote. Hay chay deploy hoac them vao Address Book.')
+      return
+    }
+    const entry = res.data.list.find(item => item.hash || item.password) || res.data.list[0]
+    showRemotePasswordDialog(entry.hash || entry.password, {
+      id: row.id,
+      hostname: row.hostname,
+      alias: entry.alias,
     })
   }
 

@@ -52,11 +52,11 @@
         <!--        <el-table-column prop="updated_at" label="Update time" align="center"/>-->
         <el-table-column prop="alias" :label="T('Alias')" align="center" width="150"/>
         <el-table-column prop="peer.version" :label="T('Version')" align="center" width="100"/>
-        <el-table-column prop="hash" :label="T('Hash')" align="center" width="150" show-overflow-tooltip/>
-        <el-table-column :label="T('Actions')" align="center" class-name="table-actions" width="600" fixed="right">
+        <el-table-column :label="T('Actions')" align="center" class-name="table-actions" width="680" fixed="right">
           <template #default="{row}">
             <el-button type="success" @click="connectByClient(row.id)">{{ T('Link') }}</el-button>
             <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">Web Client</el-button>
+            <el-button type="warning" @click="viewRemotePassword(row)">{{ T('ViewRemotePassword') }}</el-button>
             <el-button v-if="appStore.setting.appConfig.web_client" type="primary" @click="toShowShare(row)">{{ T('ShareByWebClient') }}</el-button>
             <el-button @click="toEdit(row)">{{ T('Edit') }}</el-button>
             <el-button type="danger" @click="del(row)">{{ T('Delete') }}</el-button>
@@ -184,6 +184,15 @@
   import { handleClipboard } from '@/utils/clipboard'
   import { CopyDocument } from '@element-plus/icons'
   import PlatformIcons from '@/components/icons/platform.vue'
+  import { showRemotePasswordDialog } from '@/utils/remotePassword'
+
+  const viewRemotePassword = (row) => {
+    showRemotePasswordDialog(row.hash || row.password, {
+      id: row.id,
+      hostname: row.hostname,
+      alias: row.alias,
+    })
+  }
 
   const appStore = useAppStore()
   const {
