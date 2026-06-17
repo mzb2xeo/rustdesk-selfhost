@@ -24,7 +24,7 @@ import (
 	"rustdesk-api/utils"
 )
 
-const DatabaseVersion = 268
+const DatabaseVersion = 270
 
 // @title Management System API
 // @version 1.0

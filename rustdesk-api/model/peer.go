@@ -17,6 +17,7 @@ type Peer struct {
 	GroupId        uint   `json:"group_id"  gorm:"default:0;not null;index"`
 	Alias          string `json:"alias" gorm:"default:'';not null;index"`
 	Pk             string `json:"pk" gorm:"column:pk;default:'';not null;"`
+	DeployedAt     int64  `json:"deployed_at" gorm:"default:0;not null;index"`
 	TimeModel
 }
 

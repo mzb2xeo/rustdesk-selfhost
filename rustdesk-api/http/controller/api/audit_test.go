@@ -360,6 +360,9 @@ func TestAuditWorkflow(t *testing.T) {
 	if newPe.GroupId != deviceGroup.Id || newPe.Alias != "new remark/note" || newPe.Username != "new-device-username" || newPe.Hostname != "new-device-name" {
 		t.Fatalf("Peer fields not updated by CLI: %+v", newPe)
 	}
+	if newPe.DeployedAt == 0 {
+		t.Fatalf("Peer deployed_at should be set by CLI: %+v", newPe)
+	}
 
 	// Verify Address Book entry created in DB
 	var dbAb model.AddressBook

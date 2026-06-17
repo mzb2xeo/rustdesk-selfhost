@@ -83,6 +83,21 @@
   "ViewRemotePassword": {
     "One": "Xem mật khẩu"
   },
+  "DeployedAt": {
+    "One": "Ngày deploy"
+  },
+  "DeployPasswordMode": {
+    "One": "Mật khẩu remote"
+  },
+  "DeployPasswordStructured": {
+    "One": "Theo cấu trúc Rd@ + 5 số cuối ID"
+  },
+  "DeployPasswordCustom": {
+    "One": "Tự nhập mật khẩu"
+  },
+  "DeployCustomPasswordHint": {
+    "One": "Mật khẩu tùy chỉnh: 4–32 ký tự"
+  },
   "DecodedRemotePassword": {
     "One": "Mật khẩu đã giải mã"
   },

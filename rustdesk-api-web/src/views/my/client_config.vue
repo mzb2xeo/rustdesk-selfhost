@@ -68,8 +68,25 @@
         <p>{{ T('DeployIntro') || 'Bấm "Tạo lệnh triển khai" để sinh token 1 lần (30 phút). Chạy lệnh PowerShell dưới quyền Administrator trên máy Windows — script sẽ tự tải RustDesk, cấu hình và đăng ký thiết bị vào tài khoản của bạn.' }}</p>
       </div>
 
-      <el-form class="deploy-form" label-width="150px" label-position="left">
-        <el-form-item :label="T('DownloadAndRunDeploy') || 'Tự tải script và chạy deploy'">
+      <el-form class="deploy-form" label-width="180px" label-position="left">
+        <el-form-item :label="T('DeployPasswordMode') || 'Mat khau remote'">
+          <el-radio-group v-model="passwordMode">
+            <el-radio label="structured">{{ T('DeployPasswordStructured') || 'Theo cau truc Rd@ + 5 so cuoi ID' }}</el-radio>
+            <el-radio label="custom">{{ T('DeployPasswordCustom') || 'Tu nhap mat khau' }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="passwordMode === 'custom'" :label="T('Password') || 'Mat khau'">
+          <el-input
+            v-model="customPassword"
+            type="password"
+            show-password
+            maxlength="32"
+            :placeholder="T('DeployCustomPasswordHint') || '4-32 ky tu'"
+            class="copy-input"
+          />
+        </el-form-item>
+
+        <el-form-item :label="T('DownloadAndRunDeploy') || 'Tu tai script va chay deploy'">
           <el-input :value="downloadRunCommand" type="textarea" :rows="4" readonly class="command-textarea" placeholder="Bấm 'Tạo lệnh triển khai' để sinh lệnh tự tải script và chạy deploy..."></el-input>
           <div class="command-actions">
             <el-button type="primary" :loading="generating" @click="generateDeployCommand">
@@ -202,15 +219,27 @@
   const scriptUrl = ref('')
   const tokenExpiresAt = ref(0)
   const generating = ref(false)
+  const passwordMode = ref('structured')
+  const customPassword = ref('')
 
   onMounted(() => {
     appStore.loadRustdeskConfig()
   })
 
   const generateDeployCommand = async () => {
+    if (passwordMode.value === 'custom') {
+      const pwd = customPassword.value.trim()
+      if (pwd.length < 4 || pwd.length > 32) {
+        ElMessage.warning(T('DeployCustomPasswordHint') || 'Mat khau tuy chinh phai tu 4-32 ky tu.')
+        return
+      }
+    }
     generating.value = true
     try {
-      const res = await createDeployToken()
+      const res = await createDeployToken({
+        password_mode: passwordMode.value,
+        custom_password: passwordMode.value === 'custom' ? customPassword.value.trim() : '',
+      })
       powershellCommand.value = res.data.powershell_command
       downloadRunCommand.value = res.data.download_run_command || res.data.powershell_command
       scriptUrl.value = res.data.script_url

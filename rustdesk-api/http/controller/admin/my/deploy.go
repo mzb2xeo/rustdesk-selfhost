@@ -3,6 +3,7 @@ package my
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/gin-gonic/gin"
 	"rustdesk-api/global"
@@ -13,6 +14,11 @@ import (
 
 type Deploy struct{}
 
+type createDeployTokenForm struct {
+	PasswordMode   string `json:"password_mode"`
+	CustomPassword string `json:"custom_password"`
+}
+
 // CreateToken issues a short-lived deploy token for automated client setup.
 func (ct *Deploy) CreateToken(c *gin.Context) {
 	u := service.AllService.UserService.CurUser(c)
@@ -21,7 +27,29 @@ func (ct *Deploy) CreateToken(c *gin.Context) {
 		return
 	}
 
-	dt, err := service.AllService.DeployTokenService.Create(u.Id)
+	form := &createDeployTokenForm{}
+	_ = c.ShouldBindJSON(form)
+
+	passwordMode := strings.TrimSpace(form.PasswordMode)
+	if passwordMode == "" {
+		passwordMode = model.DeployPasswordModeStructured
+	}
+	if passwordMode != model.DeployPasswordModeStructured && passwordMode != model.DeployPasswordModeCustom {
+		response.Fail(c, 101, response.TranslateMsg(c, "ParamsError")+"invalid password_mode")
+		return
+	}
+
+	customPassword := strings.TrimSpace(form.CustomPassword)
+	if passwordMode == model.DeployPasswordModeCustom {
+		if utf8.RuneCountInString(customPassword) < 4 || utf8.RuneCountInString(customPassword) > 32 {
+			response.Fail(c, 101, response.TranslateMsg(c, "ParamsError")+"custom_password length must be 4-32")
+			return
+		}
+	} else {
+		customPassword = ""
+	}
+
+	dt, err := service.AllService.DeployTokenService.Create(u.Id, passwordMode, customPassword)
 	if err != nil {
 		response.Fail(c, 101, response.TranslateMsg(c, "OperationFailed")+err.Error())
 		return
@@ -42,6 +70,7 @@ func (ct *Deploy) CreateToken(c *gin.Context) {
 		"deploy_token":         dt.Token,
 		"expires_at":           dt.ExpiresAt,
 		"expires_in":           model.DeployTokenTTLSeconds,
+		"password_mode":        dt.PasswordMode,
 		"script_url":           scriptURL,
 		"powershell_command":   powershellCommand,
 		"download_run_command": downloadRunCommand,

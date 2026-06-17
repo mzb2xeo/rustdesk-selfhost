@@ -83,6 +83,21 @@
   "ViewRemotePassword": {
     "One": "View password"
   },
+  "DeployedAt": {
+    "One": "Deployed at"
+  },
+  "DeployPasswordMode": {
+    "One": "Remote password"
+  },
+  "DeployPasswordStructured": {
+    "One": "Structured: Rd@ + last 5 digits of ID"
+  },
+  "DeployPasswordCustom": {
+    "One": "Custom password"
+  },
+  "DeployCustomPasswordHint": {
+    "One": "Custom password: 4–32 characters"
+  },
   "DecodedRemotePassword": {
     "One": "Decoded password"
   },

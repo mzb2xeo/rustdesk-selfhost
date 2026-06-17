@@ -52,6 +52,11 @@
         <el-table-column prop="uuid" :label="T('Uuid')" align="center" width="120" show-overflow-tooltip/>
         <el-table-column prop="version" :label="T('Version')" align="center" width="80"/>
         <el-table-column prop="alias" :label="T('Alias')" align="center" width="80"/>
+        <el-table-column prop="deployed_at" :label="T('DeployedAt') || 'Ngay deploy'" align="center" width="150">
+          <template #default="{row}">
+            <span>{{ row.deployed_at ? formatDeployedAt(row.deployed_at) : '-' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="created_at" :label="T('CreatedAt')" align="center" width="150"/>
         <el-table-column prop="updated_at" :label="T('UpdatedAt')" align="center" width="150"/>
         <el-table-column :label="T('Actions')" align="center" width="600" class-name="table-actions" fixed="right">
@@ -286,6 +291,11 @@
     let now = new Date().getTime()
     let after = new Date(time * 1000).getTime()
     return (now - after) / 1000
+  }
+
+  const formatDeployedAt = (ts) => {
+    if (!ts) return '-'
+    return new Date(ts * 1000).toLocaleString()
   }
 
   const timeFilters = computed(() => [

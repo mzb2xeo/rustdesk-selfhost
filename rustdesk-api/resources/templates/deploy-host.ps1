@@ -3,7 +3,9 @@
 param (
     [string]$DeployToken = "{{.DeployToken}}",
     [string]$ApiUrl = "{{.ApiUrl}}",
-    [string]$ConfigString = "{{.ConfigString}}"
+    [string]$ConfigString = "{{.ConfigString}}",
+    [string]$PasswordMode = "{{.PasswordMode}}",
+    [string]$CustomPassword = "{{.CustomPassword}}"
 )
 
 $ErrorActionPreference = "Stop"
@@ -115,20 +117,31 @@ if ($deployResponse.result -ne "OK") {
 }
 
 Write-Host "[5/6] Setting host password..." -ForegroundColor Yellow
-$idTail = if ($id.Length -ge 5) { $id.Substring($id.Length - 5) } else { $id.PadLeft(5, '0') }
-$randomPassword = "Rd@$idTail"
-Write-DeployLog "Setting structured host password: Rd@<last5ofId>"
+if ($PasswordMode -eq "custom" -and $CustomPassword) {
+    $hostPassword = $CustomPassword
+    Write-DeployLog "Setting custom host password from deploy token."
+} else {
+    $idTail = if ($id.Length -ge 5) { $id.Substring($id.Length - 5) } else { $id.PadLeft(5, '0') }
+    $hostPassword = "Rd@$idTail"
+    Write-DeployLog "Setting structured host password: $hostPassword"
+}
+Write-Host " -> Host password: $hostPassword" -ForegroundColor Green
 Stop-RustDeskRuntime
-Start-Process -FilePath $rustdeskExe -ArgumentList "--password", $randomPassword -NoNewWindow -Wait
+Start-Process -FilePath $rustdeskExe -ArgumentList "--password", $hostPassword -NoNewWindow -Wait
 Start-RustDeskRuntime
 
 Write-Host "[6/6] Syncing address book..." -ForegroundColor Yellow
-$base64Password = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($randomPassword))
+$base64Password = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($hostPassword))
+$deployedAt = [int][DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+$deployNote = "Deploy: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 $cliBody = @{
     id = $id
     address_book_name = "My Devices"
+    address_book_tag = "deploy"
     address_book_password = $base64Password
     address_book_alias = $env:COMPUTERNAME
+    address_book_note = $deployNote
+    deployed_at = $deployedAt
 } | ConvertTo-Json
 Invoke-RestMethod -Uri "$cleanApiUrl/api/devices/cli" -Method Post -Headers $headers -Body $cliBody | Out-Null
 

@@ -92,7 +92,8 @@ func (i *Index) DeployPowershell(c *gin.Context) {
 		c.String(http.StatusBadRequest, "deploy_token is required")
 		return
 	}
-	if _, err := service.AllService.DeployTokenService.FindValid(deployToken); err != nil {
+	dt, err := service.AllService.DeployTokenService.FindValid(deployToken)
+	if err != nil {
 		c.String(http.StatusUnauthorized, "invalid or expired deploy token")
 		return
 	}
@@ -104,6 +105,11 @@ func (i *Index) DeployPowershell(c *gin.Context) {
 	key := global.Config.Rustdesk.Key
 	configString := utils.EncodeRustDeskConfig(idServer, relayServer, apiServer, key)
 
+	passwordMode := dt.PasswordMode
+	if passwordMode == "" {
+		passwordMode = model.DeployPasswordModeStructured
+	}
+
 	script := loadPowershellTemplate()
 	script = strings.ReplaceAll(script, "{{.DeployToken}}", deployToken)
 	script = strings.ReplaceAll(script, "{{.ApiUrl}}", apiServer)
@@ -111,6 +117,8 @@ func (i *Index) DeployPowershell(c *gin.Context) {
 	script = strings.ReplaceAll(script, "{{.RelayServer}}", relayServer)
 	script = strings.ReplaceAll(script, "{{.Key}}", key)
 	script = strings.ReplaceAll(script, "{{.ConfigString}}", configString)
+	script = strings.ReplaceAll(script, "{{.PasswordMode}}", passwordMode)
+	script = strings.ReplaceAll(script, "{{.CustomPassword}}", escapePowerShellSingleQuoted(dt.CustomPassword))
 
 	c.Header("Content-Type", "text/plain; charset=utf-8")
 	c.String(http.StatusOK, script)
@@ -182,4 +190,8 @@ func resolvePublicRelayServer(c *gin.Context) string {
 		relayServer = host + ":21117"
 	}
 	return relayServer
+}
+
+func escapePowerShellSingleQuoted(value string) string {
+	return strings.ReplaceAll(value, "'", "''")
 }

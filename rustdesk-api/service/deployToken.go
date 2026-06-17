@@ -11,9 +11,13 @@ import (
 
 type DeployTokenService struct{}
 
-func (s *DeployTokenService) Create(userId uint) (*model.DeployToken, error) {
+func (s *DeployTokenService) Create(userId uint, passwordMode, customPassword string) (*model.DeployToken, error) {
 	now := time.Now().Unix()
 	DB.Where("user_id = ? AND used_at = 0 AND expires_at < ?", userId, now).Delete(&model.DeployToken{})
+
+	if passwordMode == "" {
+		passwordMode = model.DeployPasswordModeStructured
+	}
 
 	token, err := s.generateToken()
 	if err != nil {
@@ -21,9 +25,11 @@ func (s *DeployTokenService) Create(userId uint) (*model.DeployToken, error) {
 	}
 
 	dt := &model.DeployToken{
-		UserId:    userId,
-		Token:     token,
-		ExpiresAt: time.Now().Add(time.Duration(model.DeployTokenTTLSeconds) * time.Second).Unix(),
+		UserId:         userId,
+		Token:          token,
+		ExpiresAt:      time.Now().Add(time.Duration(model.DeployTokenTTLSeconds) * time.Second).Unix(),
+		PasswordMode:   passwordMode,
+		CustomPassword: customPassword,
 	}
 	if err := DB.Create(dt).Error; err != nil {
 		return nil, err

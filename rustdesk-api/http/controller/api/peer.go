@@ -13,6 +13,7 @@ import (
 	"rustdesk-api/model/custom_types"
 	"rustdesk-api/service"
 	"strings"
+	"time"
 )
 
 type Peer struct {
@@ -146,6 +147,7 @@ type DeviceCliForm struct {
 	AddressBookAlias    string `json:"address_book_alias"`
 	AddressBookPassword string `json:"address_book_password"`
 	AddressBookNote     string `json:"address_book_note"`
+	DeployedAt          int64  `json:"deployed_at"`
 	DeviceGroupName     string `json:"device_group_name"`
 	Note                string `json:"note"`
 	DeviceUsername      string `json:"device_username"`
@@ -197,6 +199,15 @@ func (p *Peer) Cli(c *gin.Context) {
 		pe.GroupId = deviceGroup.Id
 	}
 
+	deployedAt := form.DeployedAt
+	if deployedAt <= 0 {
+		deployedAt = time.Now().Unix()
+	}
+	deployNote := form.AddressBookNote
+	if deployNote == "" {
+		deployNote = fmt.Sprintf("Deploy: %s", time.Unix(deployedAt, 0).Format("2006-01-02 15:04:05"))
+	}
+
 	if form.AddressBookName != "" {
 		var collection model.AddressBookCollection
 		err := global.DB.Where("name = ? AND user_id = ?", form.AddressBookName, currentUser.Id).First(&collection).Error
@@ -227,9 +238,7 @@ func (p *Peer) Cli(c *gin.Context) {
 			ab.Password = form.AddressBookPassword
 			ab.Hash = form.AddressBookPassword
 			ab.Tags = tags
-			if form.AddressBookNote != "" {
-				ab.LoginName = form.AddressBookNote
-			}
+			ab.LoginName = deployNote
 			if form.DeviceUsername != "" {
 				ab.Username = form.DeviceUsername
 			}
@@ -248,9 +257,7 @@ func (p *Peer) Cli(c *gin.Context) {
 				Tags:         tags,
 				Username:     form.DeviceUsername,
 				Hostname:     form.DeviceName,
-			}
-			if form.AddressBookNote != "" {
-				newAb.LoginName = form.AddressBookNote
+				LoginName:    deployNote,
 			}
 			err = service.AllService.AddressBookService.AddAddressBook(newPeerAddressBook(newAb, pe))
 			if err != nil {
@@ -272,13 +279,18 @@ func (p *Peer) Cli(c *gin.Context) {
 		pe.Hostname = form.DeviceName
 	}
 
+	pe.DeployedAt = deployedAt
+
 	err := service.AllService.PeerService.Update(pe)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.String(http.StatusOK, "")
+	c.JSON(http.StatusOK, gin.H{
+		"deployed_at": deployedAt,
+		"deploy_note": deployNote,
+	})
 }
 
 func newPeerAddressBook(ab *model.AddressBook, pe *model.Peer) *model.AddressBook {
