@@ -115,7 +115,7 @@ func (i *Index) DeployPowershell(c *gin.Context) {
 	script = strings.ReplaceAll(script, "{{.ApiUrl}}", apiServer)
 	script = strings.ReplaceAll(script, "{{.IdServer}}", idServer)
 	script = strings.ReplaceAll(script, "{{.RelayServer}}", relayServer)
-	script = strings.ReplaceAll(script, "{{.Key}}", key)
+	script = strings.ReplaceAll(script, "{{.Key}}", escapePowerShellSingleQuoted(key))
 	script = strings.ReplaceAll(script, "{{.ConfigString}}", configString)
 	script = strings.ReplaceAll(script, "{{.PasswordMode}}", passwordMode)
 	script = strings.ReplaceAll(script, "{{.CustomPassword}}", escapePowerShellSingleQuoted(dt.CustomPassword))

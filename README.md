@@ -136,7 +136,8 @@ Script sẽ:
 
 - Tải RustDesk client nếu máy chưa cài.
 - Ghi cấu hình `ID Server`, `Relay Server`, `API Server`, public key.
-- Đọc device ID bằng `rustdesk.exe --get-id`.
+- Xác minh `RustDesk2.toml` (host/relay/api/key) và kiểm tra kết nối mạng tới ID/Relay/API.
+- Đọc device ID bằng `rustdesk.exe --get-id` (trên Windows cần pipe: `| Out-String`).
 - Gọi API `/api/devices/deploy` trực tiếp bằng deploy token ngắn hạn.
 - Sinh mật khẩu tĩnh ngẫu nhiên cho unattended access.
 - Đồng bộ thiết bị vào address book `My Devices`.
@@ -156,7 +157,13 @@ Windows:
 
 ```cmd
 "C:\Program Files\RustDesk\rustdesk.exe" --deploy --token <USER_API_TOKEN>
-"C:\Program Files\RustDesk\rustdesk.exe" --get-id
+"C:\Program Files\RustDesk\rustdesk.exe" --get-id | more
+```
+
+PowerShell (đọc ID — bản GUI Windows thường không in ra console trực tiếp):
+
+```powershell
+& "C:\Program Files\RustDesk\rustdesk.exe" --get-id | Out-String
 ```
 
 Linux/macOS:

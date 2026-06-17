@@ -136,7 +136,8 @@ The script will:
 
 - Download the RustDesk client if it is not installed.
 - Write `ID Server`, `Relay Server`, `API Server`, and public key configuration.
-- Read the device ID with `rustdesk.exe --get-id`.
+- Verify `RustDesk2.toml` (host/relay/api/key) and run network checks to ID/Relay/API.
+- Read the device ID with `rustdesk.exe --get-id` (on Windows, pipe output: `| Out-String`).
 - Call `/api/devices/deploy` directly with the short-lived deploy token.
 - Generate a random static password for unattended access.
 - Sync the device into the `My Devices` address book.
@@ -156,7 +157,13 @@ Windows:
 
 ```cmd
 "C:\Program Files\RustDesk\rustdesk.exe" --deploy --token <USER_API_TOKEN>
-"C:\Program Files\RustDesk\rustdesk.exe" --get-id
+"C:\Program Files\RustDesk\rustdesk.exe" --get-id | more
+```
+
+PowerShell (read ID — the Windows GUI build often does not print to the console directly):
+
+```powershell
+& "C:\Program Files\RustDesk\rustdesk.exe" --get-id | Out-String
 ```
 
 Linux/macOS:
