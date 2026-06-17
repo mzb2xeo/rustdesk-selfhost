@@ -115,11 +115,9 @@ if ($deployResponse.result -ne "OK") {
 }
 
 Write-Host "[5/6] Setting host password..." -ForegroundColor Yellow
-$charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-$idTail = if ($id.Length -ge 4) { $id.Substring($id.Length - 4) } else { $id.PadLeft(4, '0') }
-$suffix = -join ((1..6) | ForEach-Object { $charset[(Get-Random -Maximum $charset.Length)] })
-$randomPassword = "Rd-$idTail-$suffix"
-Write-DeployLog "Setting structured host password."
+$idTail = if ($id.Length -ge 5) { $id.Substring($id.Length - 5) } else { $id.PadLeft(5, '0') }
+$randomPassword = "Rd@$idTail"
+Write-DeployLog "Setting structured host password: Rd@<last5ofId>"
 Stop-RustDeskRuntime
 Start-Process -FilePath $rustdeskExe -ArgumentList "--password", $randomPassword -NoNewWindow -Wait
 Start-RustDeskRuntime
