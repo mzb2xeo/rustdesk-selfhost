@@ -1,15 +1,17 @@
-x-server-image: &server-image rustdesk/hbbs-hbbr:local
+x-server-image: &server-image rustdesk-hbbs-hbbr:local
 x-api-image: &api-image rustdesk-api:local
+x-server-build: &server-build
+  context: .
+  dockerfile: Dockerfile.server
 
 services:
   # ------------------------------------------------------------------------------
   # 1. RustDesk ID/Rendezvous Server (hbbs - Built from Fork)
   # ------------------------------------------------------------------------------
   hbbs:
-    build:
-      context: .
-      dockerfile: Dockerfile.server
+    build: *server-build
     image: *server-image
+    pull_policy: never
     container_name: rustdesk-hbbs
     command: hbbs -r ${DOMAIN}:21117 -k _
     environment:
@@ -37,7 +39,9 @@ services:
   # 2. RustDesk Relay Server (hbbr - Built from Fork)
   # ------------------------------------------------------------------------------
   hbbr:
+    build: *server-build
     image: *server-image
+    pull_policy: never
     container_name: rustdesk-hbbr
     command: hbbr -k _
     volumes:
@@ -59,6 +63,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: *api-image
+    pull_policy: never
     container_name: rustdesk-api
     environment:
       - TZ=${TZ:-Asia/Ho_Chi_Minh}
