@@ -25,10 +25,121 @@ function Stop-RustDeskRuntime {
     Start-Sleep -Seconds 2
 }
 
-function Start-RustDeskRuntime {
-    Write-DeployLog "Starting RustDesk service."
-    Start-Service -Name "rustdesk" -ErrorAction SilentlyContinue
+function Test-RustDeskServiceInstalled {
+    return $null -ne (Get-Service -Name "rustdesk" -ErrorAction SilentlyContinue)
+}
+
+function Install-RustDeskServiceIfNeeded {
+    param([string]$Exe)
+    if (Test-RustDeskServiceInstalled) {
+        return $true
+    }
+    Write-Host "Installing RustDesk Windows service..." -ForegroundColor Yellow
+    Write-DeployLog "Running rustdesk --install-service"
+    try {
+        $proc = Start-Process -FilePath $Exe -ArgumentList "--install-service" -Wait -PassThru -WindowStyle Hidden
+        Write-DeployLog "rustdesk --install-service exit code: $($proc.ExitCode)"
+    } catch {
+        Write-DeployLog "rustdesk --install-service failed: $($_.Exception.Message)"
+    }
     Start-Sleep -Seconds 5
+    return (Test-RustDeskServiceInstalled)
+}
+
+function Test-RustDeskIpcPipeReady {
+    return Test-Path "\\.\pipe\RustDesk\query"
+}
+
+function Wait-RustDeskIpcReady {
+    param([int]$MaxAttempts = 30)
+    for ($i = 0; $i -lt $MaxAttempts; $i++) {
+        if (Test-RustDeskIpcPipeReady) {
+            return $true
+        }
+        Start-Sleep -Seconds 2
+    }
+    return $false
+}
+
+function Start-RustDeskServerProcessIfNeeded {
+    param([string]$Exe)
+    if (Test-RustDeskIpcPipeReady) {
+        return
+    }
+    Write-DeployLog "Starting rustdesk --server for IPC."
+    Write-Host " -> Starting RustDesk server process for IPC..." -ForegroundColor Yellow
+    Start-Process -FilePath $Exe -ArgumentList "--server" -WindowStyle Hidden | Out-Null
+    if (-not (Wait-RustDeskIpcReady)) {
+        Write-Error "RustDesk IPC pipe is not available. Install the Windows service or start RustDesk before setting password."
+        exit 1
+    }
+}
+
+function Ensure-RustDeskIpcReady {
+    param([string]$Exe)
+
+    if (Test-RustDeskIpcPipeReady) {
+        return
+    }
+
+    $serviceInstalled = Install-RustDeskServiceIfNeeded -Exe $Exe
+    if ($serviceInstalled) {
+        Write-DeployLog "Starting RustDesk Windows service."
+        try {
+            $svc = Get-Service -Name "rustdesk" -ErrorAction Stop
+            if ($svc.Status -ne "Running") {
+                Start-Service -Name "rustdesk" -ErrorAction Stop
+            }
+            Start-Sleep -Seconds 5
+            if (Wait-RustDeskIpcReady) {
+                return
+            }
+            Write-DeployLog "RustDesk service is running but IPC pipe is not ready yet."
+        } catch {
+            Write-DeployLog "Failed to start RustDesk service: $($_.Exception.Message)"
+        }
+    }
+
+    Start-RustDeskServerProcessIfNeeded -Exe $Exe
+}
+
+function Start-RustDeskRuntime {
+    param([string]$Exe = $rustdeskExe)
+    Ensure-RustDeskIpcReady -Exe $Exe
+}
+
+function Set-RustDeskPermanentPassword {
+    param(
+        [string]$Exe,
+        [string]$Password
+    )
+
+    Ensure-RustDeskIpcReady -Exe $Exe
+
+    $lastOutput = ""
+    for ($i = 0; $i -lt 10; $i++) {
+        $lastOutput = (& $Exe --password "$Password" 2>&1 | Out-String).Trim()
+        Write-DeployLog "rustdesk --password attempt $($i + 1): $lastOutput"
+        if ($lastOutput -match 'Done') {
+            $optionOutput = (& $Exe --option verification-method use-permanent-password 2>&1 | Out-String).Trim()
+            if ($optionOutput) {
+                Write-DeployLog "verification-method output: $optionOutput"
+            }
+            Write-DeployLog "verification-method set to use-permanent-password"
+            return
+        }
+        if ($lastOutput -match 'Installation and administrative privileges required') {
+            Write-Error "Deploy script must run in an elevated Administrator PowerShell session to set permanent password."
+            exit 1
+        }
+        if ($lastOutput -match 'cannot find the file|os error 2') {
+            Ensure-RustDeskIpcReady -Exe $Exe
+        }
+        Start-Sleep -Seconds 2
+    }
+
+    Write-Error "Failed to set permanent password. Output: $lastOutput"
+    exit 1
 }
 
 function Get-RustDeskDeviceId {
@@ -406,6 +517,8 @@ if (-not (Test-Path $rustdeskExe)) {
     Write-DeployLog "RustDesk installed."
 }
 
+Install-RustDeskServiceIfNeeded -Exe $rustdeskExe
+
 Stop-RustDeskRuntime
 
 Write-Host "[2/8] Applying server config..." -ForegroundColor Yellow
@@ -471,15 +584,7 @@ if ($PasswordMode -eq "custom" -and $CustomPassword) {
     Write-DeployLog "Setting structured host password: $hostPassword"
 }
 Write-Host " -> Host password: $hostPassword" -ForegroundColor Green
-Start-RustDeskRuntime
-$pwdOutput = (& $rustdeskExe --password $hostPassword 2>&1 | Out-String).Trim()
-Write-DeployLog "rustdesk --password output: $pwdOutput"
-if ($pwdOutput -notmatch 'Done') {
-    Write-Error "Failed to set permanent password on RustDesk service. Output: $pwdOutput"
-    exit 1
-}
-$null = (& $rustdeskExe --option verification-method use-permanent-password 2>&1 | Out-String)
-Write-DeployLog "verification-method set to use-permanent-password"
+Set-RustDeskPermanentPassword -Exe $rustdeskExe -Password $hostPassword
 
 Write-Host "[7/8] Syncing address book..." -ForegroundColor Yellow
 $deployedAt = [int][DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
